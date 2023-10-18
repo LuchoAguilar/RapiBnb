@@ -18,7 +18,7 @@
                         <label for="ubicacion" class="form-label">Ubicación:</label>
                         <input type="text" class="form-control" name="ubicacion" id="ubicacion" placeholder="Ubicación" required>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="etiquetas" class="form-label">Etiquetas</label>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="etiquetas[]" value="casa" id="casa">
@@ -36,6 +36,10 @@
                             <input class="form-check-input" type="checkbox" name="etiquetas[]" value="cabana" id="cabana">
                             <label class="form-check-label" for="cabana">Cabaña</label>
                         </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="listServicios" class="form-label">Servicios:</label>
+                        <input type="text" class="form-control" name="listServicios" id="listServicios" placeholder="Servicios" required>
                     </div>
                     <div class="col-md-6">
                         <label for="galeriaFotos" class="form-label">Galería de Fotos:</label>
@@ -75,4 +79,4 @@
     </div>
 </main>
 
-<script src="<?= URL_PATH?>/Assets/js/publicarOferta.js"></script>
+<script src="<?= URL_PATH?>/Assets/js/publicarOfertaCreate.js"></script>

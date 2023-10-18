@@ -19,9 +19,85 @@
                 header("Location: http://localhost/PM/Public/");
             }
         }
+        public function crear(){
+            if($this->userSession->Roll() === 'usuarioLog'){
+                $this->render('publicarOfertaCreate',[],'site');
+            }else{
+                header("Location: http://localhost/PM/Public/");
+            } 
+        }
 
         public function create(){
+            $result = new Result();
+            
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+                $titulo = (isset($_POST['titulo'])) ? $_POST['titulo']: '';
+                $descripcion = (isset($_POST['descripcion'])) ? $_POST['descripcion']: '';
+                $ubicacion = (isset($_POST['ubicacion'])) ? $_POST['ubicacion']: '';
+                $listServicios = (isset($_POST['listServicios'])) ? $_POST['listServicios']: '';
+                $costo = (isset($_POST['costoAlquilerPorDia'])) ? $_POST['costoAlquilerPorDia']: '';
+                $cupo = (isset($_POST['cupo']))? $_POST['cupo']: '';
+                $tiempoMin = (isset($_POST['tiempoMinPermanencia'])) ? $_POST['tiempoMinPermanencia']: '';
+                $tiempoMax = (isset($_POST['tiempoMaxPermanencia'])) ? $_POST['tiempoMaxPermanencia']: '';
+                $fechaIni = (isset($_POST['fechaInicio'])) ? $_POST['fechaInicio']: '';
+                $fechaFin = (isset($_POST['fechaFin'])) ? $_POST['fechaFin']: '';
 
+                $etiquetas = array();
+
+                if (isset($_POST['etiquetas[]']) && is_array($_POST['etiquetas[]'])) {
+                    foreach ($_POST['etiquetas[]'] as $etiqueta) {
+                        $etiquetas[] = $etiqueta; // Agrega cada etiqueta al array
+                    }
+                }
+
+                if (isset($_FILES['galeriaFotos']) && is_array($_FILES['galeriaFotos']['tmp_name'])) {
+                    $galeriaFotos = [];
+                
+                    foreach ($_FILES['galeriaFotos']['tmp_name'] as $key => $tmp_name) {
+                        // Validar si es una imagen y obtener la extensión del archivo
+                        $tipoMIME = $_FILES['galeriaFotos']['type'][$key];
+                        $extension = pathinfo($_FILES['galeriaFotos']['name'][$key], PATHINFO_EXTENSION);
+                        
+                        // Verificar que es una imagen válida 
+                        if (strpos($tipoMIME, 'image') === 0) {
+                            // Generar un nombre de archivo único con una extensión segura
+                            $fecha_img = new DateTime();
+                            $nombre_foto = $fecha_img->getTimestamp() . '_' . uniqid() . '.' . $extension;
+                            
+                            // Ruta de destino relativa al directorio de imágenes
+                            //'C:\xampp\htdocs\PM\Public\Assets\images\galeriaFotos\\'
+                            $destinationPath = 'Assets/images/galeriaFotos/' . $nombre_foto;
+                            
+                            // Mover la imagen al directorio de destino
+                            if (move_uploaded_file($tmp_name, $destinationPath)) {
+                                $galeriaFotos[] = $nombre_foto;
+                            }
+                        }
+                    }
+                }
+            }
+
+            $id = $this->userSession->ID();
+
+            $this->ofertaModel->insert([
+                'titulo' => $titulo,
+                'descripcion' => $descripcion,
+                'ubicacion' => $ubicacion,
+                'etiquetas' =>  $etiquetas,
+                'galeriaFotos' => $galeriaFotos,
+                'listServicios' => $listServicios,
+                'costoAlquilerPorDia' => $costo,
+                'tiempoMinPermanencia' => $tiempoMin,
+                'tiempoMaxPermanencia' => $tiempoMax,
+                'cupo' => $cupo,
+                'fechaInicio' => $fechaIni,
+                'fechaFin' => $fechaFin,
+                'creadorID' => $id
+            ]);
+
+            $result->success = true;
+            $result->message = "Oferta de alquiler creada con éxito";
+            echo json_encode($result);
         }
 
         public function edit(){

@@ -7,7 +7,7 @@ function usuarioUpdate(){
     const formulario = document.getElementById('ofertaAlquilerCreate');
     const formData = new FormData(formulario);
     
-    fetch(URL_PATH + '/Usuario/update/', {method: 'POST', body: formData}
+    fetch(URL_PATH + '/OfertaAlquiler/create/', {method: 'POST', body: formData}
     ).then(response => response.json()
     ).then(data => {
         if(data.success){

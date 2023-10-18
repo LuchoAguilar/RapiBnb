@@ -127,7 +127,7 @@
                 $nombre_foto = ($foto !="")?$fecha_img->getTimesTamp()."_".$foto:"";
     
                 //mover imagena carpeta de imagenes
-                $img_tmp = $_FILES['fotoPerfil']['tmp_name'];;
+                $img_tmp = $_FILES['fotoPerfil']['tmp_name'];
                 if($img_tmp !=""){
                     $destinationPath = 'C:\xampp\htdocs\PM\Public\Assets\images\fotoPerfil\\' . $nombre_foto;
                     move_uploaded_file($img_tmp, $destinationPath);
