@@ -1,11 +1,10 @@
 <main class="container mt-3">
-        <div class="card mb-3" style="max-width: 540px;" id="divCard">
-            
-        </div>
+        <div id="divCard"></div>
+        <div id="imagen"></div>
         
-        <div class="card text-center ">
+        <div class="card text-center " >
             <div class="card-body">
-                <button>Crear nueva</button>
+            <a name="" id="" class="btn btn-info" href="<?=URL_PATH.'/OfertaAlquiler/crear';?>" role="button">Crear Oferta</a>
             </div>
         </div>
         

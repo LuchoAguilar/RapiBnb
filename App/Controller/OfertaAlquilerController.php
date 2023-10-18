@@ -34,22 +34,15 @@
                 $titulo = (isset($_POST['titulo'])) ? $_POST['titulo']: '';
                 $descripcion = (isset($_POST['descripcion'])) ? $_POST['descripcion']: '';
                 $ubicacion = (isset($_POST['ubicacion'])) ? $_POST['ubicacion']: '';
-                $listServicios = (isset($_POST['listServicios'])) ? $_POST['listServicios']: '';
+                $etiqueta = (isset($_POST['etiqueta'])) ? $_POST['etiqueta']: '';
                 $costo = (isset($_POST['costoAlquilerPorDia'])) ? $_POST['costoAlquilerPorDia']: '';
                 $cupo = (isset($_POST['cupo']))? $_POST['cupo']: '';
                 $tiempoMin = (isset($_POST['tiempoMinPermanencia'])) ? $_POST['tiempoMinPermanencia']: '';
                 $tiempoMax = (isset($_POST['tiempoMaxPermanencia'])) ? $_POST['tiempoMaxPermanencia']: '';
                 $fechaIni = (isset($_POST['fechaInicio'])) ? $_POST['fechaInicio']: '';
                 $fechaFin = (isset($_POST['fechaFin'])) ? $_POST['fechaFin']: '';
-
-                $etiquetas = array();
-
-                if (isset($_POST['etiquetas[]']) && is_array($_POST['etiquetas[]'])) {
-                    foreach ($_POST['etiquetas[]'] as $etiqueta) {
-                        $etiquetas[] = $etiqueta; // Agrega cada etiqueta al array
-                    }
-                }
-
+                $listServicios = isset($_POST['listServicios']) ? implode(", ", $_POST['listServicios']) : '';
+                
                 if (isset($_FILES['galeriaFotos']) && is_array($_FILES['galeriaFotos']['tmp_name'])) {
                     $galeriaFotos = [];
                 
@@ -75,6 +68,8 @@
                         }
                     }
                 }
+
+                $fotosString = implode(", ", $galeriaFotos);
             }
 
             $id = $this->userSession->ID();
@@ -83,8 +78,8 @@
                 'titulo' => $titulo,
                 'descripcion' => $descripcion,
                 'ubicacion' => $ubicacion,
-                'etiquetas' =>  $etiquetas,
-                'galeriaFotos' => $galeriaFotos,
+                'etiquetas' =>  $etiqueta,
+                'galeriaFotos' => $fotosString,
                 'listServicios' => $listServicios,
                 'costoAlquilerPorDia' => $costo,
                 'tiempoMinPermanencia' => $tiempoMin,
@@ -109,7 +104,7 @@
         }
 
         public function table(){
-            $result = Result();
+            $result = new Result();
             $userLogin = $this->userSession->ID();
             $userVerf = $this->userSession->esVerificado();
             $ofertasUsuario = $this->ofertaModel->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'creadorID' , $userLogin);

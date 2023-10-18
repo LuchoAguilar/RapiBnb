@@ -15,14 +15,14 @@ class ControladorDeSessiones {
             if ($this->Roll() === "usuarioLog") {
                 $users = $this->usuarios->getAll();
                 foreach ($users as $user) {
-                    if ($user['usuarioNombre'] === $this->session->getCurrentUser()) {
+                    if ($user['nombreUsuario'] === $this->session->getCurrentUser()) {
                         return $user['usuarioID'];
                     }
                 }
             } elseif ($this->Roll() === "admin") {
                 $admins = $this->administradores->getAll();
                 foreach ($admins as $admin) {
-                    if ($admin['usuarioNombre'] === $this->session->getCurrentUser()) {
+                    if ($admin['nombreUsuario'] === $this->session->getCurrentUser()) {
                         return $admin['administradorID'];
                     }
                 }
@@ -53,7 +53,7 @@ class ControladorDeSessiones {
     // Orm('verificadoID','verificacion_cuenta',$connect);
 
     public function esVerificado() {
-        if ($this->session->exists) {
+        if ($this->session->exists()) {
             $user = $this->usuarios->getById($this->ID());
     
             if ($user) {

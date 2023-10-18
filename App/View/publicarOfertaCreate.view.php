@@ -1,4 +1,5 @@
 <main class="container">
+    
     <div class="card mt-3">
         <div class="card-header">
             <h3 class="text-center">Crear Oferta de Alquiler</h3>
@@ -19,30 +20,46 @@
                         <input type="text" class="form-control" name="ubicacion" id="ubicacion" placeholder="Ubicación" required>
                     </div>
                     <div class="col-md-3">
-                        <label for="etiquetas" class="form-label">Etiquetas</label>
+                        <label for="servicios[]" class="form-label">Servicios:</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="etiquetas[]" value="casa" id="casa">
-                            <label class="form-check-label" for="casa">Casa</label>
+                            <input class="form-check-input" type="checkbox" name="servicios[]" value="gas" id="Gas">
+                            <label class="form-check-label" for="gas">Gas</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="etiquetas[]" value="hotel" id="hotel">
-                            <label class="form-check-label" for="hotel">Hotel</label>
+                            <input class="form-check-input" type="checkbox" name="servicios[]" value="internet" id="Internet">
+                            <label class="form-check-label" for="internet">Internet</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="etiquetas[]" value="departamento" id="departamento">
-                            <label class="form-check-label" for="departamento">Departamento</label>
+                            <input class="form-check-input" type="checkbox" name="servicios[]" value="electricidad" id="Electricidad">
+                            <label class="form-check-label" for="electricidad">Electricidad</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="etiquetas[]" value="cabana" id="cabana">
-                            <label class="form-check-label" for="cabana">Cabaña</label>
+                            <input class="form-check-input" type="checkbox" name="servicios[]" value="muebles" id="Muebles">
+                            <label class="form-check-label" for="muebles">Muebles</label>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label for="listServicios" class="form-label">Servicios:</label>
-                        <input type="text" class="form-control" name="listServicios" id="listServicios" placeholder="Servicios" required>
+                        <label for="etiqueta" class="form-label">Etiquetas:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="etiqueta" value="casa" id="Casa">
+                            <label class="form-check-label" for="casa">Casa</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="etiqueta" value="hotel" id="Hotel">
+                            <label class="form-check-label" for="hotel">Hotel</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="etiqueta" value="departamento" id="Departamento">
+                            <label class="form-check-label" for="departamento">Departamento</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="etiqueta" value="cabana" id="Cabaña">
+                            <label class="form-check-label" for="cabana">Cabaña</label>
+                        </div>
                     </div>
+
                     <div class="col-md-6">
-                        <label for="galeriaFotos" class="form-label">Galería de Fotos:</label>
+                        <label for="galeriaFotos[]" class="form-label">Galería de Fotos:</label>
                         <input type="file" class="form-control" id="galeriaFotos" name="galeriaFotos[]" multiple accept="image/*" required>
                     </div>
                     <div class="col-md-6">

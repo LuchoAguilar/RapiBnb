@@ -8,18 +8,22 @@ async function ofertasAlquilerCard() {
         const data = reposenseData.result.ofertas;
         data.forEach(element => {
             const galeriaFotosStr = element.galeriaFotos;
-            const galeriaFotosArray = galeriaFotosStr.split(",");
+            const galeriaFotosArray = galeriaFotosStr.split(", ");
             let galeriaHTML = ''; // Variable para almacenar el HTML del carrusel
-
             galeriaFotosArray.forEach(foto => {
                 galeriaHTML += `
                     <div class="carousel-item">
-                        <img src="${URL_PATH}/Assets/images/galeriaFotos/${foto}" class="d-block w-100" alt="Imagen">
+                        <img src="${URL_PATH}/Assets/images/galeriaFotos/${foto}"></img>
                     </div>
+                    
                 `;
             });
 
+            
+            
+
             divCard.innerHTML += `
+            <div class="card mb-3" style="max-width: 800px; margin:auto;">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -30,7 +34,7 @@ async function ofertasAlquilerCard() {
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Anterior</span>
                             </button>
-                            <button class "carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                            <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Siguiente</span>
                             </button>
@@ -41,6 +45,7 @@ async function ofertasAlquilerCard() {
                             <h5 class="card-title">${element.titulo}</h5>
                             <p class="card-text">${element.descripcion}</p>
                             <p class="card-text"><small class="text-muted">Ubicación: ${element.ubicacion}</small></p>
+                            <p class="card-text"><small class="text-muted">Servicios: ${element.listServicios} $</small></p>
                             <p class="card-text"><small class="text-muted">Costo por Día: ${element.costoAlquilerPorDia} $</small></p>
                             <p class="card-text"><small class="text-muted">Tiempo Mínimo de Permanencia: ${element.tiempoMinPermanencia} días</small></p>
                             <p class="card-text"><small class="text-muted">Tiempo Máximo de Permanencia: ${element.tiempoMaxPermanencia} días</small></p>
@@ -50,6 +55,7 @@ async function ofertasAlquilerCard() {
                         </div>
                     </div>
                 </div>
+            </div>
             `;
         });
     }
