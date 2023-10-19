@@ -19,6 +19,7 @@
                 header("Location: http://localhost/PM/Public/");
             }
         }
+
         public function crear(){
             if($this->userSession->Roll() === 'usuarioLog'){
                 $this->render('publicarOfertaCreate',[],'site');
