@@ -1,9 +1,9 @@
 const createOfertaForm = document.getElementById('ofertaAlquilerCreate');
 createOfertaForm.addEventListener('submit',(e)=>{
     e.preventDefault();
-    usuarioUpdate();
+    ofertaCreate();
 });
-function usuarioUpdate(){
+function ofertaCreate(){
     const formulario = document.getElementById('ofertaAlquilerCreate');
     const formData = new FormData(formulario);
     
