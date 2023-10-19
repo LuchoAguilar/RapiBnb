@@ -96,11 +96,27 @@
         }
 
         public function edit(){
+            if($this->userSession->Roll() === 'usuarioLog'){
+                $id = $_GET['id'];
 
+                $oferta = $this->ofertaModel->getById($id);
+
+                $this->render('publicarOfertaEdit',[
+                    'oferta' => $oferta,
+                ],'site');
+            }else{
+                header("Location: http://localhost/PM/Public/");
+            } 
         }
 
         public function delete(){
+            $result = new Result();
+    
+            $this->ofertaModel->deleteById($_POST['id']);
+            $result->success = true;
+            $result->message = "Oferta eliminada con éxito";
 
+            echo json_encode($result);
         }
 
         public function table(){

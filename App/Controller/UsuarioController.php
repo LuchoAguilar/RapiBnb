@@ -152,8 +152,6 @@
 
         public function delete() {
             $result = new Result();
-
-            // utilizar el id obtenido por sesion
     
             $this->usuarioModel->deleteById($_POST['id']);
             $result->success = true;

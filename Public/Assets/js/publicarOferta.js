@@ -22,37 +22,56 @@ async function ofertasAlquilerCard() {
 
             divCard.innerHTML += `
             <div class="card mb-3" style="max-width: 600px; margin:auto;">
-
-                        <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner">
-                                ${carrouselHTML}
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Anterior</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Siguiente</span>
-                            </button>
-
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">${element.titulo}</h5>
-                            <p class="card-text">${element.descripcion}</p>
-                            <p class="card-text"><small class="text-muted">Ubicación: ${element.ubicacion}</small></p>
-                            <p class="card-text"><small class="text-muted">Servicios: ${element.listServicios} $</small></p>
-                            <p class="card-text"><small class="text-muted">Costo por Día: ${element.costoAlquilerPorDia} $</small></p>
-                            <p class="card-text"><small class="text-muted">Tiempo Mínimo de Permanencia: ${element.tiempoMinPermanencia} días</small></p>
-                            <p class="card-text"><small class="text-muted">Tiempo Máximo de Permanencia: ${element.tiempoMaxPermanencia} días</small></p>
-                            <p class="card-text"><small class="text-muted">Cupo: ${element.cupo} personas</small></p>
-                            <p class="card-text"><small class="text-muted">Fecha de Inicio: ${element.fechaInicio ?? 'No especificada'}</small></p>
-                            <p class="card-text"><small class="text-muted">Fecha de Fin: ${element.fechaFin ?? 'No especificada'}</small></p>
-                        </div>
-            </div>
+                
+                <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        ${carrouselHTML}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Anterior</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Siguiente</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">${element.titulo}</h5>
+                    <p class="card-text">${element.descripcion}</p>
+                    <p class="card-text"><small class="text-muted">Ubicación: ${element.ubicacion}</small></p>
+                    <p class="card-text"><small class="text-muted">Servicios: ${element.listServicios} $</small></p>
+                    <p class="card-text"><small class="text-muted">Costo por Día: ${element.costoAlquilerPorDia} $</small></p>
+                    <p class="card-text"><small class="text-muted">Tiempo Mínimo de Permanencia: ${element.tiempoMinPermanencia} días</small></p>
+                    <p class="card-text"><small class="text-muted">Tiempo Máximo de Permanencia: ${element.tiempoMaxPermanencia} días</small></p>
+                    <p class="card-text"><small class="text-muted">Cupo: ${element.cupo} personas</small></p>
+                    <p class="card-text"><small class="text-muted">Fecha de Inicio: ${element.fechaInicio ?? 'No especificada'}</small></p>
+                    <p class="card-text"><small class="text-muted">Fecha de Fin: ${element.fechaFin ?? 'No especificada'}</small></p>
+                </div>
+                <div class="card-footer">
+                    <a name="" id="" class="btn btn-info" href="${URL_PATH}/OfertaAlquiler/edit/?id=${element.ofertaID}" role="button">Editar perfil</a>
+                    <button onclick="eliminarUsuario(${element.ofertaID});"  class="btn btn-danger">Eliminar</button>
+                </div>
+        </div>
             `;
         });
     }
 }
 
 ofertasAlquilerCard();
+
+function eliminarUsuario(id) {
+    const data = new FormData();
+    data.append('id', id);
+
+    fetch(URL_PATH + '/OfertaAlquiler/delete/', {
+        method: 'POST',
+        body: data
+    }).then(response => response.json())
+      .then(data => {
+        if (data.success) {
+            console.log(data.message);
+            ofertasAlquilerCard();
+        }
+    });
+}
