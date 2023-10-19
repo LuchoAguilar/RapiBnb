@@ -9,18 +9,16 @@ async function ofertasAlquilerCard() {
         data.forEach(element => {
             const galeriaFotosStr = element.galeriaFotos;
             const galeriaFotosArray = galeriaFotosStr.split(", ");
-            let galeriaHTML = ''; // Variable para almacenar el HTML del carrusel
-            galeriaFotosArray.forEach(foto => {
-                galeriaHTML += `
-                    <div class="carousel-item">
-                        <img src="${URL_PATH}/Assets/images/galeriaFotos/${foto}"></img>
+            
+            let carrouselHTML = ''; // Variable para almacenar el HTML del carrusel
+            galeriaFotosArray.forEach((foto, index) => {
+                const activeClass = index === 0 ? 'active' : ''; // Establecer la primera imagen como activa
+                carrouselHTML += `
+                    <div class="carousel-item ${activeClass}">
+                        <img src="${URL_PATH}/Assets/images/galeriaFotos/${foto}" class="img-fluid" alt="Imagen">
                     </div>
-                    
                 `;
             });
-
-            
-            
 
             divCard.innerHTML += `
             <div class="card mb-3" style="max-width: 800px; margin:auto;">
@@ -28,14 +26,14 @@ async function ofertasAlquilerCard() {
                     <div class="col-md-4">
                         <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
-                                ${galeriaHTML}
+                                ${carrouselHTML}
                             </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Anterior</span>
                             </button>
                             <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="carousel-control-next-icon" ariahidden="true"></span>
                                 <span class="visually-hidden">Siguiente</span>
                             </button>
                         </div>
