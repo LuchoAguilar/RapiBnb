@@ -15,15 +15,14 @@ async function ofertasAlquilerCard() {
                 const activeClass = index === 0 ? 'active' : ''; // Establecer la primera imagen como activa
                 carrouselHTML += `
                     <div class="carousel-item ${activeClass}">
-                        <img src="${URL_PATH}/Assets/images/galeriaFotos/${foto}" class="img-fluid" alt="Imagen">
+                        <img  src="${URL_PATH}/Assets/images/galeriaFotos/${foto}" style="width: 600px; height: 400px;" alt="Imagen">
                     </div>
                 `;
             });
 
             divCard.innerHTML += `
-            <div class="card mb-3" style="max-width: 800px; margin:auto;">
-                <div class="row g-0">
-                    <div class="col-md-4">
+            <div class="card mb-3" style="max-width: 600px; margin:auto;">
+
                         <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
                                 ${carrouselHTML}
@@ -33,12 +32,11 @@ async function ofertasAlquilerCard() {
                                 <span class="visually-hidden">Anterior</span>
                             </button>
                             <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" ariahidden="true"></span>
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Siguiente</span>
                             </button>
+
                         </div>
-                    </div>
-                    <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">${element.titulo}</h5>
                             <p class="card-text">${element.descripcion}</p>
@@ -51,8 +49,6 @@ async function ofertasAlquilerCard() {
                             <p class="card-text"><small class="text-muted">Fecha de Inicio: ${element.fechaInicio ?? 'No especificada'}</small></p>
                             <p class="card-text"><small class="text-muted">Fecha de Fin: ${element.fechaFin ?? 'No especificada'}</small></p>
                         </div>
-                    </div>
-                </div>
             </div>
             `;
         });

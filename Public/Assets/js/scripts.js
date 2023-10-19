@@ -91,9 +91,3 @@ const Modal = {
         });
     }
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    new bootstrap.Carousel(document.getElementById('imageCarousel'), {
-        interval: false  // Opciones personalizadas según tus necesidades
-    });
-});
