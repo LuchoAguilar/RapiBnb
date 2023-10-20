@@ -9,13 +9,14 @@
     <script>
         var URL_PATH = '<?= URL_PATH ?>';
     </script>
+    
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand navbar-ligth bg-light">
             <div class="nav navbar-nav">
-                <a class="nav-item nav-link" href="http://localhost/PM/Public/usuario/login/">Iniciar Sesion</a>
-                <a class="nav-item nav-link" href="http://localhost/PM/Public/usuario/signUp/">Crear cuenta</a>
+                <a class="nav-item nav-link" href="<?=URL_PATH.'/Usuario/Login/';?>">Iniciar Sesion</a>
+                <a class="nav-item nav-link" href="<?=URL_PATH.'/Usuario/signUp/';?>">Crear cuenta</a>
             </div>
         </nav>
     </header>
