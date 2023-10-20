@@ -16,8 +16,13 @@
 </head>
 <body>
     <header>
-        <nav>
-            <a href="<?=URL_PATH.'/Usuario/LogOut/';?>">Cerrar Sesion</a>
+        <nav class="navbar navbar-expand navbar-ligth bg-light">
+            <div class="nav navbar-nav">
+                <a class="nav-item nav-link active" href="#" aria-current="page">RapiBnB<span class="visually-hidden">(current)</span></a>
+                <a class="nav-item nav-link" href="<?=URL_PATH.'/Usuario/home/';?>">Usuario</a>
+                <a class="nav-item nav-link" href="<?=URL_PATH.'/OfertaAlquiler/home';?>">Publicaciones</a>
+                <a class="nav-item nav-link" href="<?=URL_PATH.'/Usuario/LogOut/';?>">Cerrar Sesion</a>
+            </div>
         </nav>
     </header>
 
