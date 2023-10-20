@@ -1,12 +1,20 @@
 <?php
+    require_once(__DIR__.'/../Model/controladorDeSessiones.php');
+
     class PageController extends Controller{
 
-        public function __construct($connect,$session){
+        private $userSessionControl;
 
+        public function __construct($connect,$session){
+            $this->userSessionControl = new ControladorDeSessiones($session,$connect);
         }
 
         public function home(){
-           $this->render('home',[],'noLog');
+            if($this->userSessionControl->Roll() === NO_LOG){
+                $this->render('home',[],'noLog');
+            }elseif($this->userSessionControl->Roll() === LOG){
+                $this->render('home',[],'site');
+            }// aca iria el de administrador    
         }
         public function listar(){
             echo "listar";

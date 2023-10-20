@@ -13,18 +13,18 @@
         }
 
         public function home(){
-            if($this->userSession->Roll() === 'usuarioLog'){
+            if($this->userSession->Roll() === LOG){
                 $this->render('publicarOferta', [] ,'site');
             }else{
-                header("Location: http://localhost/PM/Public/");
+                header("Location:".URL_PATH);
             }
         }
 
         public function crear(){
-            if($this->userSession->Roll() === 'usuarioLog'){
+            if($this->userSession->Roll() === LOG){
                 $this->render('publicarOfertaCreate',[],'site');
             }else{
-                header("Location: http://localhost/PM/Public/");
+                header("Location:".URL_PATH);
             } 
         }
 
@@ -97,7 +97,7 @@
         }
 
         public function edit(){
-            if($this->userSession->Roll() === 'usuarioLog'){
+            if($this->userSession->Roll() === LOG){
                 $id = $_GET['id'];
 
                 $oferta = $this->ofertaModel->getById($id);
@@ -106,7 +106,7 @@
                     'oferta' => $oferta,
                 ],'site');
             }else{
-                header("Location: http://localhost/PM/Public/");
+                header("Location:".URL_PATH);
             } 
         }
 
@@ -120,7 +120,7 @@
                     if($oferta){
                         $imagenes = explode(", ", $oferta['galeriaFotos']);
                         foreach($imagenes as $imagen){
-                            $imagenPath = URL_PATH . "/Assets/images/fotoPerfil/" . $imagen;
+                            $imagenPath = 'Assets/images/galeriaFotos/'.$imagen;
                             if (file_exists($imagenPath)) {
                                 unlink($imagenPath);
                             }
@@ -159,56 +159,53 @@
             echo json_encode($result);
         }
 
-        public function update(){
+        public function update() {
             $result = new Result();
-            
-            if($_SERVER["REQUEST_METHOD"] == "POST"){
+        
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $idOferta = (isset($_POST['textID'])) ? $_POST['textID'] : null;
-                $titulo = (isset($_POST['titulo'])) ? $_POST['titulo']: '';
-                $descripcion = (isset($_POST['descripcion'])) ? $_POST['descripcion']: '';
-                $ubicacion = (isset($_POST['ubicacion'])) ? $_POST['ubicacion']: '';
-                $etiqueta = (isset($_POST['etiqueta'])) ? $_POST['etiqueta']: '';
-                $costo = (isset($_POST['costoAlquilerPorDia'])) ? $_POST['costoAlquilerPorDia']: '';
-                $cupo = (isset($_POST['cupo']))? $_POST['cupo']: '';
-                $tiempoMin = (isset($_POST['tiempoMinPermanencia'])) ? $_POST['tiempoMinPermanencia']: '';
-                $tiempoMax = (isset($_POST['tiempoMaxPermanencia'])) ? $_POST['tiempoMaxPermanencia']: '';
-                $fechaIni = (isset($_POST['fechaInicio'])) ? $_POST['fechaInicio']: '';
-                $fechaFin = (isset($_POST['fechaFin'])) ? $_POST['fechaFin']: '';
+                $titulo = (isset($_POST['titulo'])) ? $_POST['titulo'] : '';
+                $descripcion = (isset($_POST['descripcion'])) ? $_POST['descripcion'] : '';
+                $ubicacion = (isset($_POST['ubicacion'])) ? $_POST['ubicacion'] : '';
+                $etiqueta = (isset($_POST['etiqueta'])) ? $_POST['etiqueta'] : '';
+                $costo = (isset($_POST['costoAlquilerPorDia'])) ? $_POST['costoAlquilerPorDia'] : '';
+                $cupo = (isset($_POST['cupo'])) ? $_POST['cupo'] : '';
+                $tiempoMin = (isset($_POST['tiempoMinPermanencia'])) ? $_POST['tiempoMinPermanencia'] : '';
+                $tiempoMax = (isset($_POST['tiempoMaxPermanencia'])) ? $_POST['tiempoMaxPermanencia'] : '';
+                $fechaIni = (isset($_POST['fechaInicio'])) ? $_POST['fechaInicio'] : '';
+                $fechaFin = (isset($_POST['fechaFin'])) ? $_POST['fechaFin'] : '';
                 $listServicios = isset($_POST['listServicios']) ? implode(", ", $_POST['listServicios']) : '';
-                
-
-                
-
-                if($idOferta != null && is_numeric($idOferta)){
+        
+                if ($idOferta != null && is_numeric($idOferta)) {
                     $oferta = $this->ofertaModel->getById($idOferta);
-                    if($oferta){
+                    if ($oferta) {
                         if (isset($_FILES['galeriaFotos']) && is_array($_FILES['galeriaFotos']['tmp_name'])) {
                             // Procesar y subir nuevas imágenes
                             $galeriaFotos = [];
                             if (isset($oferta['galeriaFotos'])) {
                                 $imagenes = explode(", ", $oferta['galeriaFotos']);
                                 foreach ($imagenes as $imagen) {
-                                    $imagenPath = URL_PATH . "/Assets/images/fotoPerfil/" . $imagen;
+                                    $imagenPath = 'Assets/images/galeriaFotos/' . $imagen;
                                     if (file_exists($imagenPath)) {
                                         unlink($imagenPath);
                                     }
                                 }
                             }
-                        
+        
                             foreach ($_FILES['galeriaFotos']['tmp_name'] as $key => $tmp_name) {
                                 // Validar si es una imagen y obtener la extensión del archivo
                                 $tipoMIME = $_FILES['galeriaFotos']['type'][$key];
                                 $extension = pathinfo($_FILES['galeriaFotos']['name'][$key], PATHINFO_EXTENSION);
-                        
+        
                                 // Verificar que es una imagen válida
                                 if (strpos($tipoMIME, 'image') === 0) {
                                     // Generar un nombre de archivo único con una extensión segura
                                     $fecha_img = new DateTime();
                                     $nombre_foto = $fecha_img->getTimestamp() . '_' . uniqid() . '.' . $extension;
-                        
+        
                                     // Ruta de destino relativa al directorio de imágenes
                                     $destinationPath = 'Assets/images/galeriaFotos/' . $nombre_foto;
-                        
+        
                                     // Mover la imagen al directorio de destino
                                     if (move_uploaded_file($tmp_name, $destinationPath)) {
                                         $galeriaFotos[] = $nombre_foto;
@@ -219,7 +216,7 @@
                         } else {
                             $fotosString = $oferta['galeriaFotos']; // No se subieron nuevas imágenes, mantener las antiguas
                         }
-                        
+        
                         // Luego, actualiza la oferta con los datos proporcionados
                         $this->ofertaModel->updateById($idOferta, [
                             'titulo' => $titulo,
@@ -236,17 +233,17 @@
                             'fechaFin' => $fechaFin,
                             'creadorID' => $id
                         ]);
-                        
+        
                         $result->success = true;
                         $result->message = "Oferta modificada con éxito";
-                        
-
-                }else{
-                    $result->success = false;
-                    $result->message = "Identificador invalido";
+                    } else {
+                        $result->success = false;
+                        $result->message = "Identificador inválido";
+                    }
                 }
-            }    
+            }
         }
+        
         
     }
 

@@ -1,6 +1,6 @@
 <div class="card">
         <div class="card-header">
-          <h1>Usuario no registrado</h1>
+          <h1>Usuario  </h1>
         </div>
         <div class="card-body">
           <h2>Se viene BOOOOOOOOOOCA!</h2>

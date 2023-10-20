@@ -13,30 +13,44 @@
         }
 
         public function home(){
-            if($this->userSessionControl->Roll() === 'usuarioLog'){
+            if($this->userSessionControl->Roll() === LOG){
                 $this->render('usuario', [] ,'site');
             }else{
-                header("Location: http://localhost/PM/Public/");
+                header("Location: ".URL_PATH);
             }
             
         }
 
         public function signUp(){
-            $this->render("UsuarioSignUp", [], "login");
+            if($this->userSessionControl->Roll() === NO_LOG){
+                $this->render("UsuarioSignUp", [], "login");
+            }else{
+                header("Location: ".URL_PATH);
+            }    
         }
 
         public function login(){
-            $this->render('usuarioLog', [] , "login");
+            if($this->userSessionControl->Roll() === NO_LOG){
+                $this->render('usuarioLog', [] , "login");
+            }else{
+                header("Location: ".URL_PATH);
+            }
+            
         }
 
         public function LogOut(){
-            $this->userSessionControl->cerrarSesion();
-            $this->home();
+            if($this->userSessionControl->Roll() === NO_LOG){
+                $this->userSessionControl->cerrarSesion();
+                $this->home();
+            }else{
+                header("Location: ".URL_PATH);
+            }   
         }
 
         public function loginProcess() {
+
             $result = new Result();
-        
+            
             // Comprobar si los datos requeridos están presentes
             if (!isset($_POST['usuario']) || !isset($_POST['contrasena'])) {
                 $result->success = false;
@@ -58,12 +72,13 @@
                         break;
                     default:
                         $result->success = false;
-                        $result->message = "Error desconocido.";
+                        $result->message = "Error desconocido: $mensaje"; // Agrega el mensaje real
                 }
             }
             
             echo json_encode($result);
         }
+        
         
 
 
@@ -91,7 +106,7 @@
         }
 
         public function edit(){
-            if($this->userSessionControl->Roll() === 'usuarioLog'){
+            if($this->userSessionControl->Roll() === LOG){
                 $id = $_GET['id'];
 
                 $usuario = $this->usuarioModel->getById($id);
@@ -100,7 +115,7 @@
                     'usuario' => $usuario,
                 ],'site');
             }else{
-                header("Location: http://localhost/PM/Public/");
+                header("Location:".URL_PATH);
             } 
         }
 
@@ -122,7 +137,7 @@
                         $foto = (isset($_FILES['fotoPerfil']['name'])) ? $_FILES['fotoPerfil']['name'] : "";
                         if ($foto !== "") {
                             if (isset($usuario['fotoRostro'])) {
-                                $fotoRostroPath = URL_PATH . "/Assets/images/fotoPerfil/" . $usuario['fotoRostro'];
+                                $fotoRostroPath =  'Assets/images/fotoPerfil/' . $usuario['fotoRostro'];
         
                                 if (file_exists($fotoRostroPath)) {
                                     unlink($fotoRostroPath);
@@ -135,7 +150,7 @@
                             $img_tmp = $_FILES['fotoPerfil']['tmp_name'];
         
                             if ($img_tmp !== "") {
-                                $destinationPath = 'C:\xampp\htdocs\PM\Public\Assets\images\fotoPerfil\\' . $nombre_foto;
+                                $destinationPath = 'Assets/images/fotoPerfil/' . $nombre_foto;
                                 move_uploaded_file($img_tmp, $destinationPath);
                             }
         
@@ -188,7 +203,7 @@
         
                         // Luego, eliminar la foto de perfil si existe
                         if (isset($usuario['fotoRostro'])) {
-                            $fotoRostroPath = URL_PATH . "/Assets/images/fotoPerfil/" . $usuario['fotoRostro'];
+                            $fotoRostroPath = "/Assets/images/fotoPerfil/".$usuario['fotoRostro'];
         
                             if (file_exists($fotoRostroPath)) {
                                 unlink($fotoRostroPath);

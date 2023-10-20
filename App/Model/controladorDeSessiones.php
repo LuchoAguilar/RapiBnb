@@ -37,18 +37,18 @@ class ControladorDeSessiones {
             $users = $this->usuarios->getAll();
             foreach ($users as $user) {
                 if ($user['nombreUsuario'] === $this->session->getCurrentUser()) {
-                    return "usuarioLog";
+                    return LOG;
                 }
             }
             $admins = $this->administradores->getAll();
             foreach ($admins as $admin) {
                 if ($admin['nombreUsuario'] === $this->session->getCurrentUser()) {
-                    return "admin";
+                    return ADMIN;
                 }
             }
         }
 
-        return "usuario";
+        return NO_LOG;
     }
     // Orm('verificadoID','verificacion_cuenta',$connect);
 
