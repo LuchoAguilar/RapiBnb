@@ -34,8 +34,12 @@
                             <label class="form-check-label" for="electricidad">Electricidad</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="servicios[]" value="muebles" id="Muebles">
-                            <label class="form-check-label" for="muebles">Muebles</label>
+                            <input class="form-check-input" type="checkbox" name="servicios[]" value="amoblado" id="Amoblado">
+                            <label class="form-check-label" for="amoblado">Amoblado</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="servicios[]" value="estacionamiento" id="Estacionamiento">
+                            <label class="form-check-label" for="estacionamiento">Estacionamiento</label>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -55,6 +59,10 @@
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="etiqueta" value="cabana" id="Cabaña">
                             <label class="form-check-label" for="cabana">Cabaña</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="etiqueta" value="habitaciones" id="Habitaciones">
+                            <label class="form-check-label" for="habitaciones">Habitaciones</label>
                         </div>
                     </div>
 
@@ -93,6 +101,7 @@
                 </div>
             </form>
         </div>
+        <div class="card-footer"></div>
     </div>
 </main>
 
