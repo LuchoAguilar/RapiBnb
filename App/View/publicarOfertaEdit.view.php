@@ -8,15 +8,15 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label for="titulo" class="form-label">Título:</label>
-                        <input type="text" class="form-control" name="titulo" id="titulo" placeholder="Título" required>
+                        <input type="text" class="form-control" name="titulo" id="titulo" value="<?= $parameters['oferta']['titulo'] ?? '' ?>" placeholder="Título" required>
                     </div>
                     <div class="col-md-6">
                         <label for="descripcion" class="form-label">Descripción:</label>
-                        <input type="text" class="form-control" name="descripcion" id="descripcion" placeholder="Descripción" required>
+                        <input type="text" class="form-control" name="descripcion" id="descripcion" value="<?= $parameters['oferta']['descripcion'] ?? '' ?>" placeholder="Descripción" required>
                     </div>
                     <div class="col-md-6">
                         <label for="ubicacion" class="form-label">Ubicación:</label>
-                        <input type="text" class="form-control" name="ubicacion" id="ubicacion" placeholder="Ubicación" required>
+                        <input type="text" class="form-control" name="ubicacion" id="ubicacion" value="<?= $parameters['oferta']['ubicacion'] ?? '' ?>" placeholder="Ubicación" required>
                     </div>
                     <div class="col-md-6">
                         <label for="etiquetas" class="form-label">Etiquetas</label>
@@ -43,7 +43,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="costoAlquilerPorDia" class="form-label">Costo de Alquiler por Día:</label>
-                        <input type="number" step="0.01" class="form-control" name="costoAlquilerPorDia" required>
+                        <input type="number" step="0.01" class="form-control" name="costoAlquilerPorDia" value="<?= $parameters['oferta']['costo'] ?? '' ?>" required>
                     </div>
                     <div class="col-md-6">
                         <label for="tiempoMinPermanencia" class="form-label">Tiempo Mínimo de Permanencia:</label>
@@ -55,7 +55,7 @@
                     </div>
                     <div class="col-md-3">
                         <label for="cupo" class="form-label">Cupo:</label>
-                        <input type="number" class="form-control" name="cupo" required>
+                        <input type="number" class="form-control" name="cupo" value="<?= $parameters['oferta']['cupo'] ?? '' ?>" required>
                     </div>
                     <div class="col-md-3">
                         <label for="fechaInicio" class="form-label">Fecha de Inicio (Opcional):</label>
@@ -64,6 +64,10 @@
                     <div class="col-md-3">
                         <label for="fechaFin" class="form-label">Fecha de Fin (Opcional):</label>
                         <input type="date" class="form-control" name="fechaFin">
+                    </div>
+                    <div class="col-md-12 d-none">
+                        <label for="textID" class="form-label">ID</label>
+                        <input type="text" class="form-control" value="<?= $parameters['oferta']['ofertaID'] ?? '' ?>" name="textID" id="textID" placeholder="ID">
                     </div>
                 </div>
                 <div class="text-center mt-3">
