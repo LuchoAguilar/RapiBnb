@@ -12,7 +12,7 @@ function ofertaUpdate(){
     ).then(data => {
         if(data.success){
             console.log(data.message);
-            window.location.replace(URL_PATH + '/Usuario/home');
+            window.location.replace(URL_PATH + '/OfertaAlquiler/home');
         }else{
             console.log(data.message);
         }

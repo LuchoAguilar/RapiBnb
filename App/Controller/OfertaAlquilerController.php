@@ -42,7 +42,7 @@
                 $tiempoMax = (isset($_POST['tiempoMaxPermanencia'])) ? $_POST['tiempoMaxPermanencia']: '';
                 $fechaIni = (isset($_POST['fechaInicio'])) ? $_POST['fechaInicio']: '';
                 $fechaFin = (isset($_POST['fechaFin'])) ? $_POST['fechaFin']: '';
-                $listServicios = isset($_POST['listServicios']) ? implode(", ", $_POST['listServicios']) : '';
+                $listServicios = isset($_POST['servicios']) ? implode(", ", $_POST['servicios']) : '';
                 
                 if (isset($_FILES['galeriaFotos']) && is_array($_FILES['galeriaFotos']['tmp_name'])) {
                     $galeriaFotos = [];
@@ -59,7 +59,7 @@
                             $nombre_foto = $fecha_img->getTimestamp() . '_' . uniqid() . '.' . $extension;
                             
                             // Ruta de destino relativa al directorio de imágenes
-                            //'C:\xampp\htdocs\PM\Public\Assets\images\galeriaFotos\\'
+                            //'Assets/images/galeriaFotos/''C:\xampp\htdocs\PM\Public\Assets\images\galeriaFotos\\'
                             $destinationPath = 'Assets/images/galeriaFotos/' . $nombre_foto;
                             
                             // Mover la imagen al directorio de destino
@@ -174,7 +174,7 @@
                 $tiempoMax = (isset($_POST['tiempoMaxPermanencia'])) ? $_POST['tiempoMaxPermanencia'] : '';
                 $fechaIni = (isset($_POST['fechaInicio'])) ? $_POST['fechaInicio'] : '';
                 $fechaFin = (isset($_POST['fechaFin'])) ? $_POST['fechaFin'] : '';
-                $listServicios = isset($_POST['listServicios']) ? implode(", ", $_POST['listServicios']) : '';
+                $listServicios = isset($_POST['servicios']) ? implode(", ", $_POST['servicios']) : '';
         
                 if ($idOferta != null && is_numeric($idOferta)) {
                     $oferta = $this->ofertaModel->getById($idOferta);

@@ -40,7 +40,7 @@ async function ofertasAlquilerCard() {
                     <h5 class="card-title">${element.titulo}</h5>
                     <p class="card-text">${element.descripcion}</p>
                     <p class="card-text"><small class="text-muted">Ubicación: ${element.ubicacion}</small></p>
-                    <p class="card-text"><small class="text-muted">Servicios: ${element.listServicios} $</small></p>
+                    <p class="card-text"><small class="text-muted">Servicios: ${element.listServicios} </small></p>
                     <p class="card-text"><small class="text-muted">Costo por Día: ${element.costoAlquilerPorDia} $</small></p>
                     <p class="card-text"><small class="text-muted">Tiempo Mínimo de Permanencia: ${element.tiempoMinPermanencia} días</small></p>
                     <p class="card-text"><small class="text-muted">Tiempo Máximo de Permanencia: ${element.tiempoMaxPermanencia} días</small></p>
@@ -49,8 +49,8 @@ async function ofertasAlquilerCard() {
                     <p class="card-text"><small class="text-muted">Fecha de Fin: ${element.fechaFin ?? 'No especificada'}</small></p>
                 </div>
                 <div class="card-footer">
-                    <a name="" id="" class="btn btn-info" href="${URL_PATH}/OfertaAlquiler/edit/?id=${element.ofertaID}" role="button">Editar perfil</a>
-                    <button onclick="eliminarUsuario(${element.ofertaID});"  class="btn btn-danger">Eliminar</button>
+                    <a name="" id="" class="btn btn-info" href="${URL_PATH}/OfertaAlquiler/edit/?id=${element.ofertaID}" role="button">Modificar Oferta</a>
+                    <button onclick="eliminarUsuario(${element.ofertaID});"  class="btn btn-danger">Eliminar Oferta</button>
                 </div>
         </div>
             `;
