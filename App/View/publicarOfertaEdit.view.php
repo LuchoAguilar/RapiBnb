@@ -112,4 +112,4 @@
 
 
 
-<script src="<?= URL_PATH?>/Assets/js/publicarOferta.js"></script>
+<script src="<?= URL_PATH?>/Assets/js/publicarOfertaEdit.js"></script>
