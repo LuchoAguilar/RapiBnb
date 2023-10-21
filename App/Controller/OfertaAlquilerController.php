@@ -179,44 +179,48 @@
                 if ($idOferta != null && is_numeric($idOferta)) {
                     $oferta = $this->ofertaModel->getById($idOferta);
                     if ($oferta) {
-                        if (isset($_FILES['galeriaFotos']) && is_array($_FILES['galeriaFotos']['tmp_name'])) {
+                        if (count($_FILES)>0) {
                             // Procesar y subir nuevas imágenes
-                            $galeriaFotos = [];
-                            if (isset($oferta['galeriaFotos'])) {
-                                $imagenes = explode(", ", $oferta['galeriaFotos']);
-                                foreach($imagenes as $imagen){
-                                    $imagenPath = 'Assets/images/galeriaFotos/'.$imagen;
-                                    if (file_exists($imagenPath)) {
-                                        unlink($imagenPath);
+                            if(isset($_FILES['galeriaFotos']) && is_array($_FILES['galeriaFotos']['tmp_name'])){
+                                $galeriaFotos = [];
+                                if (isset($oferta['galeriaFotos'])) {
+                                    $imagenes = explode(", ", $oferta['galeriaFotos']);
+                                    foreach ($imagenes as $imagen) {
+                                        $imagenPath = 'Assets/images/galeriaFotos/' . $imagen;
+                                        if (file_exists($imagenPath) && is_file($imagenPath)) {
+                                            unlink($imagenPath);
+                                        }
                                     }
                                 }
-                            }
-        
-                            foreach ($_FILES['galeriaFotos']['tmp_name'] as $key => $tmp_name) {
-                                // Validar si es una imagen y obtener la extensión del archivo
-                                $tipoMIME = $_FILES['galeriaFotos']['type'][$key];
-                                $extension = pathinfo($_FILES['galeriaFotos']['name'][$key], PATHINFO_EXTENSION);
-        
-                                // Verificar que es una imagen válida
-                                if (strpos($tipoMIME, 'image') === 0) {
-                                    // Generar un nombre de archivo único con una extensión segura
-                                    $fecha_img = new DateTime();
-                                    $nombre_foto = $fecha_img->getTimestamp() . '_' . uniqid() . '.' . $extension;
-        
-                                    // Ruta de destino relativa al directorio de imágenes
-                                    $destinationPath = 'Assets/images/galeriaFotos/' . $nombre_foto;
-        
-                                    // Mover la imagen al directorio de destino
-                                    if (move_uploaded_file($tmp_name, $destinationPath)) {
-                                        $galeriaFotos[] = $nombre_foto;
+                                
+            
+                                foreach ($_FILES['galeriaFotos']['tmp_name'] as $key => $tmp_name) {
+                                    // Validar si es una imagen y obtener la extensión del archivo
+                                    $tipoMIME = $_FILES['galeriaFotos']['type'][$key];
+                                    $extension = pathinfo($_FILES['galeriaFotos']['name'][$key], PATHINFO_EXTENSION);
+            
+                                    // Verificar que es una imagen válida
+                                    if (strpos($tipoMIME, 'image') === 0) {
+                                        // Generar un nombre de archivo único con una extensión segura
+                                        $fecha_img = new DateTime();
+                                        $nombre_foto = $fecha_img->getTimestamp() . '_' . uniqid() . '.' . $extension;
+            
+                                        // Ruta de destino relativa al directorio de imágenes
+                                        $destinationPath = 'Assets/images/galeriaFotos/' . $nombre_foto;
+            
+                                        // Mover la imagen al directorio de destino
+                                        if (move_uploaded_file($tmp_name, $destinationPath)) {
+                                            $galeriaFotos[] = $nombre_foto;
+                                        }
                                     }
                                 }
+                                $fotosString = implode(", ", $galeriaFotos);
                             }
-                            $fotosString = implode(", ", $galeriaFotos);
+                            
                         } else {
                             $fotosString = $oferta['galeriaFotos']; // No se subieron nuevas imágenes, mantener las antiguas
                         }
-        
+                        $id = $this->userSession->ID();
                         // Luego, actualiza la oferta con los datos proporcionados
                         $this->ofertaModel->updateById($idOferta, [
                             'titulo' => $titulo,
@@ -242,6 +246,7 @@
                     }
                 }
             }
+            echo json_encode($result);
         }
         
         
