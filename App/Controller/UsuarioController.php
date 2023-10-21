@@ -6,9 +6,13 @@
 
         private $usuarioModel;
         private $userSession;
+        private $intereses;
+        private $userIntereses;
 
         public function __construct($connect, $session){
             $this->usuarioModel = new Usuario($connect);
+            $this->intereses = new Intereses($connect);
+            $this->userIntereses = new UserIntereses($connect);
             $this->userSessionControl = new ControladorDeSessiones($session,$connect);
         }
 
@@ -229,10 +233,12 @@
         
 
         public function intereses(){
+            $result = new Result();
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $ubicacion = (isset($_POST['ubicacion'])) ? implode(", ",$_POST['ubicacion'])  : '';
                 $etiqueta = (isset($_POST['etiqueta'])) ? implode(", ",$_POST['etiqueta']) : '';
                 $listServicios = isset($_POST['servicios']) ? implode(", ", $_POST['servicios']) : '';
+                $datosCombinados = "$ubicacion, $etiqueta, $listServicios";
             }
         }
         
