@@ -4,26 +4,26 @@ async function usuarioList(){
    
    if(reposenseData.success){
     const tablaUsuarios = document.getElementById('tablaUsuarios');
-    tablaUsuarios.innerHTML = '';
+        tablaUsuarios.innerHTML = '';
     
-    reposenseData.result.forEach(element => {
-        // beforebegin sirve para colocar al final de cada elemento
-        tablaUsuarios.insertAdjacentHTML('beforeend',`<tr>
-        <th scope="row">${element.usuarioID} </th>
-        <td>${element.nombreUsuario}</td>
-        <td>${element.correo}</td>
-        <td>${element.contrasena}</td>
-        <td>${element.nombreCompleto}</td>
-        <td><img width="50" src="${URL_PATH}/Assets/images/fotoPerfil/${element.fotoRostro}"></img></td>
 
-        <td>${element.bio}</td>
+        // beforebegin sirve para colocar al final de cada elemento
+        tablaUsuarios.innerHTML = `<tr>
+        <th scope="row">${reposenseData.result.usuarioID} </th>
+        <td>${reposenseData.result.nombreUsuario}</td>
+        <td>${reposenseData.result.correo}</td>
+        <td>${reposenseData.result.contrasena}</td>
+        <td>${reposenseData.result.nombreCompleto}</td>
+        <td><img width="50" src="${URL_PATH}/Assets/images/fotoPerfil/${reposenseData.result.fotoRostro}"></img></td>
+
+        <td>${reposenseData.result.bio}</td>
         <td>
-        <a name="" id="" class="btn btn-info" href="${URL_PATH}/usuario/edit/?id=${element.usuarioID}" role="button">Editar perfil</a>
+        <a name="" id="" class="btn btn-info" href="${URL_PATH}/usuario/edit/?id=${reposenseData.result.usuarioID}" role="button">Editar perfil</a>
         |
-        <button onclick="eliminarUsuario(${element.usuarioID});"  class="btn btn-danger">Eliminar</button>
+        <button onclick="eliminarUsuario(${reposenseData.result.usuarioID});"  class="btn btn-danger">Eliminar</button>
         </td>                    
-        </tr>`)
-    });
+        </tr>`;
+
    }
 }
 usuarioList();

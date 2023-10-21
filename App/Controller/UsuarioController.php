@@ -39,7 +39,7 @@
         }
 
         public function LogOut(){
-            if($this->userSessionControl->Roll() === NO_LOG){
+            if($this->userSessionControl->Roll() === LOG){
                 $this->userSessionControl->cerrarSesion();
                 $this->home();
             }else{
@@ -85,7 +85,9 @@
 
         public function table(){
             $result = new Result();
-            $usuarios = $this->usuarioModel->getAll();
+            $userLogin = $this->userSessionControl->ID();
+
+            $usuarios = $this->usuarioModel->getById($userLogin);
             $result->success = true;
             $result->result = $usuarios;
             echo json_encode($result);
