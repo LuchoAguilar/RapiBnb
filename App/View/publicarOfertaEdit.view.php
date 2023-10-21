@@ -16,8 +16,34 @@
                     </div>
                     <div class="col-md-6">
                         <label for="ubicacion" class="form-label">Ubicación:</label>
-                        <input type="text" class="form-control" name="ubicacion" id="ubicacion" value="<?= $parameters['oferta']['ubicacion'] ?? '' ?>" placeholder="Ubicación" required>
+                        <select class="form-select" name="ubicacion" id="ubicacion" required>
+                            <option value="" disabled>Selecciona una provincia</option>
+                            <option value="Buenos Aires" <?= ($parameters['oferta']['ubicacion'] == 'Buenos Aires') ? 'selected' : '' ?>>Buenos Aires</option>
+                            <option value="Catamarca" <?= ($parameters['oferta']['ubicacion'] == 'Catamarca') ? 'selected' : '' ?>>Catamarca</option>
+                            <option value="Chaco" <?= ($parameters['oferta']['ubicacion'] == 'Chaco') ? 'selected' : '' ?>>Chaco</option>
+                            <option value="Chubut" <?= ($parameters['oferta']['ubicacion'] == 'Chubut') ? 'selected' : '' ?>>Chubut</option>
+                            <option value="Córdoba" <?= ($parameters['oferta']['ubicacion'] == 'Córdoba') ? 'selected' : '' ?>>Córdoba</option>
+                            <option value="Corrientes" <?= ($parameters['oferta']['ubicacion'] == 'Corrientes') ? 'selected' : '' ?>>Corrientes</option>
+                            <option value="Entre Ríos" <?= ($parameters['oferta']['ubicacion'] == 'Entre Ríos') ? 'selected' : '' ?>>Entre Ríos</option>
+                            <option value="Formosa" <?= ($parameters['oferta']['ubicacion'] == 'Formosa') ? 'selected' : '' ?>>Formosa</option>
+                            <option value="Jujuy" <?= ($parameters['oferta']['ubicacion'] == 'Jujuy') ? 'selected' : '' ?>>Jujuy</option>
+                            <option value="La Pampa" <?= ($parameters['oferta']['ubicacion'] == 'La Pampa') ? 'selected' : '' ?>>La Pampa</option>
+                            <option value="La Rioja" <?= ($parameters['oferta']['ubicacion'] == 'La Rioja') ? 'selected' : '' ?>>La Rioja</option>
+                            <option value="Mendoza" <?= ($parameters['oferta']['ubicacion'] == 'Mendoza') ? 'selected' : '' ?>>Mendoza</option>
+                            <option value="Misiones" <?= ($parameters['oferta']['ubicacion'] == 'Misiones') ? 'selected' : '' ?>>Misiones</option>
+                            <option value="Neuquén" <?= ($parameters['oferta']['ubicacion'] == 'Neuquén') ? 'selected' : '' ?>>Neuquén</option>
+                            <option value="Río Negro" <?= ($parameters['oferta']['ubicacion'] == 'Río Negro') ? 'selected' : '' ?>>Río Negro</option>
+                            <option value="Salta" <?= ($parameters['oferta']['ubicacion'] == 'Salta') ? 'selected' : '' ?>>Salta</option>
+                            <option value="San Juan" <?= ($parameters['oferta']['ubicacion'] == 'San Juan') ? 'selected' : '' ?>>San Juan</option>
+                            <option value="San Luis" <?= ($parameters['oferta']['ubicacion'] == 'San Luis') ? 'selected' : '' ?>>San Luis</option>
+                            <option value="Santa Cruz" <?= ($parameters['oferta']['ubicacion'] == 'Santa Cruz') ? 'selected' : '' ?>>Santa Cruz</option>
+                            <option value="Santa Fe" <?= ($parameters['oferta']['ubicacion'] == 'Santa Fe') ? 'selected' : '' ?>>Santa Fe</option>
+                            <option value="Santiago del Estero" <?= ($parameters['oferta']['ubicacion'] == 'Santiago del Estero') ? 'selected' : '' ?>>Santiago del Estero</option>
+                            <option value="Tierra del Fuego" <?= ($parameters['oferta']['ubicacion'] == 'Tierra del Fuego') ? 'selected' : '' ?>>Tierra del Fuego</option>
+                            <option value="Tucumán" <?= ($parameters['oferta']['ubicacion'] == 'Tucumán') ? 'selected' : '' ?>>Tucumán</option>
+                        </select>
                     </div>
+
                     <div class="col-md-3">
                         <label for="servicios[]" class="form-label">Servicios:</label>
                         <div class="form-check">
@@ -42,7 +68,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label for="etiqueta" class="form-label">Etiquetas:</label>
+                        <label for="etiqueta" class="form-label">Tipo de propiedad:</label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="etiqueta" value="casa" id="Casa" <?= isset($parameters['oferta']['etiquetas']) && $parameters['oferta']['etiquetas'] == 'casa' ? 'checked' : '' ?>>
                             <label class="form-check-label" for="casa">Casa</label>
@@ -81,7 +107,7 @@
                         <label for="tiempoMaxPermanencia" class="form-label">Tiempo Máximo de Permanencia:</label>
                         <input type="number" class="form-control" name="tiempoMaxPermanencia" value="<?= $parameters['oferta']['tiempoMaxPermanencia'] ?? '' ?>" required>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <label for="cupo" class="form-label">Cupo:</label>
                         <input type="number" class="form-control" name="cupo" value="<?= $parameters['oferta']['cupo'] ?? '' ?>" required>
                     </div>

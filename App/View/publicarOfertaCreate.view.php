@@ -17,8 +17,34 @@
                     </div>
                     <div class="col-md-6">
                         <label for="ubicacion" class="form-label">Ubicación:</label>
-                        <input type="text" class="form-control" name="ubicacion" id="ubicacion" placeholder="Ubicación" required>
+                        <select class="form-select" name="ubicacion" id="ubicacion" required>
+                            <option value="" disabled selected>Selecciona una provincia</option>
+                            <option value="Buenos Aires, Argentina">Buenos Aires, Argentina</option>
+                            <option value="Catamarca, Argentina">Catamarca, Argentina</option>
+                            <option value="Chaco, Argentina">Chaco, Argentina</option>
+                            <option value="Chubut, Argentina">Chubut, Argentina</option>
+                            <option value="Córdoba, Argentina">Córdoba, Argentina</option>
+                            <option value="Corrientes, Argentina">Corrientes, Argentina</option>
+                            <option value="Entre Ríos, Argentina">Entre Ríos, Argentina</option>
+                            <option value="Formosa, Argentina">Formosa, Argentina</option>
+                            <option value="Jujuy, Argentina">Jujuy, Argentina</option>
+                            <option value="La Pampa, Argentina">La Pampa, Argentina</option>
+                            <option value="La Rioja, Argentina">La Rioja, Argentina</option>
+                            <option value="Mendoza, Argentina">Mendoza, Argentina</option>
+                            <option value="Misiones, Argentina">Misiones, Argentina</option>
+                            <option value="Neuquén, Argentina">Neuquén, Argentina</option>
+                            <option value="Río Negro, Argentina">Río Negro, Argentina</option>
+                            <option value="Salta, Argentina">Salta, Argentina</option>
+                            <option value="San Juan, Argentina">San Juan, Argentina</option>
+                            <option value="San Luis, Argentina">San Luis, Argentina</option>
+                            <option value="Santa Cruz, Argentina">Santa Cruz, Argentina</option>
+                            <option value="Santa Fe, Argentina">Santa Fe, Argentina</option>
+                            <option value="Santiago del Estero, Argentina">Santiago del Estero, Argentina</option>
+                            <option value="Tierra del Fuego, Argentina">Tierra del Fuego, Argentina</option>
+                            <option value="Tucumán, Argentina">Tucumán, Argentina</option>
+                        </select>
                     </div>
+
                     <div class="col-md-3">
                         <label for="servicios[]" class="form-label">Servicios:</label>
                         <div class="form-check">
@@ -43,7 +69,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label for="etiqueta" class="form-label">Etiquetas:</label>
+                        <label for="etiqueta" class="form-label">Tipo de propiedad:</label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="etiqueta" value="casa" id="Casa">
                             <label class="form-check-label" for="casa">Casa</label>
@@ -82,7 +108,7 @@
                         <label for="tiempoMaxPermanencia" class="form-label">Tiempo Máximo de Permanencia:</label>
                         <input type="number" class="form-control" name="tiempoMaxPermanencia" required>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <label for="cupo" class="form-label">Cupo:</label>
                         <input type="number" class="form-control" name="cupo" required>
                     </div>

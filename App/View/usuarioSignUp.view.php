@@ -22,7 +22,7 @@
                                 <!-- button comun--><br>
                                 <button type="submit" class="btn btn-success">Crear Usuario</button>
                                 <!-- button ref -->
-                                <a name="" id="" class="btn btn-primary" href="index.php" role="button">Cancelar</a>
+                                <a name="" id="" class="btn btn-primary" href="<?=URL_PATH;?>" role="button">Cancelar</a>
                             </form>
                         </div>
                 </div>

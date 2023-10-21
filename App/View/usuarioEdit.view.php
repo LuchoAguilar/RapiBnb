@@ -37,7 +37,7 @@
 
             <div class="text-center">
                 <button type="submit" class="btn btn-success">Editar</button>
-                <a id="" class="btn btn-primary" href="http://localhost/PM/Public/usuario/home" role="button">Cancelar</a>
+                <a id="" class="btn btn-primary" href="<?=URL_PATH.'/Usuario/home/';?>" role="button">Cancelar</a>
             </div>
         </form>
     </div>

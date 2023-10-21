@@ -228,8 +228,12 @@
         }
         
 
-        public function validaciones(){
-            // debe ser general
+        public function intereses(){
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                $ubicacion = (isset($_POST['ubicacion'])) ? implode(", ",$_POST['ubicacion'])  : '';
+                $etiqueta = (isset($_POST['etiqueta'])) ? implode(", ",$_POST['etiqueta']) : '';
+                $listServicios = isset($_POST['servicios']) ? implode(", ", $_POST['servicios']) : '';
+            }
         }
         
 
