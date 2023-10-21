@@ -85,9 +85,10 @@
 
         public function table(){
             $result = new Result();
-            $usuarios = $this->usuarioModel->getAll();
+            $user = $this->userSessionControl->ID();
+            $usuario = $this->usuarioModel->getById($user);
             $result->success = true;
-            $result->result = $usuarios;
+            $result->result = $usuario;
             echo json_encode($result);
         }
 
