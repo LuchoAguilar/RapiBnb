@@ -1,18 +1,17 @@
 <?php 
     require_once(__DIR__.'/../Model/controladorDeSessiones.php');
     require_once(__DIR__.'/../Model/usuario.php');
+    require_once(__DIR__.'/../Model/intereses.php');
 
     class UsuarioController extends Controller{
 
         private $usuarioModel;
         private $userSession;
         private $intereses;
-        private $userIntereses;
 
         public function __construct($connect, $session){
             $this->usuarioModel = new Usuario($connect);
             $this->intereses = new Intereses($connect);
-            $this->userIntereses = new UserIntereses($connect);
             $this->userSessionControl = new ControladorDeSessiones($session,$connect);
         }
 
@@ -88,11 +87,16 @@
 
 
         public function table(){
+            
             $result = new Result();
             $user = $this->userSessionControl->ID();
             $usuario = $this->usuarioModel->getById($user);
+            $intereses = $this->intereses->buscarRegistrosRelacionados('usuarios','usuarioID','userInteresesID',$user);
             $result->success = true;
-            $result->result = $usuario;
+            $result->result = [
+                'usuario' => $usuario,
+                'intereses' => $intereses['nombresDeInteres']
+            ];
             echo json_encode($result);
         }
 
@@ -218,12 +222,15 @@
                         $result->success = true;
                         $result->message = "Usuario eliminado con éxito";
                     } else {
+                        $result->success = false;
                         $result->message = "Usuario no encontrado";
                     }
                 } else {
+                    $result->success = false;
                     $result->message = "ID de usuario no válido";
                 }
             } else {
+                $result->success = false;
                 $result->message = "Solicitud no válida";
             }
             // recordar verificar que se eliminen todos los datos relacionados de manera foranea en otras tablas
@@ -235,13 +242,31 @@
         public function intereses(){
             $result = new Result();
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                //traemos la data del front
                 $ubicacion = (isset($_POST['ubicacion'])) ? implode(", ",$_POST['ubicacion'])  : '';
                 $etiqueta = (isset($_POST['etiqueta'])) ? implode(", ",$_POST['etiqueta']) : '';
                 $listServicios = isset($_POST['servicios']) ? implode(", ", $_POST['servicios']) : '';
                 $datosCombinados = "$ubicacion, $etiqueta, $listServicios";
+                //conseguimos el id del user en session
+                $user = $this->userSessionControl->ID();
+                if($user){
+
+                    $this->intereses->insert([
+                        'nombresDeInteres'=> $datosCombinados,
+                        'userInteresesID' => $user
+                    ]);
+
+                    $result->success = true;
+                    $result->message = "intereses Creados con Éxito";
+                }else{
+                    $result->success = false;
+                    $result->message = "Error de session";
+                }
+            }else{
+                $result->success = false;
+                $result->message = "Solicitud no válida";
             }
         }
-        
-
+        echo json_encode($result);
     }    
 ?>
