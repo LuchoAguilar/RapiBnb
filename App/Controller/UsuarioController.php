@@ -39,7 +39,7 @@
         }
 
         public function LogOut(){
-            if($this->userSessionControl->Roll() === NO_LOG){
+            if($this->userSessionControl->Roll() === LOG){
                 $this->userSessionControl->cerrarSesion();
                 $this->home();
             }else{
