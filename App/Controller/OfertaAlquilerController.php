@@ -184,8 +184,8 @@
                             $galeriaFotos = [];
                             if (isset($oferta['galeriaFotos'])) {
                                 $imagenes = explode(", ", $oferta['galeriaFotos']);
-                                foreach ($imagenes as $imagen) {
-                                    $imagenPath = 'Assets/images/galeriaFotos/' . $imagen;
+                                foreach($imagenes as $imagen){
+                                    $imagenPath = 'Assets/images/galeriaFotos/'.$imagen;
                                     if (file_exists($imagenPath)) {
                                         unlink($imagenPath);
                                     }
