@@ -237,27 +237,39 @@
         
             echo json_encode($result);
         }
-        
 
         public function intereses(){
             $result = new Result();
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 //traemos la data del front
+                $idIntereses =
                 $ubicacion = (isset($_POST['ubicacion'])) ? implode(", ",$_POST['ubicacion'])  : '';
                 $etiqueta = (isset($_POST['etiqueta'])) ? implode(", ",$_POST['etiqueta']) : '';
                 $listServicios = isset($_POST['servicios']) ? implode(", ", $_POST['servicios']) : '';
                 $datosCombinados = "$ubicacion, $etiqueta, $listServicios";
                 //conseguimos el id del user en session
                 $user = $this->userSessionControl->ID();
+                $interesesPrevios = $this->intereses->buscarRegistrosRelacionados('usuarios','usuarioID','userInteresesID',$user);
+
                 if($user){
-
-                    $this->intereses->insert([
-                        'nombresDeInteres'=> $datosCombinados,
-                        'userInteresesID' => $user
-                    ]);
-
-                    $result->success = true;
-                    $result->message = "intereses Creados con Éxito";
+                    if(empty($interesesPrevios)){
+                        $this->intereses->insert([
+                            'nombresDeInteres'=> $datosCombinados,
+                            'userInteresesID' => $user
+                        ]);
+    
+                        $result->success = true;
+                        $result->message = "intereses Creados con Éxito";
+                    }else{
+                        $this->intereses->update($idIntereses,[
+                            'nombresDeInteres'=> $datosCombinados,
+                            'userInteresesID' => $user
+                        ]);
+    
+                        $result->success = true;
+                        $result->message = "intereses Creados con Éxito";
+                    }
+                    
                 }else{
                     $result->success = false;
                     $result->message = "Error de session";
