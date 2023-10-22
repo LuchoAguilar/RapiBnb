@@ -107,7 +107,7 @@
                 $result->success = true;
                 $result->result = [
                     'usuario' => $usuario,
-                    'intereses' => $intereses['nombresDeInteres']
+                    'intereses' => $intereses
                 ];
             } 
             echo json_encode($result);
@@ -306,31 +306,38 @@
         public function intereses(){
             $result = new Result();
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                //traemos la data del front
-                $idIntereses =
-                $ubicacion = (isset($_POST['ubicacion'])) ? implode(", ",$_POST['ubicacion'])  : '';
-                $etiqueta = (isset($_POST['etiqueta'])) ? implode(", ",$_POST['etiqueta']) : '';
-                $listServicios = isset($_POST['servicios']) ? implode(", ", $_POST['servicios']) : '';
-                $datosCombinados = "$ubicacion, $etiqueta, $listServicios";
-                //conseguimos el id del user en session
+                // traemos la data del front
                 $user = $this->userSessionControl->ID();
-                if($user){
-                    $this->intereses->upsert($user,[
-                        'nombresDeInteres'=> $datosCombinados,
+                if (!$user) {
+                    $result->success = false;
+                    $result->message = "Error de sesión";
+                    echo json_encode($result);
+                    return;
+                }
+
+                $ubicacion = (isset($_POST['ubicacion'])) ? implode("| ", $_POST['ubicacion']) : '';
+                $etiqueta = (isset($_POST['etiqueta'])) ? implode("| ", $_POST['etiqueta']) : '';
+                $listServicios = isset($_POST['servicios']) ? implode("| ", $_POST['servicios']) : '';
+
+                $datosCombinados = "$ubicacion, $etiqueta, $listServicios";
+
+                // Verifica si los datos combinados no están vacíos antes de actualizar o insertar en la base de datos
+                if (!empty($datosCombinados)) {
+                    $this->intereses->upsert($user, [
+                        'nombresDeInteres' => $datosCombinados,
                         'userInteresesID' => $user
                     ]);
                     $result->success = true;
                     $result->message = "Datos cargados con éxito";
-                }else{
+                } else {
                     $result->success = false;
-                    $result->message = "Error de session";
+                    $result->message = "Datos combinados vacíos. Por favor, seleccione al menos una opción.";
                 }
-            }else{
+            } else {
                 $result->success = false;
                 $result->message = "Solicitud no válida";
             }
             echo json_encode($result);
-        }
-        
-    }    
+        } 
+    }     
 ?>

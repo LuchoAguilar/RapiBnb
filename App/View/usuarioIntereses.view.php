@@ -33,7 +33,7 @@
                     <!--ubicacion provincia check box--> 
                     <div class="col-md-4">
                             <label for="ubicacion" class="form-label">Ubicación:</label>
-                            <select class="form-select" name="ubicacion" id="ubicacion" multiple>
+                            <select class="form-select" name="ubicacion[]" id="ubicacion" multiple>
                                 <option value="" disabled selected>Selecciona una provincia</option>
                                 <option value="Buenos Aires, Argentina">Buenos Aires, Argentina</option>
                                 <option value="Catamarca, Argentina">Catamarca, Argentina</option>

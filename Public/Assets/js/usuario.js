@@ -5,7 +5,17 @@ async function user() {
     if (reposenseData.success) {
          const cardUser = document.getElementById('divUser');
          const data =  reposenseData.result.usuario;
-         if(data){
+         const intereses = reposenseData.result.intereses;
+         let interesesHTML = "";
+
+        if (intereses && intereses.length > 0) {
+            interesesHTML = intereses.map(interes => {
+                return `<p style="font-weight: 400;">${interes.nombresDeInteres}</p>`;
+            }).join("");
+        } else {
+            interesesHTML = "Aún no ha agregado sus intereses";
+        }
+        if(data){
             const foto = (data.fotoRostro != null)? data.fotoRostro : 'user.png';
             const nombre = (data.nombreCompleto != null)? data.nombreCompleto: 'Agregue su nombre';
             const bio = (data.bio != null)? data.bio : 'Agregue su bio'; 
@@ -30,10 +40,9 @@ async function user() {
                                 <p style="font-weight: 600; margin-bottom: 10px;">Bio:</p>
                                 <p style="font-weight: 400;">${bio}</p>
                             </div>
-                            <h6 style="font-weight: 600; margin-top: 20px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #ccc;">Intereses</h6>
                             <div>
-                                <p style="font-weight: 600; margin-bottom: 10px;">Intereses:</p>
-                                <p style="font-weight: 400;">${reposenseData.result.intereses}</p>
+                                <h6 style="font-weight: 600; margin-bottom: 10px;">Intereses:</h6>
+                                ${interesesHTML}
                             </div>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-top: 20px;">
@@ -84,5 +93,6 @@ async function user() {
          
      }
  }
+ 
  
  user();
