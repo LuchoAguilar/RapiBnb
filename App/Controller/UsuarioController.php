@@ -314,27 +314,11 @@
                 $datosCombinados = "$ubicacion, $etiqueta, $listServicios";
                 //conseguimos el id del user en session
                 $user = $this->userSessionControl->ID();
-                $interesesPrevios = $this->intereses->buscarRegistrosRelacionados('usuarios','usuarioID','userInteresesID',$user);
-
                 if($user){
-                    if(empty($interesesPrevios)){
-                        $this->intereses->insert([
-                            'nombresDeInteres'=> $datosCombinados,
-                            'userInteresesID' => $user
-                        ]);
-    
-                        $result->success = true;
-                        $result->message = "intereses Creados con Éxito";
-                    }else{
-                        $this->intereses->update($idIntereses,[
-                            'nombresDeInteres'=> $datosCombinados,
-                            'userInteresesID' => $user
-                        ]);
-    
-                        $result->success = true;
-                        $result->message = "intereses Creados con Éxito";
-                    }
-                    
+                    $this->intereses->upsert($user,[
+                        'nombresDeInteres'=> $datosCombinados,
+                        'userInteresesID' => $user
+                    ]);
                 }else{
                     $result->success = false;
                     $result->message = "Error de session";
