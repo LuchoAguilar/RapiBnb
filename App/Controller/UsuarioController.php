@@ -52,7 +52,7 @@
 
         public function interesesForm(){
             if($this->userSessionControl->Roll() === LOG){
-                $this->render('usuarioIntereses', [] , "login");
+                $this->render('usuarioIntereses', [] , "site");
             }else{
                 header("Location: ".URL_PATH);
             }  
@@ -319,6 +319,8 @@
                         'nombresDeInteres'=> $datosCombinados,
                         'userInteresesID' => $user
                     ]);
+                    $result->success = true;
+                    $result->message = "Datos cargados con éxito";
                 }else{
                     $result->success = false;
                     $result->message = "Error de session";
