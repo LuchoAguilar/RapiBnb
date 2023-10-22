@@ -100,52 +100,84 @@
             $user = $this->userSessionControl->ID();
             $usuario = $this->usuarioModel->getById($user);
             $intereses = $this->intereses->buscarRegistrosRelacionados('usuarios','usuarioID','userInteresesID',$user);
-            $result->success = true;
-            $result->result = [
-                'usuario' => $usuario,
-                'intereses' => $intereses['nombresDeInteres']
-            ];
+            if(empty($intereses)){
+                $result->success = true;
+                $result->result = $usuario;
+            }else{
+                $result->success = true;
+                $result->result = [
+                    'usuario' => $usuario,
+                    'intereses' => $intereses['nombresDeInteres']
+                ];
+            } 
             echo json_encode($result);
         }
 
-        public function create(){
+        // funcion que crea e inicia session de usuarios
+
+        public function create() {
             $result = new Result();
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $usuario =  (isset($_POST['usuario']))? $_POST['usuario']:'';
-                $correo = (isset($_POST['correo']))? $_POST['correo']:'';
-                $contrasena = (isset($_POST['password']))?$_POST['password']:'';
+        
+            if ($_SERVER["REQUEST_METHOD"] === "POST") {
+                $usuario = isset($_POST['usuario']) ? $_POST['usuario'] : '';
+                $correo = isset($_POST['correo']) ? $_POST['correo'] : '';
+                $contrasena = isset($_POST['password']) ? $_POST['password'] : '';
+        
+                // Validación adicional (puedes personalizarla según tus requisitos)
+                if (empty($usuario) || empty($correo) || empty($contrasena) || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+                    $result->success = false;
+                    $result->message = "Datos de registro no válidos.";
+                } else {
+                    // Verificar si el usuario o el correo ya existen
+                    $existsUser = $this->usuarioModel->exists('nombreUsuario', $usuario);
+                    $existsCorreo = $this->usuarioModel->exists('correo', $correo);
+        
+                    if (!$existsUser && !$existsCorreo) {
 
-                $this->usuarioModel->insert([
-                    'nombreUsuario' => $_POST['usuario'],
-                    'correo' => $_POST['correo'],
-                    'contrasena' => password_hash($_POST['password'],PASSWORD_BCRYPT),
-                   ]);
+                        try{
+                            $this->usuarioModel->insert([
+                                'nombreUsuario' => $usuario,
+                                'correo' => $correo,
+                                'contrasena' => password_hash($contrasena ,PASSWORD_BCRYPT)
+                            ]);
+                            $mensaje = $this->userSessionControl->inicioSesion($usuario, $contrasena);
+                            switch ($mensaje) {
+                                    case "Sesión iniciada correctamente.":
+                                        $result->success = true;
+                                        $result->message = "Cuenta y Sesión Realizada con Éxito.";
+                                        break;
+                                    case "Error: El usuario no fue encontrado.":
+                                        $result->success = false;
+                                        $result->message = "El usuario no fue encontrado.";
+                                        break;
+                                    case "Error: Contraseña incorrecta.":
+                                        $result->success = false;
+                                        $result->message = "Contraseña incorrecta.";
+                                        break;
+                                    default:
+                                        $result->success = false;
+                                        $result->message = "Error desconocido: $mensaje"; // Agrega el mensaje real
+                                }  
+                        }catch(Exception $error){
+                            $result->success = false;
+                            $result->message = $error;
+                        }
+
+                    } else {
+                        $result->success = false;
+                        $result->message = "El nombre de usuario o correo electrónico ya existen.";
+                    }
+
+                }
+                
             }else{
-
+                $result->success = false;
+                $result->message = "Solicitud invalida.";
             } 
-
-           
-           $mensaje = $this->userSessionControl->inicioSesion($_POST['usuario'], $_POST['contrasena']);
-           switch ($mensaje) {
-                case "Sesión iniciada correctamente.":
-                    $result->success = true;
-                    $result->message = "Cuenta y Sesión Realizada con Éxito.";
-                    break;
-                case "Error: El usuario no fue encontrado.":
-                    $result->success = false;
-                    $result->message = "El usuario no fue encontrado.";
-                    break;
-                case "Error: Contraseña incorrecta.":
-                    $result->success = false;
-                    $result->message = "Contraseña incorrecta.";
-                    break;
-                default:
-                    $result->success = false;
-                    $result->message = "Error desconocido: $mensaje"; // Agrega el mensaje real
-            }     
-
            echo json_encode($result);
         }
+
+
 
         public function edit(){
             if($this->userSessionControl->Roll() === LOG){

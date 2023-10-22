@@ -195,6 +195,48 @@
                 throw $e;
             }
         }
+
+        public function exists($col, $colData) {
+            try {
+                $consulta = "SELECT * FROM {$this->table} WHERE $col = ?";
+                $stmt = mysqli_prepare($this->bd, $consulta);
+                
+                if ($stmt) {
+                    mysqli_stmt_bind_param($stmt, "s", $colData);
+                    
+                    if (mysqli_stmt_execute($stmt)) {
+                        $resultado = mysqli_stmt_get_result($stmt);
+                        $registro = mysqli_fetch_assoc($resultado);
+                        
+                        // Verifica si se encontró algún registro en la base de datos
+                        if ($registro) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        throw new Exception("Error al ejecutar la consulta: " . mysqli_error($this->bd));
+                    }
+                    mysqli_stmt_close($stmt);
+                } else {
+                    throw new Exception("Error en la preparación de la consulta: " . mysqli_error($this->bd));
+                }
+            } catch (Exception $e) {
+                throw $e;
+            }
+        }
+        
+
+        public function upsert($id,$data){
+
+            $existeEnTabla = $this->getById($id);
+            if($existeEnTabla){
+                return $this->updateById($id,$data);
+            }else{
+                return $this->insert($data);
+            }
+            
+        }
         
         public function busquedaForanea($tabla, $idTabla, $idForanea){
             try{
