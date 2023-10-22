@@ -50,6 +50,14 @@
             }   
         }
 
+        public function interesesForm(){
+            if($this->userSessionControl->Roll() === LOG){
+                $this->render('usuarioIntereses', [] , "login");
+            }else{
+                header("Location: ".URL_PATH);
+            }  
+        }
+
         public function loginProcess() {
 
             $result = new Result();
@@ -102,14 +110,39 @@
 
         public function create(){
             $result = new Result();
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                $usuario =  (isset($_POST['usuario']))? $_POST['usuario']:'';
+                $correo = (isset($_POST['correo']))? $_POST['correo']:'';
+                $contrasena = (isset($_POST['password']))?$_POST['password']:'';
 
-           $this->usuarioModel->insert([
-            'nombreUsuario' => $_POST['usuario'],
-            'correo' => $_POST['correo'],
-            'contrasena' => password_hash($_POST['password'],PASSWORD_BCRYPT),
-           ]);
-           $result->success = true;
-           $result->message = "El registro fue cargado con éxito";
+                $this->usuarioModel->insert([
+                    'nombreUsuario' => $_POST['usuario'],
+                    'correo' => $_POST['correo'],
+                    'contrasena' => password_hash($_POST['password'],PASSWORD_BCRYPT),
+                   ]);
+            }else{
+
+            } 
+
+           
+           $mensaje = $this->userSessionControl->inicioSesion($_POST['usuario'], $_POST['contrasena']);
+           switch ($mensaje) {
+                case "Sesión iniciada correctamente.":
+                    $result->success = true;
+                    $result->message = "Cuenta y Sesión Realizada con Éxito.";
+                    break;
+                case "Error: El usuario no fue encontrado.":
+                    $result->success = false;
+                    $result->message = "El usuario no fue encontrado.";
+                    break;
+                case "Error: Contraseña incorrecta.":
+                    $result->success = false;
+                    $result->message = "Contraseña incorrecta.";
+                    break;
+                default:
+                    $result->success = false;
+                    $result->message = "Error desconocido: $mensaje"; // Agrega el mensaje real
+            }     
 
            echo json_encode($result);
         }
@@ -278,7 +311,8 @@
                 $result->success = false;
                 $result->message = "Solicitud no válida";
             }
+            echo json_encode($result);
         }
-        echo json_encode($result);
+        
     }    
 ?>
