@@ -230,6 +230,7 @@
         public function upsert($id,$data){
 
             $existeEnTabla = $this->getById($id);
+            
             if($existeEnTabla){
                 return $this->updateById($id,$data);
             }else{

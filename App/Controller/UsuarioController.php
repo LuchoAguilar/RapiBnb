@@ -52,7 +52,15 @@
 
         public function interesesForm(){
             if($this->userSessionControl->Roll() === LOG){
-                $this->render('usuarioIntereses', [] , "site");
+                $user = $this->userSessionControl->ID();
+                $interesPrev = $this->intereses->buscarRegistrosRelacionados('usuarios','usuarioID','userInteresesID',$user);
+                $interesID = '';
+                foreach($interesPrev as $interes){
+                    $interesID = $interes['interesID'];
+                }
+                $this->render('usuarioIntereses', [
+                    'intereses' => $interesID,
+                ] , "site");
             }else{
                 header("Location: ".URL_PATH);
             }  
@@ -315,15 +323,17 @@
                     return;
                 }
 
+                $id = (isset($_POST['textID'])) ? $_POST['textID']: '';
+
                 $ubicacion = (isset($_POST['ubicacion'])) ? implode("| ", $_POST['ubicacion']) : '';
                 $etiqueta = (isset($_POST['etiqueta'])) ? implode("| ", $_POST['etiqueta']) : '';
                 $listServicios = isset($_POST['servicios']) ? implode("| ", $_POST['servicios']) : '';
 
-                $datosCombinados = "$ubicacion, $etiqueta, $listServicios";
+                $datosCombinados = "$ubicacion | $etiqueta | $listServicios";
 
                 // Verifica si los datos combinados no están vacíos antes de actualizar o insertar en la base de datos
                 if (!empty($datosCombinados)) {
-                    $this->intereses->upsert($user, [
+                    $this->intereses->upsert($id, [
                         'nombresDeInteres' => $datosCombinados,
                         'userInteresesID' => $user
                     ]);

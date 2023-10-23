@@ -85,12 +85,19 @@
                             <label class="form-check-label" for="habitaciones">Habitaciones</label>
                         </div>
                     </div>
-                    <div class="text-center">
+                    <div class="col-md-12 d-none">
+                        <label for="textID" class="form-label">ID</label>
+                        <input type="text" class="form-control" value="<?= $parameters['intereses'] ?? '' ?>" name="textID" id="textID" placeholder="ID">
+                    </div>
+                    <div class="text-center ">
                         <button type="submit" class="btn btn-success">Agregar</button>
                         <a id="" class="btn btn-primary" href="<?=URL_PATH.'/Usuario/home/';?>" role="button">Cancelar</a>
                     </div>
                 </div>
             </form>
+            <div class="container" id="errores">
+
+            </div>
         </div>
         <div class="card-footer">
 
