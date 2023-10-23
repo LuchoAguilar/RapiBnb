@@ -51,20 +51,36 @@
         }
 
         public function interesesForm(){
-            if($this->userSessionControl->Roll() === LOG){
+            if ($this->userSessionControl->Roll() === LOG) {
                 $user = $this->userSessionControl->ID();
-                $interesPrev = $this->intereses->buscarRegistrosRelacionados('usuarios','usuarioID','userInteresesID',$user);
+                $interesPrev = $this->intereses->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'userInteresesID', $user);
                 $interesID = '';
-                foreach($interesPrev as $interes){
+                $ubicaciones = [];
+                $etiquetas = [];
+                $servicios = [];
+        
+                foreach ($interesPrev as $interes) {
                     $interesID = $interes['interesID'];
+                    $datosCombinados = explode('| ', $interes['nombresDeInteres']);
+        
+                    if (count($datosCombinados) >= 3) {
+                        $ubicaciones = explode(', ', $datosCombinados[0]);
+                        $etiquetas = explode(', ', $datosCombinados[1]);
+                        $servicios = explode(', ', $datosCombinados[2]);
+                    }
                 }
+        
                 $this->render('usuarioIntereses', [
                     'intereses' => $interesID,
-                ] , "site");
-            }else{
+                    'ubicaciones' => $ubicaciones,
+                    'etiquetas' => $etiquetas,
+                    'servicios' => $servicios,
+                ], "site");
+            } else {
                 header("Location: ".URL_PATH);
-            }  
+            }
         }
+        
 
         public function loginProcess() {
 
@@ -325,9 +341,9 @@
 
                 $id = (isset($_POST['textID'])) ? $_POST['textID']: '';
 
-                $ubicacion = (isset($_POST['ubicacion'])) ? implode("| ", $_POST['ubicacion']) : '';
-                $etiqueta = (isset($_POST['etiqueta'])) ? implode("| ", $_POST['etiqueta']) : '';
-                $listServicios = isset($_POST['servicios']) ? implode("| ", $_POST['servicios']) : '';
+                $ubicacion = (isset($_POST['ubicacion'])) ? implode(", ", $_POST['ubicacion']) : '';
+                $etiqueta = (isset($_POST['etiqueta'])) ? implode(", ", $_POST['etiqueta']) : '';
+                $listServicios = isset($_POST['servicios']) ? implode(", ", $_POST['servicios']) : '';
 
                 $datosCombinados = "$ubicacion | $etiqueta | $listServicios";
 
