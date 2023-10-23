@@ -51,36 +51,20 @@
         }
 
         public function interesesForm(){
-            if ($this->userSessionControl->Roll() === LOG) {
+            if($this->userSessionControl->Roll() === LOG){
                 $user = $this->userSessionControl->ID();
-                $interesPrev = $this->intereses->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'userInteresesID', $user);
+                $interesPrev = $this->intereses->buscarRegistrosRelacionados('usuarios','usuarioID','userInteresesID',$user);
                 $interesID = '';
-                $ubicaciones = [];
-                $etiquetas = [];
-                $servicios = [];
-        
-                foreach ($interesPrev as $interes) {
+                foreach($interesPrev as $interes){
                     $interesID = $interes['interesID'];
-                    $datosCombinados = explode('| ', $interes['nombresDeInteres']);
-        
-                    if (count($datosCombinados) >= 3) {
-                        $ubicaciones = explode(', ', $datosCombinados[0]);
-                        $etiquetas = explode(', ', $datosCombinados[1]);
-                        $servicios = explode(', ', $datosCombinados[2]);
-                    }
                 }
-        
                 $this->render('usuarioIntereses', [
                     'intereses' => $interesID,
-                    'ubicaciones' => $ubicaciones,
-                    'etiquetas' => $etiquetas,
-                    'servicios' => $servicios,
-                ], "site");
-            } else {
+                ] , "site");
+            }else{
                 header("Location: ".URL_PATH);
-            }
+            }  
         }
-        
 
         public function loginProcess() {
 
