@@ -349,5 +349,7 @@
             }
             echo json_encode($result);
         } 
+
+        //agregar carga de documentacion
     }     
 ?>
