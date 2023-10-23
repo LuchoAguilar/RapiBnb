@@ -348,7 +348,11 @@
                 $result->message = "Solicitud no válida";
             }
             echo json_encode($result);
-        } 
+        }
+        
+        public function documentacion(){
+            
+        }
 
         //agregar carga de documentacion
     }     
