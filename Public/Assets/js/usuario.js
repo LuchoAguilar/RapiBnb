@@ -47,6 +47,7 @@ async function user() {
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-top: 20px;">
                             <a class="btn btn-info" href="${URL_PATH}/usuario/edit/?id=${data.usuarioID}" role="button">Editar perfil</a>
+                            <a class="btn btn-info" href="${URL_PATH}/usuario/verificar/?id=${data.usuarioID}" role="button">Editar perfil</a>
                             <a class="btn btn-info" href="${URL_PATH}/usuario/interesesForm/" role="button">Agregar intereses</a>
                         </div>
                     </div>
@@ -84,6 +85,7 @@ async function user() {
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-top: 20px;">
                             <a class="btn btn-info" href="${URL_PATH}/usuario/edit/?id=${reposenseData.result.usuarioID}" role="button">Editar perfil</a>
+                            <a class="btn btn-info" href="${URL_PATH}/usuario/verificar/?id=${reposenseData.result.usuarioID}" role="button">Verificar Cuenta</a>
                             <a class="btn btn-info" href="${URL_PATH}/usuario/interesesForm/" role="button">Agregar intereses</a>
                         </div>
                     </div>

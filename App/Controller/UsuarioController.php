@@ -2,16 +2,19 @@
     require_once(__DIR__.'/../Model/controladorDeSessiones.php');
     require_once(__DIR__.'/../Model/usuario.php');
     require_once(__DIR__.'/../Model/intereses.php');
+    require_once(__DIR__.'/../Model/documentacion.php');
 
     class UsuarioController extends Controller{
 
         private $usuarioModel;
         private $userSession;
         private $intereses;
+        private $documentacion;
 
         public function __construct($connect, $session){
             $this->usuarioModel = new Usuario($connect);
             $this->intereses = new Intereses($connect);
+            $this->documentacion = new documentacion($connect);
             $this->userSessionControl = new ControladorDeSessiones($session,$connect);
         }
 
@@ -349,9 +352,73 @@
             }
             echo json_encode($result);
         }
+
+        public function verificar(){
+            
+        }
         
         public function documentacion(){
-            
+            $result = new Result();
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+                $user = $this->userSessionControl->ID();
+
+                if (!$user) {
+                    $result->success = false;
+                    $result->message = "Error de sesión";
+                    echo json_encode($result);
+                    return;
+                }
+
+                $id = (isset($_POST['textID'])) ? $_POST['textID']: '';
+                $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios','usuarioID','usarioAVerfID',$user);
+                $foto = (isset($_FILES['documentacion']['name'])) ? $_FILES['documentacion']['name'] : "";
+                
+                if(!$documentacion){
+                    // Mover la nueva imagen a la carpeta de imágenes
+                    $fecha_img = new DateTime();
+                    $nombre_foto = $fecha_img->getTimestamp() . "_" . $foto;
+                    $img_tmp = $_FILES['documentacion']['tmp_name'];
+
+                    if ($img_tmp !== "") {
+                        $destinationPath = 'Assets/images/documentacion/' . $nombre_foto;
+                        move_uploaded_file($img_tmp, $destinationPath);
+                    }
+
+                    $this->documentacion->insert([
+                        'documentoAdjunto' =>  $nombre_foto,
+                        'fechaVencimiento'   // datetime con tiempo de 2 dias en adelante
+                    ]);
+                    // pensar en como eliminar de la bd por si sola una documentacion cuando se vence junto a la img
+                }else{
+
+                    $documentacionPath =  'Assets/images/documentacion/' . $documentacion['documentoAdjunto'];
+                    if (file_exists($documentacionPath)) {
+                        unlink($documentacionPath);
+                    } 
+
+                    // Mover la nueva imagen a la carpeta de imágenes
+                    $fecha_img = new DateTime();
+                    $nombre_foto = $fecha_img->getTimestamp() . "_" . $foto;
+                    $img_tmp = $_FILES['documentacion']['tmp_name'];
+
+                    if ($img_tmp !== "") {
+                        $destinationPath = 'Assets/images/documentacion/' . $nombre_foto;
+                        move_uploaded_file($img_tmp, $destinationPath);
+                    }
+
+                    $this->documentacion->update($id,[
+                        'documentoAdjunto' =>  $nombre_foto,
+                        'fechaVencimiento'   // datetime con tiempo de 2 dias en adelante
+                    ]);
+
+                }
+
+            }else{
+                $result->success = false;
+                $result->message = "Solicitud no válida";
+            }
+            echo json_encode($result);
         }
 
         //agregar carga de documentacion
