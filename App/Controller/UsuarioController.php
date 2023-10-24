@@ -18,6 +18,8 @@
             $this->userSessionControl = new ControladorDeSessiones($session,$connect);
         }
 
+        //---------------------------------------------muestra de perfil de usuario--------------------------------------------------//
+
         public function home(){
             if($this->userSessionControl->Roll() === LOG){
                 $this->render('usuario', [] ,'site');
@@ -25,80 +27,6 @@
                 header("Location: ".URL_PATH);
             }
             
-        }
-
-        public function signUp(){
-            if($this->userSessionControl->Roll() === NO_LOG){
-                $this->render("UsuarioSignUp", [], "login");
-            }else{
-                header("Location: ".URL_PATH);
-            }    
-        }
-
-        public function login(){
-            if($this->userSessionControl->Roll() === NO_LOG){
-                $this->render('usuarioLog', [] , "login");
-            }else{
-                header("Location: ".URL_PATH);
-            }
-            
-        }
-
-        public function LogOut(){
-            if($this->userSessionControl->Roll() === LOG){
-                $this->userSessionControl->cerrarSesion();
-                $this->home();
-            }else{
-                header("Location: ".URL_PATH);
-            }   
-        }
-
-        public function interesesForm(){
-            if($this->userSessionControl->Roll() === LOG){
-                $user = $this->userSessionControl->ID();
-                $interesPrev = $this->intereses->buscarRegistrosRelacionados('usuarios','usuarioID','userInteresesID',$user);
-                $interesID = '';
-                foreach($interesPrev as $interes){
-                    $interesID = $interes['interesID'];
-                }
-                $this->render('usuarioIntereses', [
-                    'intereses' => $interesID,
-                ] , "site");
-            }else{
-                header("Location: ".URL_PATH);
-            }  
-        }
-
-        public function loginProcess() {
-
-            $result = new Result();
-            
-            // Comprobar si los datos requeridos están presentes
-            if (!isset($_POST['usuario']) || !isset($_POST['contrasena'])) {
-                $result->success = false;
-                $result->message = "Faltan datos requeridos.";
-            } else {
-                $mensaje = $this->userSessionControl->inicioSesion($_POST['usuario'], $_POST['contrasena']);
-                switch ($mensaje) {
-                    case "Sesión iniciada correctamente.":
-                        $result->success = true;
-                        $result->message = "Sesión iniciada correctamente.";
-                        break;
-                    case "Error: El usuario no fue encontrado.":
-                        $result->success = false;
-                        $result->message = "El usuario no fue encontrado.";
-                        break;
-                    case "Error: Contraseña incorrecta.":
-                        $result->success = false;
-                        $result->message = "Contraseña incorrecta.";
-                        break;
-                    default:
-                        $result->success = false;
-                        $result->message = "Error desconocido: $mensaje"; // Agrega el mensaje real
-                }
-            }
-            
-            echo json_encode($result);
         }
 
         public function table(){
@@ -120,7 +48,17 @@
             echo json_encode($result);
         }
 
-        // funcion que crea e inicia session de usuarios
+        //---------------------------------------------------------------------------------------------------------------------//
+
+        //---------------------------------------------registro usuarios--------------------------------------------------//
+
+        public function signUp(){
+            if($this->userSessionControl->Roll() === NO_LOG){
+                $this->render("UsuarioSignUp", [], "login");
+            }else{
+                header("Location: ".URL_PATH);
+            }    
+        }
 
         public function create() {
             $result = new Result();
@@ -183,8 +121,68 @@
             } 
            echo json_encode($result);
         }
+        //---------------------------------------------------------------------------------------------------------------------//
 
+        //---------------------------------------------inicio sesion--------------------------------------------------//
 
+        public function login(){
+            if($this->userSessionControl->Roll() === NO_LOG){
+                $this->render('usuarioLog', [] , "login");
+            }else{
+                header("Location: ".URL_PATH);
+            }
+            
+        }
+
+        public function loginProcess() {
+
+            $result = new Result();
+            
+            // Comprobar si los datos requeridos están presentes
+            if (!isset($_POST['usuario']) || !isset($_POST['contrasena'])) {
+                $result->success = false;
+                $result->message = "Faltan datos requeridos.";
+            } else {
+                $mensaje = $this->userSessionControl->inicioSesion($_POST['usuario'], $_POST['contrasena']);
+                switch ($mensaje) {
+                    case "Sesión iniciada correctamente.":
+                        $result->success = true;
+                        $result->message = "Sesión iniciada correctamente.";
+                        break;
+                    case "Error: El usuario no fue encontrado.":
+                        $result->success = false;
+                        $result->message = "El usuario no fue encontrado.";
+                        break;
+                    case "Error: Contraseña incorrecta.":
+                        $result->success = false;
+                        $result->message = "Contraseña incorrecta.";
+                        break;
+                    default:
+                        $result->success = false;
+                        $result->message = "Error desconocido: $mensaje"; // Agrega el mensaje real
+                }
+            }
+            
+            echo json_encode($result);
+        }
+        //---------------------------------------------------------------------------------------------------------------------//
+
+        //---------------------------------------------cerrar sesion--------------------------------------------------//
+
+        public function LogOut(){
+            if($this->userSessionControl->Roll() === LOG){
+                $this->userSessionControl->cerrarSesion();
+                $this->home();
+            }else{
+                header("Location: ".URL_PATH);
+            }   
+        }
+
+        
+
+        //---------------------------------------------------------------------------------------------------------------------//
+
+        //---------------------------------------------editar perfil--------------------------------------------------//
 
         public function edit(){
             if($this->userSessionControl->Roll() === LOG){
@@ -267,7 +265,9 @@
         
             echo json_encode($result);
         }
+        //---------------------------------------------------------------------------------------------------------------------//
         
+        //---------------------------------------------borrar perfil(sin uso)--------------------------------------------------//
 
         public function delete() {
             $result = new Result();
@@ -309,6 +309,25 @@
         
             echo json_encode($result);
         }
+        //---------------------------------------------------------------------------------------------------------------------//
+
+        //---------------------------------------------intereses del usuario(teniendo en cuenta las etiquetas)--------------------------------------------------//
+
+        public function interesesForm(){
+            if($this->userSessionControl->Roll() === LOG){
+                $user = $this->userSessionControl->ID();
+                $interesPrev = $this->intereses->buscarRegistrosRelacionados('usuarios','usuarioID','userInteresesID',$user);
+                $interesID = '';
+                foreach($interesPrev as $interes){
+                    $interesID = $interes['interesID'];
+                }
+                $this->render('usuarioIntereses', [
+                    'intereses' => $interesID,
+                ] , "site");
+            }else{
+                header("Location: ".URL_PATH);
+            }  
+        }
 
         public function intereses(){
             $result = new Result();
@@ -348,6 +367,9 @@
             }
             echo json_encode($result);
         }
+        //---------------------------------------------------------------------------------------------------------------------//
+
+        //---------------------------------------------Envio de documentacion para verificar cuenta--------------------------------------------------//
 
         public function verificar(){
             //que no este verificado previamente y que no este en proceso
@@ -393,8 +415,9 @@
                     }
         
                     $fecha_img = new DateTime();
-                    $fecha_img->modify('+2 days');
                     $nombre_foto = $fecha_img->getTimestamp() . "_$foto";
+                    $fechaVencimiento = new DateTime();
+                    $fechaVencimiento->modify('+2 days');
         
                     if ($documentacion) {
                         $documentacionPath = 'Assets/images/documentacion/' . $documentacion['documentoAdjunto'];
@@ -404,13 +427,13 @@
                         moveDocumento($nombre_foto);
                         $this->documentacion->update($id, [
                             'documentoAdjunto' => $nombre_foto,
-                            'fechaVencimiento' => $fecha_img,
+                            'fechaVencimiento' => $$fechaVencimiento,
                         ]);
                     } else {
                         moveDocumento($nombre_foto);
                         $this->documentacion->insert([
                             'documentoAdjunto' => $nombre_foto,
-                            'fechaVencimiento' => $fecha_img,
+                            'fechaVencimiento' => $$fechaVencimiento,
                         ]);
                     }
                     
@@ -424,6 +447,7 @@
             
             echo json_encode($result);
         }
+        //---------------------------------------------------------------------------------------------------------------------//
 
     }     
 ?>
