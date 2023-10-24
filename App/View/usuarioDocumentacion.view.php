@@ -12,7 +12,7 @@
                 </div>
                 <div class="col-md-12 d-none">
                     <label for="textID" class="form-label">ID</label>
-                    <input type="text" class="form-control" value="<?= $parameters['intereses'] ?? '' ?>" name="textID" id="textID" placeholder="ID">
+                    <input type="text" class="form-control" value="<?= $parameters['doc'] ?? '' ?>" name="textID" id="textID" placeholder="ID">
                 </div>
                 <button type="submit" class="btn btn-success">Enviar Solicitud</button>
                 <a id="" class="btn btn-primary" href="<?=URL_PATH.'/Usuario/home/';?>" role="button">Cancelar</a>

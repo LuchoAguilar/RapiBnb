@@ -100,10 +100,6 @@
             
             echo json_encode($result);
         }
-        
-        
-
-
 
         public function table(){
             
@@ -354,73 +350,80 @@
         }
 
         public function verificar(){
-            
+            //que no este verificado previamente y que no este en proceso
+            if($this->userSessionControl->Roll() === LOG){
+                $user = $this->userSessionControl->ID();
+                $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios','usuarioID','usarioAVerfID',$user);
+                $documentacionID = '';
+                foreach($documentacion as $doc){
+                    $documentacionID = $doc['certificacionID'];
+                }
+                if(empty($documentacion)/* && empty($verificado)*/){
+                    $this->render('usuarioDocumentacion',[
+                        'doc' => $documentacionID,
+                    ],'site');
+                    
+                }else{
+                    header("Location:".URL_PATH.'/usuario/home');
+                }
+            }else{
+                header("Location:".URL_PATH);
+            } 
         }
         
         public function documentacion(){
             $result = new Result();
-            if($_SERVER["REQUEST_METHOD"] == "POST"){
-
+            
+            if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $user = $this->userSessionControl->ID();
-
+                
                 if (!$user) {
                     $result->success = false;
                     $result->message = "Error de sesión";
-                    echo json_encode($result);
-                    return;
-                }
-
-                $id = (isset($_POST['textID'])) ? $_POST['textID']: '';
-                $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios','usuarioID','usarioAVerfID',$user);
-                $foto = (isset($_FILES['documentacion']['name'])) ? $_FILES['documentacion']['name'] : "";
-                
-                if(!$documentacion){
-                    // Mover la nueva imagen a la carpeta de imágenes
-                    $fecha_img = new DateTime();
-                    $nombre_foto = $fecha_img->getTimestamp() . "_" . $foto;
-                    $img_tmp = $_FILES['documentacion']['tmp_name'];
-
-                    if ($img_tmp !== "") {
-                        $destinationPath = 'Assets/images/documentacion/' . $nombre_foto;
+                } else {
+                    $id = $_POST['textID'] ?? '';
+                    $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usarioAVerfID', $user);
+                    $foto = $_FILES['documentacion']['name'] ?? "";
+        
+                    // Función para mover la imagen a la carpeta de documentos
+                    function moveDocumento($newName) {
+                        $img_tmp = $_FILES['documentacion']['tmp_name'];
+                        $destinationPath = 'Assets/images/documentacion/' . $newName;
                         move_uploaded_file($img_tmp, $destinationPath);
                     }
-
-                    $this->documentacion->insert([
-                        'documentoAdjunto' =>  $nombre_foto,
-                        'fechaVencimiento'   // datetime con tiempo de 2 dias en adelante
-                    ]);
-                    // pensar en como eliminar de la bd por si sola una documentacion cuando se vence junto a la img
-                }else{
-
-                    $documentacionPath =  'Assets/images/documentacion/' . $documentacion['documentoAdjunto'];
-                    if (file_exists($documentacionPath)) {
-                        unlink($documentacionPath);
-                    } 
-
-                    // Mover la nueva imagen a la carpeta de imágenes
+        
                     $fecha_img = new DateTime();
-                    $nombre_foto = $fecha_img->getTimestamp() . "_" . $foto;
-                    $img_tmp = $_FILES['documentacion']['tmp_name'];
-
-                    if ($img_tmp !== "") {
-                        $destinationPath = 'Assets/images/documentacion/' . $nombre_foto;
-                        move_uploaded_file($img_tmp, $destinationPath);
+                    $fecha_img->modify('+2 days');
+                    $nombre_foto = $fecha_img->getTimestamp() . "_$foto";
+        
+                    if ($documentacion) {
+                        $documentacionPath = 'Assets/images/documentacion/' . $documentacion['documentoAdjunto'];
+                        if (file_exists($documentacionPath)) {
+                            unlink($documentacionPath);
+                        }
+                        moveDocumento($nombre_foto);
+                        $this->documentacion->update($id, [
+                            'documentoAdjunto' => $nombre_foto,
+                            'fechaVencimiento' => $fecha_img,
+                        ]);
+                    } else {
+                        moveDocumento($nombre_foto);
+                        $this->documentacion->insert([
+                            'documentoAdjunto' => $nombre_foto,
+                            'fechaVencimiento' => $fecha_img,
+                        ]);
                     }
-
-                    $this->documentacion->update($id,[
-                        'documentoAdjunto' =>  $nombre_foto,
-                        'fechaVencimiento'   // datetime con tiempo de 2 dias en adelante
-                    ]);
-
+                    
+                    $result->success = true;
+                    $result->message = "Documento guardado exitosamente.";
                 }
-
-            }else{
+            } else {
                 $result->success = false;
                 $result->message = "Solicitud no válida";
             }
+            
             echo json_encode($result);
         }
 
-        //agregar carga de documentacion
     }     
 ?>
