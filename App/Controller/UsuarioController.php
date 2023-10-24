@@ -419,21 +419,11 @@
                     $fechaVencimiento = new DateTime();
                     $fechaVencimiento->modify('+2 days');
         
-                    if ($documentacion) {
-                        $documentacionPath = 'Assets/images/documentacion/' . $documentacion['documentoAdjunto'];
-                        if (file_exists($documentacionPath)) {
-                            unlink($documentacionPath);
-                        }
-                        moveDocumento($nombre_foto);
-                        $this->documentacion->update($id, [
-                            'documentoAdjunto' => $nombre_foto,
-                            'fechaVencimiento' => $$fechaVencimiento,
-                        ]);
-                    } else {
+                    if (empty($documentacion)) {
                         moveDocumento($nombre_foto);
                         $this->documentacion->insert([
                             'documentoAdjunto' => $nombre_foto,
-                            'fechaVencimiento' => $$fechaVencimiento,
+                            'fechaVencimiento' => $fechaVencimiento, 
                         ]);
                     }
                     
@@ -447,6 +437,7 @@
             
             echo json_encode($result);
         }
+        
         //---------------------------------------------------------------------------------------------------------------------//
 
     }     
