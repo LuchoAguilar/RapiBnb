@@ -12,7 +12,7 @@ async function usuarioLogSubmit(){
     ).then(response => response.json()
     ).then(data => {
         if(data.success){
-            window.location.replace(URL_PATH + '/Usuario/home');
+            window.location.replace(URL_PATH);
         }else{
             if(data.message === 'El usuario no fue encontrado.'){
                 const usuarioLogin = document.getElementById('usuarioLogin');

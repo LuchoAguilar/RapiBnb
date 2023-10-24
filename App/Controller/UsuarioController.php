@@ -3,6 +3,7 @@
     require_once(__DIR__.'/../Model/usuario.php');
     require_once(__DIR__.'/../Model/intereses.php');
     require_once(__DIR__.'/../Model/documentacion.php');
+    require_once(__DIR__.'/../Model/administrador.php');
 
     class UsuarioController extends Controller{
 
@@ -170,7 +171,7 @@
         //---------------------------------------------cerrar sesion--------------------------------------------------//
 
         public function LogOut(){
-            if($this->userSessionControl->Roll() === LOG){
+            if($this->userSessionControl->Roll() === LOG || $this->userSessionControl->Roll() === ADMIN ){
                 $this->userSessionControl->cerrarSesion();
                 $this->home();
             }else{

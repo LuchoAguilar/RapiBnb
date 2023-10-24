@@ -14,7 +14,9 @@
                 $this->render('home',[],'noLog');
             }elseif($this->userSessionControl->Roll() === LOG){
                 $this->render('home',[],'site');
-            }// aca iria el de administrador    
+            }elseif($this->userSessionControl->Roll() === ADMIN){
+                $this->render('administrador',[],'admin');
+            }
         }
         public function listar(){
             echo "listar";
