@@ -86,17 +86,25 @@
             $users = $this->usuarios->getAll();
         
             if ($users) {
-                $result->success = true;
-                $result->result = [];
-        
-                foreach ($users as $user) {
-                    $postulante = $this->usuarios->buscarRegistrosRelacionados('certificacion', 'certificacionID', 'usuarioID', $user['usuarioID']);
-                    $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usarioAVerfID', $user['usuarioID']);
-        
-                    $result->result[] = [
-                        'postulante' => $postulante,
-                        'documentacion' => $documentacion,
-                    ];
+                
+                $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usarioAVerfID', $user['usuarioID']);
+                if($documentacion){
+                    $result->success = true;
+                    $result->result = [];
+                    foreach($documentacion as $doc){
+                        foreach($users as $user){
+                            if($doc['usarioAVerfID'] === $user['usuarioID']){
+                                $result->result[] = [
+                                    'postulante' => $user,
+                                    'documentacion' => $doc,
+                                ];
+                            }
+                        }
+                        
+                    }
+                }else{
+                    $result->success = false;
+                    $result->message = 'No existen postulantes a verificar.';
                 }
             } else {
                 $result->success = false;
