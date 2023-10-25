@@ -2,7 +2,7 @@
   <br><br><br>
   <div class="card">
     <div class="card-header">
-      <h3 class="text-center">Lista de Usuarios de RapiBnB</h3>
+      <h3 class="text-center">Lista de Postulantes a Verificar</h3>
     </div>
     <div class="card-body">
       <div class="table-responsive">

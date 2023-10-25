@@ -47,7 +47,7 @@ verificacionList();
     const data = new FormData();
     data.append('id', id);
 
-    fetch(URL_PATH + '/Administrador/delete/', {
+    fetch(URL_PATH + '/Administrador/borrarPostulacion/', {
         method: 'POST',
         body: data
     }).then(response => response.json())
@@ -55,6 +55,8 @@ verificacionList();
         if (data.success) {
             console.log(data.message);
             verificacionList();
+        }else{
+            console.log(data.message);
         }
     });
  }
