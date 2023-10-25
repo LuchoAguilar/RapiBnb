@@ -9,15 +9,13 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th scope="col">Es</th>
-              <th scope="col">Nombre Usuario</th>
+              <th scope="col">Nombre Usuarios</th>
               <th scope="col">Correo</th>
-              <th scope="col">Nombre Completo</th>
-              <th scope="col">Foto</th>
-              <th scope="col">Bio</th>
+              <th scope="col">Documentacion</th>
+              <th scope="col">Verificar</th>
             </tr>
           </thead>
-          <tbody id="tablaUsuarios">
+          <tbody id="tablaPostulantes">
             <!-- Contenido de la tabla -->
           </tbody>
         </table>
@@ -29,4 +27,4 @@
 </main>
 
 
-<script src="<?= URL_PATH?>/Assets/js/administradorUsuarios.js"></script>
+<script src="<?= URL_PATH?>/Assets/js/administradorVerificados.js"></script>

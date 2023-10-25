@@ -107,7 +107,7 @@ class ControladorDeSessiones {
             if ($admin['nombreUsuario'] === $nombreUsuario) {
                 if (password_verify($contrasena,$admin['contrasena'])){
                     $this->session->setCurrentUser($nombreUsuario);
-                    return "Sesión iniciada correctamente como administrador.";
+                    return "Sesión iniciada correctamente.";
                 } else {
                     return "Error: Contraseña incorrecta.";
                 }

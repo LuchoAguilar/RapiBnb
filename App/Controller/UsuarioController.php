@@ -267,50 +267,6 @@
             echo json_encode($result);
         }
         //---------------------------------------------------------------------------------------------------------------------//
-        
-        //---------------------------------------------borrar perfil(sin uso)--------------------------------------------------//
-
-        public function delete() {
-            $result = new Result();
-        
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $idUsuario = (isset($_POST['id'])) ? $_POST['id'] : null;
-        
-                if ($idUsuario !== null && is_numeric($idUsuario)) {
-                    $usuario = $this->usuarioModel->getById($idUsuario);
-        
-                    if ($usuario) {
-                        // Eliminar al usuario en la base de datos
-                        $this->usuarioModel->deleteById($idUsuario);
-        
-                        // Luego, eliminar la foto de perfil si existe
-                        if (isset($usuario['fotoRostro'])) {
-                            $fotoRostroPath = "/Assets/images/fotoPerfil/".$usuario['fotoRostro'];
-        
-                            if (file_exists($fotoRostroPath)) {
-                                unlink($fotoRostroPath);
-                            }
-                        }
-        
-                        $result->success = true;
-                        $result->message = "Usuario eliminado con éxito";
-                    } else {
-                        $result->success = false;
-                        $result->message = "Usuario no encontrado";
-                    }
-                } else {
-                    $result->success = false;
-                    $result->message = "ID de usuario no válido";
-                }
-            } else {
-                $result->success = false;
-                $result->message = "Solicitud no válida";
-            }
-            // recordar verificar que se eliminen todos los datos relacionados de manera foranea en otras tablas
-        
-            echo json_encode($result);
-        }
-        //---------------------------------------------------------------------------------------------------------------------//
 
         //---------------------------------------------intereses del usuario(teniendo en cuenta las etiquetas)--------------------------------------------------//
 

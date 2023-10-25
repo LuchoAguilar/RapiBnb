@@ -3,6 +3,7 @@
     require_once(__DIR__.'/../Model/administrador.php');
     require_once(__DIR__.'/../Model/usuario.php');
     require_once(__DIR__.'/../Model/documentacion.php');
+    require_once(__DIR__.'/../Model/verificacion.php');
 
     class AdministradorController extends Controller{
         
@@ -10,12 +11,14 @@
         private $userSession;
         private $usuarios;
         private $documentacion;
+        private $verificacion;
 
         public function __construct($connect,$session){
             $this->administradorModel = new Administrador($connect);
             $this->userSession = new ControladorDeSessiones($session,$connect);
             $this->usuarios = new Usuario($connect);
             $this->documentacion = new Documentacion($connect);
+            $this->verificacion = new Verificacion($connect);
         }
 
         public function home(){
@@ -27,20 +30,46 @@
         }
 
 
-        public function table(){
+        public function table() {
             $result = new Result();
-
             $users = $this->usuarios->getAll();
-
-            if($users){
+        
+            if ($users) {
                 $result->success = true;
-                $result->result = $users;
-            }else{
+                $result->result = [];
+        
+                foreach ($users as $user) {
+                    // Inicializa $isVerificado como false para este usuario
+                    $isVerificado = false;
+        
+                    // Obtiene la lista de usuarios verificados relacionados con este usuario
+                    $verificados = $this->usuarios->buscarRegistrosRelacionados('verificacion_cuenta', 'verificacionID', 'usuarioID', $user['usuarioID']);
+        
+                    // Verifica si el usuario está en la lista de usuarios verificados
+                    foreach ($verificados as $userVerificado) {
+                        if ($user['usuarioID'] == $userVerificado['usuarioID']) {
+                            $isVerificado = true;
+                            break;
+                        }
+                    }
+        
+                    $result->result[] = [
+                        'usuario' => $user,
+                        'verificado' => $isVerificado,
+                    ];
+                }
+            } else {
                 $result->success = false;
-                $result->message = 'no existen usuarios cargados';
+                $result->message = 'No existen usuarios cargados.';
             }
+        
+            // Devuelve los datos como JSON
+            header('Content-Type: application/json');
             echo json_encode($result);
         }
+        
+        
+        
         //-------------------------------------------------------------------------------//
 
         //------------------------ Usuarios verificados----------------------------------//
