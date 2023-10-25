@@ -68,11 +68,46 @@
             echo json_encode($result);
         }
         
-        
-        
         //-------------------------------------------------------------------------------//
 
+
         //------------------------ Usuarios verificados----------------------------------//
+
+        public function verificaciones(){
+            if($this->userSession->Roll() === ADMIN){
+                $this->render('administradorVerificados', [] ,'admin');
+            }else{
+                header("Location: ".URL_PATH);
+            }
+        }
+
+        public function postulantes() {
+            $result = new Result();
+            $users = $this->usuarios->getAll();
+        
+            if ($users) {
+                $result->success = true;
+                $result->result = [];
+        
+                foreach ($users as $user) {
+                    $postulante = $this->usuarios->buscarRegistrosRelacionados('certificacion', 'certificacionID', 'usuarioID', $user['usuarioID']);
+                    $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usarioAVerfID', $user['usuarioID']);
+        
+                    $result->result[] = [
+                        'postulante' => $postulante,
+                        'documentacion' => $documentacion,
+                    ];
+                }
+            } else {
+                $result->success = false;
+                $result->message = 'No existen usuarios cargados.';
+            }
+        
+            // Devuelve los datos como JSON
+            header('Content-Type: application/json');
+            echo json_encode($result);
+        }
+        
 
         public function verificar(){
 
