@@ -7,6 +7,7 @@ async function user() {
         const data = reposenseData.result.usuario;
         const intereses = reposenseData.result.intereses;
         const documentacion = reposenseData.result.documentacionID;
+        const documentacionData = data.documentacionID;
         let interesesHTML = "";
         let documentacionHTML = "";
 
@@ -18,7 +19,7 @@ async function user() {
             interesesHTML = "Aún no ha agregado sus intereses";
         }
 
-        if (documentacion != null) {
+        if (documentacion != null || documentacionData !=null) {
             documentacionHTML = `
                 <a class="btn btn-info d-none" href="" role="button">no ver</a>
             `;

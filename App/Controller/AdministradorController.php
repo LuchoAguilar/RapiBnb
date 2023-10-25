@@ -80,31 +80,37 @@
                 header("Location: ".URL_PATH);
             }
         }
-
+        
         public function postulantes() {
             $result = new Result();
             $users = $this->usuarios->getAll();
-        
+            
             if ($users) {
-                foreach($users as $user){
-                    $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usarioAVerfID', $user['usuarioID']);
+                $usuariosPostulantes = [];
+        
+                foreach ($users as $user) {
+                    if ($user['documentacionID'] !== null) {
+                        $usuariosPostulantes[] = $user;
+                    }
                 }
-                
-                if($documentacion){
+        
+                if ($usuariosPostulantes) {
                     $result->success = true;
                     $result->result = [];
-                    foreach($documentacion as $doc){
-                        foreach($users as $user){
-                            if($doc['usarioAVerfID'] === $user['usuarioID']){
+                    
+                    foreach ($usuariosPostulantes as $userPos) {
+                        $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usarioAVerfID', $userPos['usuarioID']);
+        
+                        if ($documentacion) {
+                            foreach ($documentacion as $doc) {
                                 $result->result[] = [
-                                    'postulante' => $user,
+                                    'postulante' => $userPos,
                                     'documentacion' => $doc,
                                 ];
                             }
                         }
-                        
                     }
-                }else{
+                } else {
                     $result->success = false;
                     $result->message = 'No existen postulantes a verificar.';
                 }
@@ -117,6 +123,7 @@
             header('Content-Type: application/json');
             echo json_encode($result);
         }
+        
         
 
        //-------------------------------------------------------------------------------//
@@ -185,10 +192,13 @@
                 $idPostulante = (isset($_POST['id'])) ? $_POST['id'] : '';
                 if($idPostulante){
                     if($this->delete($idPostulante)){
+
                         $fechaVencimiento = new DateTime();
                         $fechaVencimiento->modify('+30 days');
-                        $this->verificacion->upsert($idPostulante,[
-                            'fechaVencimiento' => $fechaVencimiento,
+                        $fechaFormateada = $fechaVencimiento->format('Y-m-d H:i:s');
+
+                        $this->verificacion->insert($idPostulante,[
+                            'fechaVencimiento' => $fechaFormateada,
                             'usuarioPropuestaID' => $idPostulante,
                         ]);
 
