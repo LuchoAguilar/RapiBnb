@@ -17,7 +17,7 @@
             <div class="nav navbar-nav">
                 <a class="nav-item nav-link active" href="#" aria-current="page">RapiBnB<span class="visually-hidden">(current)</span></a>
                 <a class="nav-item nav-link" href="<?=URL_PATH.'/Administrador/home/';?>">Usuarios</a>
-                <a class="nav-item nav-link" href="<?=URL_PATH.'/Administrador/verificar/';?>">Verificaciones</a>
+                <a class="nav-item nav-link" href="<?=URL_PATH.'/Administrador/verificaciones/';?>">Verificaciones</a>
                 <a class="nav-item nav-link" href="<?=URL_PATH.'/Usuario/LogOut/';?>">Cerrar Sesion</a>
             </div>
         </nav>
