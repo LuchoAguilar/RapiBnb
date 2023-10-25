@@ -1,17 +1,23 @@
-async function usuarioList(){
+async function usuarioList() {
     let reposense = await fetch(URL_PATH + '/Administrador/table');
     let reposenseData = await reposense.json();
-    
-    if(reposenseData.success){
-     const tablaUsuarios = document.getElementById('tablaUsuarios');
-     tablaUsuarios.innerHTML = '';
-     
-     reposenseData.result.forEach(element => {
-         // beforebegin sirve para colocar al final de cada elemento
 
-         const verificado = element.verificado ? 'Verificado' : 'No verificado';
+    if (reposenseData.success) {
+        const tablaUsuarios = document.getElementById('tablaUsuarios');
+        tablaUsuarios.innerHTML = '';
+        let eliminarHTML = '';
 
-                tablaUsuarios.insertAdjacentHTML('beforeend', `
+        reposenseData.result.forEach(element => {
+            // beforebegin sirve para colocar al final de cada elemento
+
+            const verificado = element.verificado ? 'Verificado' : 'No verificado';
+            if(verificado === 'Verificado'){
+                eliminarHTML = `
+                    <button onclick="eliminarVerificacion(${element.usuario.usuarioID});" class="btn btn-danger">Eliminar</button>
+                `;
+            }
+
+            tablaUsuarios.insertAdjacentHTML('beforeend', `
                     <tr>
                         <th scope="row">${verificado}</th>
                         <td>${element.usuario.nombreUsuario}</td>
@@ -19,10 +25,29 @@ async function usuarioList(){
                         <td>${element.usuario.nombreCompleto}</td>
                         <td><img width="50" src="${URL_PATH}/Assets/images/fotoPerfil/${element.usuario.fotoRostro}" alt="Foto de perfil"></td>
                         <td>${element.usuario.bio}</td>
+                        <td>${eliminarHTML}</td>
                     </tr>
-                `);
-     });
+            `);
+        });
     }
- }
- usuarioList();
+}
+usuarioList();
+
+function eliminarVerificacion(id) {
+    const data = new FormData();
+    data.append('id', id);
+
+    fetch(URL_PATH + '/Administrador/borrarVerificacion/', {
+        method: 'POST',
+        body: data
+    }).then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log(data.message);
+                usuarioList();
+            } else {
+                console.log(data.message);
+            }
+        });
+}
 

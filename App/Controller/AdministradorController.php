@@ -203,7 +203,7 @@
                     $result->success = false;
                     $result->message = "Error al traer el ID.";
                 }
-            else{
+            }else{
                 $result->success = false;
                 $result->message = "Solicitud inválida.";
             }
@@ -212,6 +212,38 @@
             echo json_encode($result);    
         }
 
+        //---------------------------------------------------------------------------------------------------------------------//
+        //-----------------------------------------------Elminiar Verificacion---------------------------------------------------//
+
+        public function borrarVerificacion(){
+            $result = new Result();
+            if ($_SERVER["REQUEST_METHOD"] === "POST") {
+                $idUsuario = (isset($_POST['id'])) ? $_POST['id'] : '';
+                if($idUsuario){
+                    $verificado = $this->verificacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usuarioPropuestaID', $idUsuario);
+                    if($verificado){
+                        foreach($verificado as $ver){
+                            $this->verificacion->deleteById($ver['verificacionID']);
+                        }
+                        $result-> success = true;
+                        $result->message = 'Verificacion eliminada con éxito';
+                    }else{
+                        $result->success = false;
+                        $result->message = "Error el usuario no esta verificado."; 
+                    }
+
+                }else{
+                    $result->success = false;
+                    $result->message = "Error al traer el ID.";
+                }
+            }else{
+                $result->success = false;
+                $result->message = "Solicitud inválida.";
+            }
+            // Devuelve los resultados como JSON
+            header('Content-Type: application/json');
+            echo json_encode($result);                
+        }
         //---------------------------------------------------------------------------------------------------------------------//
 
     }

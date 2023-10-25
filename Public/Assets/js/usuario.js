@@ -6,7 +6,7 @@ async function user() {
         const cardUser = document.getElementById('divUser');
         const data = reposenseData.result.usuario;
         const intereses = reposenseData.result.intereses;
-        const documentacion = reposenseData.result.documentacion;
+        const documentacion = reposenseData.result.usuario.documentacionID;
         let interesesHTML = "";
         let documentacionHTML = "";
 
@@ -18,9 +18,9 @@ async function user() {
             interesesHTML = "Aún no ha agregado sus intereses";
         }
 
-        if (documentacion && documentacion.documentoAdjunto) {
+        if (documentacion != null) {
             documentacionHTML = `
-                <a class="btn btn-info" href="${URL_PATH}/usuario/documentacion/?id=${data.usuarioID}" role="button">Ver Documentación</a>
+                <a class="btn btn-info d-none" href="" role="button">no ver</a>
             `;
         } else {
             documentacionHTML = `

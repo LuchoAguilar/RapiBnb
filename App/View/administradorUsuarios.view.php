@@ -15,6 +15,7 @@
               <th scope="col">Nombre Completo</th>
               <th scope="col">Foto</th>
               <th scope="col">Bio</th>
+              <th scope="col">Quitar Verificación</th>
             </tr>
           </thead>
           <tbody id="tablaUsuarios">
