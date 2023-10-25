@@ -33,46 +33,11 @@ async function verificacionList() {
     } catch (error) {
         const errorContainer = document.getElementById('errorContainer');
         errorContainer.innerText = 'Ocurrió un error al cargar los datos.';
+        console.error('Error:', error);
     }
 }
 
 verificacionList();
-
-
-
-/*async function verificacionList() {
-    
-        const response = await fetch(URL_PATH + '/Administrador/postulantes');
-        const data = await response.json();
-
-        if (data.success) {
-            const tablaPostulantes = document.getElementById('tablaPostulantes');
-            tablaPostulantes.innerHTML = '';
-
-            data.result.forEach(element => {
-
-                tablaPostulantes.insertAdjacentHTML('beforeend', `
-                    <tr>
-                        <th scope="row">${element.postulante.nombreUsuario}</th>
-                        <td>${element.postulante.correo}</td>
-                        <td>
-                            <button onclick="mostrarDocumentacion('${element.documentacion.documentoAdjunto}');" class="btn btn-danger">Mostrar</button>
-                        </td>
-                        <td>
-                            <a name="" id="" class="btn btn-info" href="${URL_PATH}/Administrador/verificar/?id=${element.postulante.ofertaID}" role="button">Sí</a>
-                            |
-                            <button onclick="eliminarDocumentacion(${element.postulante.ofertaID});" class="btn btn-danger">No</button>
-                        </td>
-                    </tr>
-                `);
-            });
-        } else {
-            console.log(data.message);
-        }
-}
-
-verificacionList();*/
-
 
  function mostrarDocumentacion(documentoAdjunto){
     //mostrar en modal

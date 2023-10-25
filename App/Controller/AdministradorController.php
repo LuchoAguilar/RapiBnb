@@ -86,8 +86,10 @@
             $users = $this->usuarios->getAll();
         
             if ($users) {
+                foreach($users as $user){
+                    $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usarioAVerfID', $user['usuarioID']);
+                }
                 
-                $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usarioAVerfID', $user['usuarioID']);
                 if($documentacion){
                     $result->success = true;
                     $result->result = [];
