@@ -20,7 +20,7 @@ async function verificacionList() {
                             <button onclick="mostrarDocumentacion('${documentacion.documentoAdjunto}');" class="btn btn-danger">Mostrar</button>
                         </td>
                         <td>
-                            <a name="" id="" class="btn btn-info" href="${URL_PATH}/Administrador/verificar/?id=${postulante.usuarioID}" role="button">Sí</a>
+                            <button onclick="verificarCuenta(${postulante.usuarioID});" class="btn btn-info">Si</button>
                             |
                             <button onclick="eliminarDocumentacion(${postulante.usuarioID});" class="btn btn-danger">No</button>
                         </td>
@@ -41,6 +41,24 @@ verificacionList();
 
  function mostrarDocumentacion(documentoAdjunto){
     //mostrar en modal
+ }
+
+ function verificarCuenta(id){
+    const data = new FormData();
+    data.append('id', id);
+
+    fetch(URL_PATH + '/Administrador/verificar/', {
+        method: 'POST',
+        body: data
+    }).then(response => response.json())
+      .then(data => {
+        if (data.success) {
+            console.log(data.message);
+            verificacionList();
+        }else{
+            console.log(data.message);
+        }
+    }); 
  }
 
  function eliminarDocumentacion(id){

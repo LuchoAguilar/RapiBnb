@@ -129,30 +129,13 @@
                 $idPostulante = (isset($_POST['id'])) ? $_POST['id'] : '';
 
                 if ($idPostulante != '') {
-                    $user = $this->usuario->getById($idPostulante);
 
-                    if ($user) {
-                        $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usarioAVerfID', $idPostulante);
-
-                        foreach ($documentacion as $doc) {
-                            $documentacionPath = 'Assets/images/documentacion/' . $doc['documentoAdjunto'];
-
-                            if (file_exists($documentacionPath)) {
-                                unlink($documentacionPath);
-                            }
-
-                            $this->documentacion->deleteById($doc['certificacionID']);
-                        }
-
-                        $this->usuario->updateById($user['usuarioID'], [
-                            'documentacionID' => null,
-                        ]);
-
+                    if ($this->delete($idPostulante)) {
                         $result->success = true;
                         $result->message = 'Postulación eliminada con éxito.';
                     } else {
                         $result->success = false;
-                        $result->message = 'No se encontró el usuario con el ID especificado.';
+                        $result->message = 'Error al borrar la postulacion.';
                     }
                 } else {
                     $result->success = false;
@@ -168,7 +151,68 @@
             echo json_encode($result);
         }
 
+        public function delete($idPostulante){
+            $user = $this->usuario->getById($idPostulante);
+            if ($user) {
+                $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usarioAVerfID', $idPostulante);
 
+                foreach ($documentacion as $doc) {
+                    $documentacionPath = 'Assets/images/documentacion/' . $doc['documentoAdjunto'];
+
+                    if (file_exists($documentacionPath)) {
+                        unlink($documentacionPath);
+                    }
+
+                    $this->documentacion->deleteById($doc['certificacionID']);
+                }
+
+                $this->usuario->updateById($user['usuarioID'], [
+                    'documentacionID' => null,
+                ]);
+
+                return true;
+            } else {
+                return false;
+            }                   
+        }
+
+        //---------------------------------------------------------------------------------------------------------------------//
+        //-----------------------------------------------Verificar Cuenta---------------------------------------------------//
+
+        public function verificar(){
+            $result = new Result();
+            if ($_SERVER["REQUEST_METHOD"] === "POST") {
+                $idPostulante = (isset($_POST['id'])) ? $_POST['id'] : '';
+                if($idPostulante){
+                    if($this->delete($idPostulante)){
+                        $fechaVencimiento = new DateTime();
+                        $fechaVencimiento->modify('+30 days');
+                        $this->verificacion->upsert($idPostulante,[
+                            'fechaVencimiento' => $fechaVencimiento,
+                            'usuarioPropuestaID' => $idPostulante,
+                        ]);
+
+                        $result-> success = true;
+                        $result->message = 'Verificacion creada correctamente';
+                    }else{
+                        $result->success = false;
+                        $result->message = "Error al borrar la postulacion.";
+                    }
+                    
+                }else{
+                    $result->success = false;
+                    $result->message = "Error al traer el ID.";
+                }
+            else{
+                $result->success = false;
+                $result->message = "Solicitud inválida.";
+            }
+            // Devuelve los resultados como JSON
+            header('Content-Type: application/json');
+            echo json_encode($result);    
+        }
+
+        //---------------------------------------------------------------------------------------------------------------------//
 
     }
 ?>

@@ -1,13 +1,14 @@
 async function user() {
     let reposense = await fetch(URL_PATH + '/Usuario/table');
     let reposenseData = await reposense.json();
-
+    
     if (reposenseData.success) {
         const cardUser = document.getElementById('divUser');
         const data = reposenseData.result.usuario;
         const intereses = reposenseData.result.intereses;
+        const documentacion = reposenseData.result.documentacion;
         let interesesHTML = "";
-        const documentacion = (reposenseData.result.usuario.documentacionID == null) ? false : true;
+        let documentacionHTML = "";
 
         if (intereses && intereses.length > 0) {
             interesesHTML = intereses.map(interes => {
@@ -17,12 +18,21 @@ async function user() {
             interesesHTML = "Aún no ha agregado sus intereses";
         }
 
-        let documentacionHTML = (documentacion == false) ? '<a class="btn btn-info" href="${URL_PATH}/usuario/verificar/?id=${data.usuarioID}" role="button">verificarCuenta</a>' : '';
+        if (documentacion && documentacion.documentoAdjunto) {
+            documentacionHTML = `
+                <a class="btn btn-info" href="${URL_PATH}/usuario/documentacion/?id=${data.usuarioID}" role="button">Ver Documentación</a>
+            `;
+        } else {
+            documentacionHTML = `
+                <a class="btn btn-info" href="${URL_PATH}/usuario/documentacionForm/" role="button">Subir Documentación</a>
+            `;
+        }
 
         if (data) {
             const foto = (data.fotoRostro != null) ? data.fotoRostro : 'user.png';
             const nombre = (data.nombreCompleto != null) ? data.nombreCompleto : 'Agregue su nombre';
             const bio = (data.bio != null) ? data.bio : 'Agregue su bio';
+
             cardUser.innerHTML = `
                 <div style="padding: 3rem !important; display: flex; justify-content: center;">
                     <div style="width: 400px; background-color: #f0f0f0; border-radius: 10px; padding: 20px;">
@@ -62,7 +72,6 @@ async function user() {
             const nombre = (reposenseData.result.nombreCompleto != null) ? reposenseData.result.nombreCompleto : 'Agregue su nombre';
             const bio = (reposenseData.result.bio != null) ? reposenseData.result.bio : 'Agregue su bio';
 
-            let documentacionHTML = (documentacion == false)? '<a class="btn btn-info" href="${URL_PATH}/usuario/verificar/?id=${reposenseData.result.usuarioID}" role="button">Verificar Cuenta</a>' : '';
             cardUser.innerHTML = `
                 <div style="padding: 3rem !important; display: flex; justify-content: center;">
                     <div style="width: 400px; background-color: #f0f0f0; border-radius: 10px; padding: 20px;">
@@ -98,9 +107,9 @@ async function user() {
                 </div>
             `;
         }
-
+    } else {
+        console.log(data.message);
     }
 }
-
 
 user();
