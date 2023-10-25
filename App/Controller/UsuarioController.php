@@ -375,12 +375,22 @@
                     $nombre_foto = $fecha_img->getTimestamp() . "_$foto";
                     $fechaVencimiento = new DateTime();
                     $fechaVencimiento->modify('+2 days');
+                    $fechaFormateada = $fechaVencimiento->format('Y-m-d H:i:s');
         
                     if (empty($documentacion)) {
                         moveDocumento($nombre_foto);
                         $this->documentacion->insert([
                             'documentoAdjunto' => $nombre_foto,
-                            'fechaVencimiento' => $fechaVencimiento, 
+                            'fechaDeVencimiento' => $fechaFormateada,
+                            'usarioAVerfID' => $user,
+                        ]);
+                        $docs = $this->documentacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usarioAVerfID', $user);
+                        $idDoc = '';
+                        foreach($docs as $doc){
+                            $idDoc = $doc['certificacionID'];
+                        }
+                        $this->usuarioModel->updateById($user,[
+                            'documentacionID' => $idDoc,
                         ]);
                     }
                     

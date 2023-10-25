@@ -6,7 +6,7 @@ async function user() {
         const cardUser = document.getElementById('divUser');
         const data = reposenseData.result.usuario;
         const intereses = reposenseData.result.intereses;
-        const documentacion = reposenseData.result.usuario.documentacionID;
+        const documentacion = reposenseData.result.documentacionID;
         let interesesHTML = "";
         let documentacionHTML = "";
 
@@ -24,7 +24,7 @@ async function user() {
             `;
         } else {
             documentacionHTML = `
-                <a class="btn btn-info" href="${URL_PATH}/usuario/documentacionForm/" role="button">Subir Documentación</a>
+                <a class="btn btn-info" href="${URL_PATH}/usuario/verificar/" role="button">Subir Documentación</a>
             `;
         }
 
