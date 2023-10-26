@@ -34,7 +34,7 @@ async function user() {
 
         cardUser.innerHTML = `
                 <div style="padding: 3rem !important; display: flex; justify-content: center;">
-                    <div style="width: 400px; background-color: #f0f0f0; border-radius: 10px; padding: 20px;">
+                    <div style="width: 600px; background-color: #f0f0f0; border-radius: 10px; padding: 20px;">
                         <div style="text-align: center;">
                             <img src="${URL_PATH}/Assets/images/fotoPerfil/${foto}" style="border-radius: 50%; max-width: 100px;" alt="User-Profile-Image">
                             <h6 style="font-weight: 600; margin-top: 10px;">${data.nombreUsuario}</h6>
@@ -59,7 +59,7 @@ async function user() {
                             </div>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                            <a class="btn btn-info" href="${URL_PATH}/usuario/edit/?id=${data.usuarioID}" role="button">Editar perfil</a>
+                            <button onclick="modalRestriccion(${data.usuarioID},${esVerificado});" class="btn btn-info">Editar Perfil</button>
                             ${documentacionHTML}
                             <a class="btn btn-info" href="${URL_PATH}/usuario/interesesForm/" role="button">Agregar intereses</a>
                         </div>
@@ -73,3 +73,18 @@ async function user() {
 }
 
 user();
+
+function modalRestriccion(id,esVerificado){
+    
+    if(esVerificado === true){
+        Modal.warning({
+            title: 'Si edita su perfil, debera verificar su cuenta nuevamente',
+            confirm: true,
+            onAccept:()=>{
+                window.location.replace(`${URL_PATH}/usuario/edit/?id=${id}`);
+            }
+        });
+    }else{
+        window.location.replace(`${URL_PATH}/usuario/edit/?id=${id}`);
+    }
+}

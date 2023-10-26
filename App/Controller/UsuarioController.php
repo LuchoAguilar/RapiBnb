@@ -4,6 +4,7 @@
     require_once(__DIR__.'/../Model/intereses.php');
     require_once(__DIR__.'/../Model/documentacion.php');
     require_once(__DIR__.'/../Model/administrador.php');
+    require_once(__DIR__.'/../Model/verificacion.php');
 
     class UsuarioController extends Controller{
 
@@ -11,12 +12,14 @@
         private $userSession;
         private $intereses;
         private $documentacion;
+        private $verificacion;
 
         public function __construct($connect, $session){
             $this->usuarioModel = new Usuario($connect);
             $this->intereses = new Intereses($connect);
             $this->documentacion = new documentacion($connect);
             $this->userSessionControl = new ControladorDeSessiones($session,$connect);
+            $this->verificacion = new Verificacion($connect);
         }
 
         //---------------------------------------------muestra de perfil de usuario--------------------------------------------------//
@@ -194,9 +197,7 @@
         public function edit(){
             if($this->userSessionControl->Roll() === LOG){
                 $id = $_GET['id'];
-
                 $usuario = $this->usuarioModel->getById($id);
-
                 $this->render('usuarioEdit',[
                     'usuario' => $usuario,
                 ],'site');
@@ -214,10 +215,11 @@
                 $correo = (isset($_POST['correo'])) ? $_POST['correo'] : null;
                 $nombreCompleto = (isset($_POST['nombre'])) ? $_POST['nombre'] : null;
                 $bio = (isset($_POST['bio'])) ? $_POST['bio'] : null;
+                $userVerificado = $this->userSessionControl->esVerificado();
         
                 if ($idUsuario !== null && is_numeric($idUsuario)) {
                     $usuario = $this->usuarioModel->getById($idUsuario);
-        
+                    
                     if ($usuario) {
                         // Verificar si se subió una nueva foto y eliminar la foto anterior si existe
                         $foto = (isset($_FILES['fotoPerfil']['name'])) ? $_FILES['fotoPerfil']['name'] : "";
@@ -256,6 +258,15 @@
                                 'nombreCompleto' => $nombreCompleto,
                                 'bio' => $bio,
                             ]);
+                        }
+
+                        if($userVerificado === true){
+                            $verificado = $this->verificacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usuarioPropuestaID', $idUsuario);
+                            if($verificado){
+                                foreach($verificado as $ver){
+                                    $this->verificacion->deleteById($ver['verificacionID']);
+                                }
+                            }
                         }
         
                         $result->success = true;

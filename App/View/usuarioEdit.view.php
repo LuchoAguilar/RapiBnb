@@ -4,11 +4,11 @@
     </div>
     <div class="card-body">
         <form action="" method="post" enctype="multipart/form-data" id="usuarioEdit">
-            <div class="mb-3">
+            <div class="mb-3 d-none">
                 <label for="textID" class="form-label">ID</label>
                 <input type="text" class="form-control" value="<?= $parameters['usuario']['usuarioID'] ?? ''?>" name="textID" id="textID" placeholder="ID">
             </div>
-
+            
             <div class="mb-3">
                 <label for="usuario" class="form-label">Usuario</label>
                 <input type="text" class="form-control" value="<?= $parameters['usuario']['nombreUsuario'] ?? ''?>" name="usuario" id="usuario" placeholder="Usuario">
