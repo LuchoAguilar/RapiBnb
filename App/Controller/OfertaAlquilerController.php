@@ -84,6 +84,13 @@
 
                 $fotosString = implode(", ", $galeriaFotos);
             }
+            $esVerificado = $this->userSession->esVerificado();
+            $estado = '';
+            if($esVerificado === true){
+                $estado = 'publicado';
+            }else{
+                $estado = 'espera';
+            }
 
             $id = $this->userSession->ID();
 
@@ -100,6 +107,7 @@
                 'cupo' => $cupo,
                 'fechaInicio' => $fechaIni,
                 'fechaFin' => $fechaFin,
+                'estado' => $estado,
                 'creadorID' => $id
             ]);
 

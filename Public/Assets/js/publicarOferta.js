@@ -48,6 +48,7 @@ async function ofertasAlquilerCard() {
                         <p class="card-text"><small class="text-muted">Cupo: ${element.cupo} personas</small></p>
                         <p class="card-text"><small class="text-muted">Fecha de Inicio: ${element.fechaInicio ?? 'No especificada'}</small></p>
                         <p class="card-text"><small class="text-muted">Fecha de Fin: ${element.fechaFin ?? 'No especificada'}</small></p>
+                        <p class="card-text"><small class="text-muted">Estado de publicación: ${element.estado}</small></p>
                     </div>
                     <div class="card-footer">
                         <a name="" id="" class="btn btn-info" href="${URL_PATH}/OfertaAlquiler/edit/?id=${element.ofertaID}" role="button">Modificar Oferta</a>
