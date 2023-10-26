@@ -39,9 +39,14 @@ async function verificacionList() {
 
 verificacionList();
 
- function mostrarDocumentacion(documentoAdjunto){
-    //mostrar en modal
- }
+function mostrarDocumentacion(documentoAdjunto) {
+
+}
+
+
+
+
+
 
  function verificarCuenta(id){
     const data = new FormData();
