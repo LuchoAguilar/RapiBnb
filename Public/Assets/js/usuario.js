@@ -6,8 +6,6 @@ async function user() {
         const cardUser = document.getElementById('divUser');
         const data = reposenseData.result.usuario;
         const intereses = reposenseData.result.intereses;
-        const documentacion = reposenseData.result.documentacionID;
-        const documentacionData = data.documentacionID;
         let interesesHTML = "";
         let documentacionHTML = "";
 
@@ -19,21 +17,22 @@ async function user() {
             interesesHTML = "Aún no ha agregado sus intereses";
         }
 
-        if (documentacion != null || documentacionData !=null) {
-            documentacionHTML = `
-                <a class="btn btn-info d-none" href="" role="button">no ver</a>
-            `;
-        } else {
-            documentacionHTML = `
-                <a class="btn btn-info" href="${URL_PATH}/usuario/verificar/" role="button">Subir Documentación</a>
-            `;
-        }
+        
 
         if (data) {
             const foto = (data.fotoRostro != null) ? data.fotoRostro : 'user.png';
             const nombre = (data.nombreCompleto != null) ? data.nombreCompleto : 'Agregue su nombre';
             const bio = (data.bio != null) ? data.bio : 'Agregue su bio';
-
+            const documentacionData = data.documentacionID;
+            if (documentacionData != null) {
+                documentacionHTML = `
+                    <a class="btn btn-info d-none" href="" role="button">no ver</a>
+                `;
+            } else {
+                documentacionHTML = `
+                    <a class="btn btn-info" href="${URL_PATH}/usuario/verificar/" role="button">Subir Documentación</a>
+                `;
+            }
             cardUser.innerHTML = `
                 <div style="padding: 3rem !important; display: flex; justify-content: center;">
                     <div style="width: 400px; background-color: #f0f0f0; border-radius: 10px; padding: 20px;">
@@ -69,10 +68,19 @@ async function user() {
                 </div>
             `;
         } else {
+            const documentacion = reposenseData.result.documentacionID;
             const foto = (reposenseData.result.fotoRostro != null) ? reposenseData.result.fotoRostro : 'user.png';
             const nombre = (reposenseData.result.nombreCompleto != null) ? reposenseData.result.nombreCompleto : 'Agregue su nombre';
             const bio = (reposenseData.result.bio != null) ? reposenseData.result.bio : 'Agregue su bio';
-
+            if (documentacion != null) {
+                documentacionHTML = `
+                    <a class="btn btn-info d-none" href="" role="button">no ver</a>
+                `;
+            } else {
+                documentacionHTML = `
+                    <a class="btn btn-info" href="${URL_PATH}/usuario/verificar/" role="button">Subir Documentación</a>
+                `;
+            }
             cardUser.innerHTML = `
                 <div style="padding: 3rem !important; display: flex; justify-content: center;">
                     <div style="width: 400px; background-color: #f0f0f0; border-radius: 10px; padding: 20px;">

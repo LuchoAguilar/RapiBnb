@@ -34,8 +34,10 @@
             
             $result = new Result();
             $user = $this->userSessionControl->ID();
+            $userVerificado = $this->userSessionControl->esVerificado();
             $usuario = $this->usuarioModel->getById($user);
             $intereses = $this->intereses->buscarRegistrosRelacionados('usuarios','usuarioID','userInteresesID',$user);
+            // toca pasar el parametro de verificado
             if(empty($intereses)){
                 $result->success = true;
                 $result->result = $usuario;

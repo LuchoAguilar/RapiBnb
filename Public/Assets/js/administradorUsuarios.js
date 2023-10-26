@@ -38,20 +38,27 @@ async function usuarioList() {
 usuarioList();
 
 function eliminarVerificacion(id) {
-    const data = new FormData();
-    data.append('id', id);
+    Modal.danger({
+        confirm: true,
+        title: '¿Desea quitar la verificación del usuario?',
+        onAccept:()=>{
+            const data = new FormData();
+            data.append('id', id);
 
-    fetch(URL_PATH + '/Administrador/borrarVerificacion/', {
-        method: 'POST',
-        body: data
-    }).then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log(data.message);
-                usuarioList();
-            } else {
-                console.log(data.message);
-            }
-        });
+            fetch(URL_PATH + '/Administrador/borrarVerificacion/', {
+                method: 'POST',
+                body: data
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(data.message);
+                    usuarioList();
+                } else {
+                    console.log(data.message);
+                }
+            });
+        }
+    })
+    
 }
 
