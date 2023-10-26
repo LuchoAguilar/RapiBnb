@@ -43,11 +43,11 @@
                     $isVerificado = false;
         
                     // Obtiene la lista de usuarios verificados relacionados con este usuario
-                    $verificados = $this->usuarios->buscarRegistrosRelacionados('verificacion_cuenta', 'verificacionID', 'usuarioID', $user['usuarioID']);
+                    $verificados = $this->verificacion->getAll();
         
                     // Verifica si el usuario está en la lista de usuarios verificados
                     foreach ($verificados as $userVerificado) {
-                        if ($user['usuarioID'] == $userVerificado['usuarioID']) {
+                        if ($user['usuarioID'] == $userVerificado['usuarioPropuestaID']) {
                             $isVerificado = true;
                             break;
                         }

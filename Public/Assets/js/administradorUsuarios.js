@@ -13,7 +13,11 @@ async function usuarioList() {
             const verificado = element.verificado ? 'Verificado' : 'No verificado';
             if(verificado === 'Verificado'){
                 eliminarHTML = `
-                    <button onclick="eliminarVerificacion(${element.usuario.usuarioID});" class="btn btn-danger">Eliminar</button>
+                    <button onclick="eliminarVerificacion(${element.usuario.usuarioID});" class="btn btn-danger">Quitar</button>
+                `;
+            }else{
+                eliminarHTML = `
+                    <button class="btn btn-danger d-none">Eliminar</button>
                 `;
             }
 
