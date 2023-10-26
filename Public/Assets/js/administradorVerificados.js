@@ -40,13 +40,10 @@ async function verificacionList() {
 verificacionList();
 
 function mostrarDocumentacion(documentoAdjunto) {
-
+    Modal.confirm({
+        title: 'esta viendo un modal',
+    });
 }
-
-
-
-
-
 
  function verificarCuenta(id){
     const data = new FormData();
