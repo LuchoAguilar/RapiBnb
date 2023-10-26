@@ -73,7 +73,7 @@ class ControladorDeSessiones {
     
 
     public function usuariosVerificados() {
-        if ($this->session->exists) {
+        if ($this->session->exists()) {
             $users = $this->usuarios->busquedaForanea('verificacion_cuenta', 'usuarioPropuestaID','usuarioID');
     
             if ($users) {

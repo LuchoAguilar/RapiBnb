@@ -13,6 +13,7 @@ async function user() {
         const documentacionData = data.documentacionID;
         let interesesHTML = "";
         let documentacionHTML = "";
+        let verificado = "";
 
         if (intereses && intereses.length > 0) {
             interesesHTML = intereses.map(interes => {
@@ -21,7 +22,7 @@ async function user() {
         } else {
             interesesHTML = "Aún no ha agregado sus intereses";
         }
-        
+
         if (documentacionData === null && esVerificado === null) {
             documentacionHTML = `
                     <a class="btn btn-info" href="${URL_PATH}/usuario/verificar/" role="button">Verificar Cuenta</a>
@@ -30,6 +31,18 @@ async function user() {
             documentacionHTML = `
                     <a class="btn btn-info d-none" href="" role="button">no ver</a>
                 `;
+            if (esVerificado === true) {
+                verificado = `
+                <h6 style="font-weight: 600; margin-bottom: 10px;">Estado:</h6>
+                <p style="font-weight: 400;">Verificado</p>
+            `;
+            } else {
+                verificado = `
+                <h6 style="font-weight: 600; margin-bottom: 10px;">Estado:</h6>
+                <p style="font-weight: 400;">Procesando solicitud de verificación</p>
+            `;
+            }
+
         }
 
         cardUser.innerHTML = `
@@ -57,6 +70,9 @@ async function user() {
                                 <h6 style="font-weight: 600; margin-bottom: 10px;">Intereses:</h6>
                                 ${interesesHTML}
                             </div>
+                            <div>
+                                ${verificado}
+                            </div>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-top: 20px;">
                             <button onclick="modalRestriccion(${data.usuarioID},${esVerificado});" class="btn btn-info">Editar Perfil</button>
@@ -74,17 +90,17 @@ async function user() {
 
 user();
 
-function modalRestriccion(id,esVerificado){
-    
-    if(esVerificado === true){
+function modalRestriccion(id, esVerificado) {
+
+    if (esVerificado === true) {
         Modal.warning({
             title: 'Si edita su perfil, debera verificar su cuenta nuevamente',
             confirm: true,
-            onAccept:()=>{
+            onAccept: () => {
                 window.location.replace(`${URL_PATH}/usuario/edit/?id=${id}`);
             }
         });
-    }else{
+    } else {
         window.location.replace(`${URL_PATH}/usuario/edit/?id=${id}`);
     }
 }

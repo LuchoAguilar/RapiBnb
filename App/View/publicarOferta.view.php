@@ -1,11 +1,9 @@
 <main class="container mt-3">
-    
-        <div id="divCard"></div>
-
-        <div class="card text-center" >
-            <div class="card-body">
-            <a name="" id="" class="btn btn-info" href="<?=URL_PATH.'/OfertaAlquiler/crear';?>" role="button">Crear Oferta</a>
-            </div>
+        <div class="container">
+        <button onclick="crearOferta(<?= $parameters['esVerificado'] ?? 'false' ?>, <?= $parameters['cantOfertas'] ?? 0 ?>);" class="btn btn-info">Crear Oferta</button>
+        </div>
+        <div class="row">
+            <div class="col" id="divCard"></div>
         </div>
         
 </main>

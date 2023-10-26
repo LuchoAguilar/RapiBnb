@@ -9,7 +9,7 @@ async function ofertasAlquilerCard() {
         data.forEach(element => {
             const galeriaFotosStr = element.galeriaFotos;
             const galeriaFotosArray = galeriaFotosStr.split(", ");
-            
+
             let carrouselHTML = ''; // Variable para almacenar el HTML del carrusel
             galeriaFotosArray.forEach((foto, index) => {
                 const activeClass = index === 0 ? 'active' : ''; // Establecer la primera imagen como activa
@@ -50,7 +50,7 @@ async function ofertasAlquilerCard() {
                 </div>
                 <div class="card-footer">
                     <a name="" id="" class="btn btn-info" href="${URL_PATH}/OfertaAlquiler/edit/?id=${element.ofertaID}" role="button">Modificar Oferta</a>
-                    <button onclick="eliminarUsuario(${element.ofertaID});"  class="btn btn-danger">Eliminar Oferta</button>
+                    <button onclick="eliminarOferta(${element.ofertaID});"  class="btn btn-danger">Eliminar Oferta</button>
                 </div>
         </div>
             `;
@@ -60,18 +60,41 @@ async function ofertasAlquilerCard() {
 
 ofertasAlquilerCard();
 
-function eliminarUsuario(id) {
-    const data = new FormData();
-    data.append('id', id);
+function eliminarOferta(id) {
+    Modal.danger({
+        title: '¿Desea eliminar oferta?',
+        confirm: true,
+        onAccept: () => {
+            const data = new FormData();
+            data.append('id', id);
 
-    fetch(URL_PATH + '/OfertaAlquiler/delete/', {
-        method: 'POST',
-        body: data
-    }).then(response => response.json())
-      .then(data => {
-        if (data.success) {
-            console.log(data.message);
-            ofertasAlquilerCard();
+            fetch(URL_PATH + '/OfertaAlquiler/delete/', {
+                method: 'POST',
+                body: data
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log(data.message);
+                        ofertasAlquilerCard();
+                    }
+                });
         }
     });
+
+}
+
+function crearOferta(esVerificado,cantOfertas) {
+    if(esVerificado === false){
+        if(cantOfertas>0){
+            Modal.danger({
+                title:'No puede agregar más ofertas de alquiler',
+                content: 'Para poder agregar más ofertas de alquiler debe verificar su cuenta primero',
+                confirm: false
+            });
+        }else{
+            window.location.replace(`${URL_PATH}/OfertaAlquiler/crear/`);
+        }
+    }else{
+        window.location.replace(`${URL_PATH}/OfertaAlquiler/crear/`);
+    }
 }

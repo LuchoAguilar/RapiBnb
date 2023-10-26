@@ -86,7 +86,7 @@ const Modal = {
             icon: 'fa-solid fa-bug',
             type: 'danger',
             confirm: false,
-            acceptText : 'Confirmar',
+            acceptText : 'Aceptar',
             ...params
         });
     }

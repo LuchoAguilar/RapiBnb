@@ -14,7 +14,19 @@
 
         public function home(){
             if($this->userSession->Roll() === LOG){
-                $this->render('publicarOferta', [] ,'site');
+                $user = $this->userSession->ID();
+                $userVerificado = $this->userSession->esVerificado();
+                $ofertasUsuario = $this->ofertaModel->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'creadorID' , $user);
+                $cont = 0;
+                foreach($ofertasUsuario as $ofertas){
+                    if($ofertas != null){
+                        $cont++;
+                    }
+                }
+                $this->render('publicarOferta', [
+                    'esVerificado' => $userVerificado,
+                    'cantOfertas' => $cont,
+                ] ,'site');
             }else{
                 header("Location:".URL_PATH);
             }
@@ -149,12 +161,10 @@
         public function table(){
             $result = new Result();
             $userLogin = $this->userSession->ID();
-            $userVerf = $this->userSession->esVerificado();
             $ofertasUsuario = $this->ofertaModel->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'creadorID' , $userLogin);
             $result->success = true;
             $result->result = [
                 'ofertas' => $ofertasUsuario,
-                'userVerificado' => $userVerf
             ];            
             echo json_encode($result);
         }
