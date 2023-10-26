@@ -27,7 +27,7 @@ const Modal = {
                         ${content}
                         </div>
                     </div>
-                    <div class="mt-5">
+                    <div class="mt-5 text-center">
                     ${cancelBtn}
                     <button type="button" id="accept${uniqueID}" class="btn btn-${type}">${acceptText}</button>
                     </div>

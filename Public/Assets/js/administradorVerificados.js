@@ -41,42 +41,60 @@ verificacionList();
 
 function mostrarDocumentacion(documentoAdjunto) {
     Modal.confirm({
-        title: 'esta viendo un modal',
+        title: 'Documentación',
+        content: `<img width="400" src="${URL_PATH}/Assets/images/documentacion/${documentoAdjunto}" alt="User-Profile-Image">`,
+        confirm: false
     });
 }
 
- function verificarCuenta(id){
-    const data = new FormData();
-    data.append('id', id);
 
-    fetch(URL_PATH + '/Administrador/verificar/', {
-        method: 'POST',
-        body: data
-    }).then(response => response.json())
-      .then(data => {
-        if (data.success) {
-            console.log(data.message);
-            verificacionList();
-        }else{
-            console.log(data.message);
+ function verificarCuenta(id){
+    Modal.confirm({
+        title: '¿Verificar Cuenta?',
+        confirm: true,
+        onAccept:()=>{
+            const data = new FormData();
+            data.append('id', id);
+
+            fetch(URL_PATH + '/Administrador/verificar/', {
+                method: 'POST',
+                body: data
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(data.message);
+                    verificacionList();
+                }else{
+                    console.log(data.message);
+                }
+            }); 
         }
-    }); 
+    });
+    
  }
 
  function eliminarDocumentacion(id){
-    const data = new FormData();
-    data.append('id', id);
 
-    fetch(URL_PATH + '/Administrador/borrarPostulacion/', {
-        method: 'POST',
-        body: data
-    }).then(response => response.json())
-      .then(data => {
-        if (data.success) {
-            console.log(data.message);
-            verificacionList();
-        }else{
-            console.log(data.message);
+    Modal.danger({
+        confirm: true,
+        title: '¿Desea descartar la verificación del usuario?',
+        onAccept:()=>{
+            const data = new FormData();
+            data.append('id', id);
+
+            fetch(URL_PATH + '/Administrador/borrarPostulacion/', {
+                method: 'POST',
+                body: data
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(data.message);
+                    verificacionList();
+                }else{
+                    console.log(data.message);
+                }
+            });
         }
-    });
+    })
+    
  }
