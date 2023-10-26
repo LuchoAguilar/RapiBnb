@@ -21,8 +21,8 @@
 <body>
     <header>
         <nav class="navbar navbar-expand navbar-ligth bg-light">
-            <div class="nav navbar-nav">
-                <a class="nav-item nav-link active" href="#" aria-current="page">RapiBnB<span class="visually-hidden">(current)</span></a>
+            <div class="nav navbar-nav" id="nav">
+                <a class="nav-item nav-link active" href="#" aria-current="page" id="icon">RapiBnB<span class="visually-hidden">(current)</span></a>
                 <a class="nav-item nav-link" href="<?=URL_PATH.'/Usuario/home/';?>">Usuario</a>
                 <a class="nav-item nav-link" href="<?=URL_PATH.'/OfertaAlquiler/home';?>">Publicaciones</a>
                 <a class="nav-item nav-link" href="<?=URL_PATH.'/Usuario/LogOut/';?>">Cerrar Sesion</a>
@@ -35,5 +35,7 @@
     <footer>
         <!-- footer -->
     </footer>
+
+    <script src="<?= URL_PATH?>/Assets/js/nav.js"></script>
 </body>
 </html>
