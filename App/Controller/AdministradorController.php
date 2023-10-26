@@ -159,23 +159,27 @@
         }
 
         public function delete($idPostulante){
-            $user = $this->usuario->getById($idPostulante);
+            $user = $this->usuarios->getById($idPostulante);
             if ($user) {
-                $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usarioAVerfID', $idPostulante);
-
-                foreach ($documentacion as $doc) {
-                    $documentacionPath = 'Assets/images/documentacion/' . $doc['documentoAdjunto'];
-
-                    if (file_exists($documentacionPath)) {
-                        unlink($documentacionPath);
+                $documentacion = $this->documentacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usarioAVerfID', $user['usuarioID']);
+                if($documentacion){
+                    $this->usuarios->updateById($user['usuarioID'], [
+                        'documentacionID' => null,
+                    ]);
+                    foreach ($documentacion as $doc) {
+                        $documentacionPath = 'Assets/images/documentacion/' . $doc['documentoAdjunto'];
+    
+                        if (file_exists($documentacionPath)) {
+                            unlink($documentacionPath);
+                        }
+    
+                        $this->documentacion->deleteById($doc['certificacionID']);
                     }
-
-                    $this->documentacion->deleteById($doc['certificacionID']);
+                    
                 }
+                
 
-                $this->usuario->updateById($user['usuarioID'], [
-                    'documentacionID' => null,
-                ]);
+                
 
                 return true;
             } else {
@@ -186,41 +190,43 @@
         //---------------------------------------------------------------------------------------------------------------------//
         //-----------------------------------------------Verificar Cuenta---------------------------------------------------//
 
-        public function verificar(){
+        public function verificar() {
             $result = new Result();
+            
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $idPostulante = (isset($_POST['id'])) ? $_POST['id'] : '';
-                if($idPostulante){
-                    if($this->delete($idPostulante)){
-
+                
+                if ($idPostulante != '') {
+                    if ($this->delete($idPostulante)) {
                         $fechaVencimiento = new DateTime();
                         $fechaVencimiento->modify('+30 days');
                         $fechaFormateada = $fechaVencimiento->format('Y-m-d H:i:s');
-
-                        $this->verificacion->insert($idPostulante,[
+        
+                        $this->verificacion->insert([
                             'fechaVencimiento' => $fechaFormateada,
                             'usuarioPropuestaID' => $idPostulante,
                         ]);
-
-                        $result-> success = true;
-                        $result->message = 'Verificacion creada correctamente';
-                    }else{
+        
+                        $result->success = true;
+                        $result->message = 'Verificación creada correctamente';
+                    } else {
                         $result->success = false;
-                        $result->message = "Error al borrar la postulacion.";
+                        $result->message = "Error al borrar la postulación.";
                     }
-                    
-                }else{
+                } else {
                     $result->success = false;
                     $result->message = "Error al traer el ID.";
                 }
-            }else{
+            } else {
                 $result->success = false;
                 $result->message = "Solicitud inválida.";
             }
+            
             // Devuelve los resultados como JSON
             header('Content-Type: application/json');
-            echo json_encode($result);    
+            echo json_encode($result);
         }
+        
 
         //---------------------------------------------------------------------------------------------------------------------//
         //-----------------------------------------------Elminiar Verificacion---------------------------------------------------//
