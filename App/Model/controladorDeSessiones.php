@@ -3,11 +3,13 @@ class ControladorDeSessiones {
     private $session;
     private $usuarios;
     private $administradores;
+    private $verificados;
 
     public function __construct($session, $connect) {
         $this->session = $session;
         $this->usuarios = new Orm('usuarioID', 'usuarios', $connect);
         $this->administradores = new Orm('administradorID', 'administrador', $connect);
+        $this->verificados = new Orm('verificacionID','verificacion_cuenta', $connect);
     }
 
     public function ID() {
@@ -57,7 +59,7 @@ class ControladorDeSessiones {
             $user = $this->usuarios->getById($this->ID());
     
             if ($user) {
-                $verificado = $this->usuarios->buscarRegistrosRelacionados('verificacion_cuenta', 'usuarioPropuestaID','usuarioID', $user['usuarioID']);
+                $verificado = $this->verificados->buscarRegistrosRelacionados('usuarios', 'usuarioID','usuarioPropuestaID', $user['usuarioID']);
                 if(!empty($verificado)){
                     return true;
                 }else{

@@ -40,12 +40,16 @@
             // toca pasar el parametro de verificado
             if(empty($intereses)){
                 $result->success = true;
-                $result->result = $usuario;
+                $result->result = [
+                    'usuario' => $usuario,
+                    'esVerificado' => $userVerificado,
+                ];
             }else{
                 $result->success = true;
                 $result->result = [
                     'usuario' => $usuario,
-                    'intereses' => $intereses
+                    'intereses' => $intereses,
+                    'esVerificado' => $userVerificado,
                 ];
             } 
             echo json_encode($result);
