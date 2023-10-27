@@ -10,4 +10,10 @@
     define('NO_LOG','usuario');
     define('ADMIN','admin');
     //constantes de fallo de sesion
+    //constantes de estados de oferta
+    define('PUBLICADO','publicado');
+    define('ESPERA', 'espera');
+    //constantes de estado de aplicacion
+    define('ACEPTADO','aceptado');
+    define('RECHAZADO','rechazado');
 ?>
