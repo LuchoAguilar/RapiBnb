@@ -19,39 +19,47 @@
             
         }
 
-        public function table(){
+        public function table() {
             $result = new Result();
             $userID = $this->userSession->ID();
-            //obtener ofertas de alquiler del usuario
-            $ofertasUser = $this->ofertas->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'creadorID' , $userID);
-            //obtener solo las que estan publicadas
+        
+            // Obtener ofertas de alquiler del usuario
+            $ofertasUser = $this->ofertas->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'creadorID', $userID);
+        
+            // Obtener solo las que están publicadas
             $ofertasPublicadas = [];
-            foreach($ofertasUser as $ofUser){
-                if($ofUser['estado'] === PUBLICADO){
+        
+            foreach ($ofertasUser as $ofUser) {
+                if ($ofUser['estado'] === PUBLICADO) {
                     $ofertasPublicadas[] = $ofUser;
                 }
             }
-            //obtener aplicantes de oferta
+        
+            // Obtener aplicantes de oferta
             $aplicantesOferta = [];
-            foreach($ofertasPublicadas as $oferPublicada){
-                $aplicantesOferta[] = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler','ofertaID','ofertaAlquilerID',$oferPublicada['ofertaID']);
+        
+            foreach ($ofertasPublicadas as $oferPublicada) {
+                $aplicantesOferta[] = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
             }
-            //obtener los usuarios que aplican a la oferta
-            $usuarioAplicante = []; 
-            foreach($aplicantesOferta as $apOferta){
-                $usuarioAplicante[] = $this->usuarios->buscarRegistrosRelacionados('usuarios','usuarioID','usuarioAplicoID',$apOferta['usuarioAplicoID']);
+        
+            // Obtener los usuarios que aplican a la oferta
+            $usuarioAplicante = [];
+        
+            foreach ($aplicantesOferta as $apOferta) {
+                $usuarioAplicante[] = $this->usuarios->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usuarioAplicoID', $apOferta['usuarioAplicoID']);
             }
-            //enviar la data
+        
+            // Enviar la data
             $result->success = true;
             $result->result = [
-                'ofertasPublicadas' = $ofertasPublicadas,
-                'aplicantesOferta' = $aplicantesOferta,
-                'usuariosAplicantes' = $usuarioAplicante,
+                'ofertasPublicadas' => $ofertasPublicadas,
+                'aplicantesOferta' => $aplicantesOferta,
+                'usuariosAplicantes' => $usuarioAplicante,
             ];
-
-            json_encode($result);
-
+        
+            echo json_encode($result);
         }
+        
 
         public function crearReserva(){
 
