@@ -10,6 +10,7 @@ async function user() {
         const foto = (data.fotoRostro != null) ? data.fotoRostro : 'user.png';
         const nombre = (data.nombreCompleto != null) ? data.nombreCompleto : 'Agregue su nombre';
         const bio = (data.bio != null) ? data.bio : 'Agregue su bio';
+        const tel = (data.telefono != null) ? data.telefono : 'Agregue su telefono';
         const documentacionData = data.documentacionID;
         let interesesHTML = "";
         let documentacionHTML = "";
@@ -61,6 +62,10 @@ async function user() {
                             <div>
                                 <p style="font-weight: 600; margin-bottom: 10px;">Email:</p>
                                 <p style="font-weight: 400;">${data.correo}</p>
+                            </div>
+                            <div>
+                                <p style="font-weight: 600; margin-bottom: 10px;">Telefono:</p>
+                                <p style="font-weight: 400;">${tel}</p>
                             </div>
                             <div>
                                 <p style="font-weight: 600; margin-bottom: 10px;">Bio:</p>

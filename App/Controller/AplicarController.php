@@ -22,6 +22,7 @@
         public function table() {
             $result = new Result();
             $userID = $this->userSession->ID();
+            $usuarios = $this->usuarios->getAll();
         
             // Obtener ofertas de alquiler del usuario
             $ofertasUser = $this->ofertas->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'creadorID', $userID);
@@ -36,25 +37,31 @@
             }
         
             // Obtener aplicantes de oferta
-            $aplicantesOferta = [];
         
             foreach ($ofertasPublicadas as $oferPublicada) {
-                $aplicantesOferta[] = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
+                $aplicantesOferta = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
             }
-        
-            // Obtener los usuarios que aplican a la oferta
-            $usuarioAplicante = [];
-        
-            foreach ($aplicantesOferta as $apOferta) {
-                $usuarioAplicante[] = $this->usuarios->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usuarioAplicoID', $apOferta['usuarioAplicoID']);
+
+            $oferta_con_aplicante = [];
+            foreach($aplicantesOferta as $aplicante){
+                foreach($usuarios as $usuario){
+                    if($aplicante['usuarioAplicoID'] === $usuario['usuarioID']){
+                        foreach($ofertasPublicadas as $oferPublicada){
+                            if($aplicante['ofertaAlquilerID'] === $oferPublicada['ofertaID']){
+                                $oferta_con_aplicante[] = [
+                                    'ofertaPublicada' => $oferPublicada,
+                                    'usuarioAplicante' => $usuario,
+                                ];
+                            }
+                        }
+                    }
+                }
             }
         
             // Enviar la data
             $result->success = true;
             $result->result = [
-                'ofertasPublicadas' => $ofertasPublicadas,
-                'aplicantesOferta' => $aplicantesOferta,
-                'usuariosAplicantes' => $usuarioAplicante,
+                'ofertasAplicantes' => $oferta_con_aplicante,
             ];
         
             echo json_encode($result);

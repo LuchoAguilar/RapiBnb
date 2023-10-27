@@ -25,6 +25,11 @@
             </div>
 
             <div class="mb-3">
+                <label for="telefono" class="form-label">Telefono</label>
+                <input type="tel" class="form-control" value="<?= $parameters['usuario']['telefono'] ?? ''?>" name="telefono" id="telefono" placeholder="(codigo de area) numero">
+            </div>
+
+            <div class="mb-3">
                 <label for="fotoPerfil" class="form-label">Foto de perfil</label>
                 <img width="50" src="<?=URL_PATH.'/Assets/images/fotoPerfil/'.$parameters['usuario']['fotoRostro'] ?? ''?>" alt="fotoPerfil">
                 <input class="form-control" name="fotoPerfil" id="fotoPerfil" type="file">

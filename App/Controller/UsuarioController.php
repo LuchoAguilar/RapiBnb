@@ -215,6 +215,7 @@
                 $correo = (isset($_POST['correo'])) ? $_POST['correo'] : null;
                 $nombreCompleto = (isset($_POST['nombre'])) ? $_POST['nombre'] : null;
                 $bio = (isset($_POST['bio'])) ? $_POST['bio'] : null;
+                $tel = (isset($_POST['telefono'])) ? $_POST['telefono']: null;
                 $userVerificado = $this->userSessionControl->esVerificado();
         
                 if ($idUsuario !== null && is_numeric($idUsuario)) {
@@ -249,6 +250,7 @@
                                 'nombreCompleto' => $nombreCompleto,
                                 'fotoRostro' => $nombre_foto,
                                 'bio' => $bio,
+                                'telefono' => $tel,
                             ]);
                         } else {
                             // No se subió una nueva foto, actualizar sin cambios en la foto
@@ -257,6 +259,7 @@
                                 'correo' => $correo,
                                 'nombreCompleto' => $nombreCompleto,
                                 'bio' => $bio,
+                                'telefono' => $tel,
                             ]);
                         }
 
