@@ -41,6 +41,7 @@
             foreach ($ofertasPublicadas as $oferPublicada) {
                 $aplicantesOferta = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
             }
+            //hay que pasar sus propias aplicaciones.
 
             $oferta_con_aplicante = [];
             foreach($aplicantesOferta as $aplicante){

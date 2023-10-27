@@ -28,7 +28,6 @@ async function ofertaAplicante() {
 
         if (usuarioAplicante) {
             usuarioHTML = `
-            <div class="col-6">
                 <div class="card">
                     <div class="card-body">
                         <div class="">
@@ -39,21 +38,20 @@ async function ofertaAplicante() {
                             <p style="font-weight: 400;">${usuarioAplicante.nombreCompleto}</p>
                         </div>
                         <div>
-                                        <p style="font-weight: 600; margin-bottom: 10px;">Telefono:</p>
-                                        <p style="font-weight: 400;">${usuarioAplicante.telefono}</p>
-                                    </div>
+                            <p style="font-weight: 600; margin-bottom: 10px;">Telefono:</p>
+                            <p style="font-weight: 400;">${usuarioAplicante.telefono}</p>
+                        </div>
                     </div>
                     <div class="card-footer">
                         <button onclick="AceptarOferta(${usuarioAplicante.usuarioID});" class="btn btn-info">Aceptar Oferta</button>
                         <button onclick="rechazarOferta(${usuarioAplicante.usuarioID});" class="btn btn-info">Rechazar Oferta</button>
                     </div>
                 </div>
-            </div>
             `;
         }
 
         div.insertAdjacentHTML('beforeend', `
-        <div class="col-6">
+        <div class="col-8">
             <div class="card" id="ofertaPublicada">
                 <div class="card-header">
                     <h3 class="text-center">Oferta publicada</h3>
@@ -82,7 +80,6 @@ async function ofertaAplicante() {
                         ${usuarioHTML}
                     </div>
             </div>
-
             </div>
         </div>
         `);
