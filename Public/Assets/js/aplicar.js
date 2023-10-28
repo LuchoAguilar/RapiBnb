@@ -42,7 +42,7 @@ async function ofertaAplicante() {
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <button onclick="AceptarOferta(${usuarioAplicante.usuarioID});" class="btn btn-info">Aceptar Oferta</button>
+                                    <button onclick="AceptarOferta(${usuarioAplicante.usuarioID},${element.ofertaPublicada.ofertaID});" class="btn btn-info">Aceptar Oferta</button>
                                     <button onclick="rechazarOferta(${usuarioAplicante.usuarioID});" class="btn btn-info">Rechazar Oferta</button>
                                 </div>
                             </div>
@@ -155,7 +155,7 @@ async function ofertaAplicante() {
 ofertaAplicante();
 
 
-function AceptarOferta(id) {
+function AceptarOferta(idUser, idOferta) {
 
 }
 
