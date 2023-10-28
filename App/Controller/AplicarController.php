@@ -34,18 +34,9 @@
             $userID = $this->userSession->ID();
             $usuarios = $this->usuarios->getAll();
         
-            // Obtener ofertas de alquiler del usuario
-            $ofertasUser = $this->ofertas->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'creadorID', $userID);
-        
             // Obtener solo las que están publicadas
-            $ofertasPublicadas = [];
-        
-            foreach ($ofertasUser as $ofUser) {
-                if ($ofUser['estado'] === PUBLICADO) {
-                    $ofertasPublicadas[] = $ofUser;
-                }
-            }
-        
+            $ofertasPublicadas = $this->obtenerOfertasPublicadas(); 
+
             // Obtener aplicantes de oferta
             foreach ($ofertasPublicadas as $oferPublicada) {
                 $aplicantesOferta = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
@@ -107,16 +98,62 @@
         
             echo json_encode($result);
         }
+
+        public function obtenerOfertasPublicadas(){
+
+            $userID = $this->userSession->ID();
+
+            $ofertasUser = $this->ofertas->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'creadorID', $userID);
+        
+            // Obtener solo las que están publicadas
+            $ofertasPublicadas = [];
+        
+            foreach ($ofertasUser as $ofUser) {
+                if ($ofUser['estado'] === PUBLICADO) {
+                    $ofertasPublicadas[] = $ofUser;
+                }
+            }
+
+            return $ofertasPublicadas;
+        }
         
 
         public function crearReserva(){
+            $result = new Result();
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+                $idOferta = (isset($_POST['ofertaID']))? $_POST['ofertaID']:'';
+                $idUsuario = (isset($_POST['usuarioID'])) ? $_POST['usuarioID']:'';
 
+                if($idOferta != '' && $idUsuario !=''){
+                    $this->reserva->insert([
+                        'ofertaAlquilerID' => $idOferta,
+                        'autorID' => $idUsuario,
+                    ]);
+                    $result->success = true;
+                    $result->message = 'reserva creada con éxito';
+                }else{
+                    $result->success = false;
+                    $result->message = 'Error: al traer la informacion';
+                }
+            }else{
+                $result->success = false;
+                $result->message = 'Error: Solicitud invalida';
+            }
+        }
+
+        public function editarReserva(){
+            //si recibe puntaje
+            //si recibe mensaje(debe ser de un verificado/ deberia de discriminarse antes para que no pueda escribir siquiera el user no verif)
+            //si recibe contestacion
         }
 
         public function aplicar(){
 
         }
 
+        public function rechazar(){
+
+        }
 
     }
 ?>

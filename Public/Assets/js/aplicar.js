@@ -17,7 +17,7 @@ async function ofertaAplicante() {
                     const activeClass = index === 0 ? 'active' : '';
                     carrouselHTML += `
                             <div class="carousel-item ${activeClass}">
-                                <img src="${URL_PATH}/Assets/images/galeriaFotos/${foto}" style="width: 600px; height: 400px;" alt="Imagen">
+                                <img src="${URL_PATH}/Assets/images/galeriaFotos/${foto}" style="width: 400px; height: 300px;" alt="Imagen">
                             </div>
                         `;
                 });
@@ -51,7 +51,7 @@ async function ofertaAplicante() {
                     usuarioHTML = `
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="text-center">Aun no tiene ofertantes</h3>
+                            <h5 class="text-center">Aun no tiene ofertantes</h5>
                         </div>
                     </div>
                     `;
@@ -105,39 +105,44 @@ async function ofertaAplicante() {
 
                 div.insertAdjacentHTML('beforeend', `
                     <div class="${colHTML}">
-                        <div class="card" id="ofertaPublicada">
-                            <div class="card-header">
-                                <h3 class="text-center">Oferta/s publicada/s</h3>
-                            </div>    
-                            <div class="card-body"> 
-                                <div class="card mb-3" style="max-width: 600px; margin:auto">
-                                    <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
-                                        <div class="carousel-inner">
-                                            ${carrouselHTML}
-                                        </div>
-                                        <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Anterior</span>
-                                        </button>
-                                        <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Siguiente</span>
-                                    </button>
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">${element.ofertaPublicada.titulo}</h5>
-                                        <p class="card-text">${element.ofertaPublicada.descripcion}</p>
-                                        <p class="card-text"><small class="text-muted">Estado de publicación: ${element.ofertaPublicada.estado}</small></p>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card" id="ofertaPublicada">
+                                    <div class="card-header">
+                                        <h3 class="text-center">Oferta/s publicada/s</h3>
+                                    </div>    
+                                    <div class="card-body"> 
+                                        <div class="card mb-3" style="max-width: 400px; max-height: 800px; margin:auto; border-radius: 10px;">
+                                            <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+                                                <div class="carousel-inner">
+                                                    ${carrouselHTML}
+                                                </div>
+                                                <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Anterior</span>
+                                                </button>
+                                                <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Siguiente</span>
+                                            </button>
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">${element.ofertaPublicada.titulo}</h5>
+                                                <p class="card-text">${element.ofertaPublicada.descripcion}</p>
+                                                <p class="card-text"><small class="text-muted">Estado de publicación: ${element.ofertaPublicada.estado}</small></p>
+                                            </div>
+                                            <div class="card-footer">
+                                                ${usuarioHTML}
+                                            </div>
+                                        </div>    
                                     </div>
                                     <div class="card-footer">
-                        
+                                        
                                     </div>
-                                </div>    
-                            </div>
-                            <div class="card-footer">
-                                ${usuarioHTML}
+                                </div>
                             </div>
                         </div>
+                        
                     </div>
                     ${aplicacionesUsuarioHTML}
                     `);
