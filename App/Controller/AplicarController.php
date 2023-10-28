@@ -1,4 +1,10 @@
 <?php 
+    require_once(__DIR__.'/../Model/controladorDeSessiones.php');
+    require_once(__DIR__.'/../Model/ofertaAlquiler.php');
+    require_once(__DIR__.'/../Model/usuario.php');
+    require_once(__DIR__.'/../Model/reserva.php');
+    require_once(__DIR__.'/../Model/aplicaOferta.php');
+
     class AplicarController extends Controller{
 
         private $ofertas;
@@ -16,7 +22,11 @@
         }
 
         public function home(){
-            
+            if($this->userSession->Roll() === LOG){
+                $this->render('aplicar', [] ,'site');
+            }else{
+                header("Location: ".URL_PATH);
+            }
         }
 
         public function table() {
@@ -37,32 +47,62 @@
             }
         
             // Obtener aplicantes de oferta
-        
             foreach ($ofertasPublicadas as $oferPublicada) {
                 $aplicantesOferta = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
             }
-            //hay que pasar sus propias aplicaciones.
 
             $oferta_con_aplicante = [];
-            foreach($aplicantesOferta as $aplicante){
-                foreach($usuarios as $usuario){
-                    if($aplicante['usuarioAplicoID'] === $usuario['usuarioID']){
-                        foreach($ofertasPublicadas as $oferPublicada){
-                            if($aplicante['ofertaAlquilerID'] === $oferPublicada['ofertaID']){
-                                $oferta_con_aplicante[] = [
-                                    'ofertaPublicada' => $oferPublicada,
-                                    'usuarioAplicante' => $usuario,
-                                ];
+            if(count($aplicantesOferta) > 0){
+                foreach($aplicantesOferta as $aplicante){
+                    foreach($usuarios as $usuario){
+                        if($aplicante['usuarioAplicoID'] === $usuario['usuarioID']){
+                            foreach($ofertasPublicadas as $oferPublicada){
+                                if($aplicante['ofertaAlquilerID'] === $oferPublicada['ofertaID']){
+                                    $oferta_con_aplicante[] = [
+                                        'ofertaPublicada' => $oferPublicada,
+                                        'usuarioAplicante' => $usuario,
+                                    ];
+                                }
                             }
                         }
                     }
                 }
+            }elseif(count($ofertasPublicadas) > 0){
+                foreach($ofertasPublicadas as $oferta){
+                    
+                    $oferta_con_aplicante[] = [
+                        'ofertaPublicada' => $oferta,
+                        'usuarioAplicante' => [],
+                    ];
+                }
+    
             }
+
+            
+            //hay que pasar sus propias aplicaciones. darle a que oferta aplico
+            $aplicacionesDelUsuario = $this->aplicaOferta->buscarRegistrosRelacionados('usuarios','usuarioID','usuarioAplicoID',$userID);
+
+            $ofertasAplicadasUsuario = [];
+            if(count($aplicacionesDelUsuario) > 0){
+                $ofertas = $this->ofertas->getAll();
+                foreach($aplicacionesDelUsuario as $aUsuario){
+                    foreach ($ofertas as $oferta) {
+                        if($aUsuario['ofertaAlquilerID'] === $oferta['ofertaID']){
+                            $ofertasAplicadasUsuario[] = [
+                                'oferta' => $oferta,
+                                'aplicacion' => $aUsuario,
+                            ];
+                        }
+                    }
+                }
+            }
+            
         
             // Enviar la data
             $result->success = true;
             $result->result = [
                 'ofertasAplicantes' => $oferta_con_aplicante,
+                'aplicacionesDelUsuario' => $ofertasAplicadasUsuario,
             ];
         
             echo json_encode($result);
