@@ -1,5 +1,5 @@
 
-async function ofertaAplicante() {
+/*async function ofertaAplicante() {
     let reposense = await fetch(URL_PATH + '/Aplicar/table');
     let reposenseData = await reposense.json();
     if (reposenseData.success) {
@@ -161,4 +161,4 @@ function AceptarOferta(idUser, idOferta) {
 
 function rechazarOferta(id) {
 
-}
+}*/

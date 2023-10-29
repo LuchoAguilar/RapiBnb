@@ -84,8 +84,8 @@
             $result->result = [
                 'ofertasAplicantes' => $oferta_con_aplicante,
                 'aplicacionesDelUsuario' => $ofertasAplicadasUsuario,
-                'reservasUsuario' => $reservasUsuario,
-                'reservasDeOfertas' => $reservasDeOfertas,
+                'reservasDelUsuario' => $reservasUsuario,
+                'reservasDeOfertasP' => $reservasDeOfertas,
             ];
         
             echo json_encode($result);
