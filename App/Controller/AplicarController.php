@@ -21,6 +21,8 @@
             $this->aplicaOferta = new AplicaOferta($connect);
         }
 
+        //------------------------------------------ muestra de informacion de ofertas, aplicaciones y reservas de usuarios----------------------------------//
+
         public function home(){
             if($this->userSession->Roll() === LOG){
                 $this->render('aplicar', [] ,'site');
@@ -30,45 +32,22 @@
         }
 
         public function table() {
+
             $result = new Result();
             $userID = $this->userSession->ID();
-            $usuarios = $this->usuarios->getAll();
-        
             // Obtener solo las que están publicadas
-            $ofertasPublicadas = $this->obtenerOfertasPublicadas(); 
+            $ofertasPublicadasUser = $this->obtenerOfertasPublicadas($userID); 
 
             // Obtener aplicantes de oferta
-            foreach ($ofertasPublicadas as $oferPublicada) {
-                $aplicantesOferta = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
+            foreach ($ofertasPublicadasUser as $oferPublicada) {
+                $aplicantesAlasOfertasUser = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
             }
 
-            $oferta_con_aplicante = [];
-            if(count($aplicantesOferta) > 0){
-                foreach($aplicantesOferta as $aplicante){
-                    foreach($usuarios as $usuario){
-                        if($aplicante['usuarioAplicoID'] === $usuario['usuarioID']){
-                            foreach($ofertasPublicadas as $oferPublicada){
-                                if($aplicante['ofertaAlquilerID'] === $oferPublicada['ofertaID']){
-                                    $oferta_con_aplicante[] = [
-                                        'ofertaPublicada' => $oferPublicada,
-                                        'usuarioAplicante' => $usuario,
-                                    ];
-                                }
-                            }
-                        }
-                    }
-                }
-            }elseif(count($ofertasPublicadas) > 0){
-                foreach($ofertasPublicadas as $oferta){
-                    
-                    $oferta_con_aplicante[] = [
-                        'ofertaPublicada' => $oferta,
-                        'usuarioAplicante' => [],
-                    ];
-                }
-    
+            // obtener las ofertas publicadas del usuario con sus respectivos aplicantes(puede ser solo ofertas publicadas o el arreglo vacio)
+            if(count($ofertasPublicadasUser) > 0 || count($aplicantesAlasOfertasUser) > 0){
+                $usuarios = $this->usuarios->getAll();
+                $oferta_con_aplicante = $this->ofertas_y_Aplicantes($usuarios, $ofertasPublicadasUser, $aplicantesAlasOfertasUser);
             }
-
             
             //hay que pasar sus propias aplicaciones. darle a que oferta aplico
             $aplicacionesDelUsuario = $this->aplicaOferta->buscarRegistrosRelacionados('usuarios','usuarioID','usuarioAplicoID',$userID);
@@ -87,6 +66,17 @@
                     }
                 }
             }
+            // pasar las reservas que hizo el usuario
+            $reservasUsuario = $this->reserva->buscarRegistrosRelacionados('usuarios','usuarioID','autorID',$userID);
+
+            // pasar las reservas que le hicieron a las ofertas publicadas del usuario
+            $reservasDeOfertas = [];
+            if(count($ofertasPublicadasUser) > 0){
+                foreach($ofertasPublicadasUser as $ofertaPublicada){
+                    $reservasDeOfertas[] = $this->reserva->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
+                }
+            }
+            
             
         
             // Enviar la data
@@ -94,16 +84,16 @@
             $result->result = [
                 'ofertasAplicantes' => $oferta_con_aplicante,
                 'aplicacionesDelUsuario' => $ofertasAplicadasUsuario,
+                'reservasUsuario' => $reservasUsuario,
+                'reservasDeOfertas' => $reservasDeOfertas,
             ];
         
             echo json_encode($result);
         }
 
-        public function obtenerOfertasPublicadas(){
+        public function obtenerOfertasPublicadas($idUser){
 
-            $userID = $this->userSession->ID();
-
-            $ofertasUser = $this->ofertas->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'creadorID', $userID);
+            $ofertasUser = $this->ofertas->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'creadorID', $idUser);
         
             // Obtener solo las que están publicadas
             $ofertasPublicadas = [];
@@ -116,8 +106,44 @@
 
             return $ofertasPublicadas;
         }
-        
 
+        public function ofertas_y_Aplicantes($usuariosAll, $ofertasPublicadasUser, $aplicantesAlasOfertasUser){
+            $oferta_con_aplicante = [];
+            if(count($aplicantesAlasOfertasUser) > 0){
+                foreach($aplicantesAlasOfertasUser as $aplicante){
+                    foreach($usuariosAll as $usuario){
+                        if($aplicante['usuarioAplicoID'] === $usuario['usuarioID']){
+                            foreach($ofertasPublicadasUser as $oferPublicada){
+                                if($aplicante['ofertaAlquilerID'] === $oferPublicada['ofertaID']){
+                                    $oferta_con_aplicante[] = [
+                                        'ofertaPublicada' => $oferPublicada,
+                                        'usuarioAplicante' => $usuario,
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+                return $oferta_con_aplicante; // retorna el arreglo de las ofertas publicadas y sus aplicantes
+
+            }elseif(count($ofertasPublicadasUser) > 0){
+                foreach($ofertasPublicadasUser as $oferta){
+                    
+                    $oferta_con_aplicante[] = [
+                        'ofertaPublicada' => $oferta,
+                        'usuarioAplicante' => [],
+                    ];
+                }
+                return $oferta_con_aplicante; // retorna el arreglo solo las ofertas publicadas
+
+            }else{
+                return $oferta_con_aplicante; // retorna el arreglo vacio
+            }
+            
+        }
+
+        //---------------------------------------------------------------------------------------------------------------------------------------------//
+        //---------------------------------------------------- Reservas crear y modificar -------------------------------------------------------------//
         public function crearReserva(){
             $result = new Result();
             if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -137,7 +163,7 @@
                         foreach($aplicacionesDelUsuario as $apliUser){
                             if($apliUser['ofertaAlquilerID'] === $idOferta){
                                 $this->aplicaOferta->update($apliUser['aplicacionID'],[
-                                    'ofertaAlquilerID' => null;
+                                    'ofertaAlquilerID' => null,
                                 ]);
                                 $this->reserva->insert([
                                     'ofertaAlquilerID' => $idOferta,
@@ -178,9 +204,7 @@
                 if($idUsuario != null && is_numeric($idUsuario) && $idOferta === ''){
                     if($puntaje != null && $resena === ''){
                         $this->reserva->update();
-                    }elseif(){
-
-                    }
+                    }//elseif(){}
 
                 }elseif($idOferta != null && is_numeric($idOferta) && $idUsuario === ''){
 
@@ -197,6 +221,8 @@
             //si recibe mensaje(debe ser de un verificado/ deberia de discriminarse antes para que no pueda escribir siquiera el user no verif)
             //si recibe contestacion
         }
+
+        //---------------------------------------------------------------------------------------------------------------------------------------------//
 
         public function aplicar(){
             
