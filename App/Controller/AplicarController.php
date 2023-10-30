@@ -35,6 +35,7 @@
 
             $result = new Result();
             $userID = $this->userSession->ID();
+            $esVerificado = $this->userSession->esVerificado();
             // Obtener solo las que están publicadas
             $ofertasPublicadasUser = $this->obtenerOfertasPublicadas($userID); 
 
@@ -104,6 +105,7 @@
                 'aplicacionesDelUsuario' => $ofertasAplicadasUsuario,
                 'reservasDelUsuario' => $reservas,
                 'reservasDeOfertasP' => $reservasDeOfertas,
+                'esVerificado' => $esVerificado,
             ];
         
             echo json_encode($result);
@@ -207,44 +209,45 @@
                 $result->success = false;
                 $result->message = 'Error: Solicitud invalida';
             }
+            echo json_encode($result);
         }
 
-        public function editarReserva(){
-            // la data debe venir del user que oferto y logro la reserva.
-            // se envia el id del usuario dueño de la oferta directamente para contestar comentarios
+        public function resenar(){
             $result = new Result();
             if($_SERVER["REQUEST_METHOD"] == "POST"){
-                $idDueñoOferta = (isset($_POST['ofertaID'])) ? $_POST['ofertaID']:'';
-                $idUsuario = (isset($_POST['usuarioID'])) ? $_POST['usuarioID']:'';
-                $puntaje = (isset($_POST['puntaje'])) ? $_POST['puntaje']:'';
-                $resena = (isset($_POST['resena'])) ? $_POST['resena']:'';
-                $contestacion = (isset($_POST['contestacion'])) ? $_POST['contestacion']:'';
-                //probablemente va a venir con un puntaje o mensaje
-                //obtener la reserva a modificar
-                if($idUsuario != null && is_numeric($idUsuario) && $idDueñoOferta === ''){
-                    if($puntaje != null && $resena === ''){
-                        $this->reserva->update();
-                    }//elseif(){}
-
-                }elseif($idDueñoOferta != null && is_numeric($idDueñoOferta) && $idUsuario === ''){
-
-                }else{
-                    $result->success = false;
-                    $result->message = 'Error: al traer la informacion';
-                }
 
             }else{
                 $result->success = false;
                 $result->message = 'Error: Solicitud invalida';
-            }    
-            //si recibe puntaje
-            //si recibe mensaje(debe ser de un verificado/ deberia de discriminarse antes para que no pueda escribir siquiera el user no verif)
-            //si recibe contestacion
-            // en caso de puntuar se edita y resenar solo una vez?
-            
+            }
+            echo json_encode($result);
+        }
+
+        public function puntuar(){
+            $result = new Result();
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+            }else{
+                $result->success = false;
+                $result->message = 'Error: Solicitud invalida';
+            }
+            echo json_encode($result);
+        }
+
+        public function contestar(){
+            $result = new Result();
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+            }else{
+                $result->success = false;
+                $result->message = 'Error: Solicitud invalida';
+            }
+            echo json_encode($result);
         }
 
         //---------------------------------------------------------------------------------------------------------------------------------------------//
+
+        //---------------------------------------------------------Rentas--------------------------------------------------------------------//
 
         public function aplicar(){
             
@@ -253,6 +256,8 @@
         public function rechazar(){
 
         }
+        //---------------------------------------------------------------------------------------------------------------------------------------------//
 
     }
+    //---------------------------------------------------------------------------------------------------------------------------------------------//
 ?>

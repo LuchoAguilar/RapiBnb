@@ -25,6 +25,7 @@ async function informacionDeOfertas() {
         const dataAplicacionesUsuario = reposenseData.result.aplicacionesDelUsuario;
         const dataReservasDelUsuario = reposenseData.result.reservasDelUsuario.reservas;
         const dataReservasAOfertas = reposenseData.result.reservasDeOfertasP.reservasDeOfertas;
+        const dataEsVerificado = reposenseData.result.esVerificado;
 
         //controlador de columnas para que se vea bien la page
 
@@ -217,7 +218,12 @@ async function informacionDeOfertas() {
                 let reservasUsuarioHTML = '';
 
                 dataReservasDelUsuario.forEach(element => {
-                    let btnResenar = `<button onclick="resenarOferta(${element.reservaUser.reservaID});" class="btn btn-danger">Reseñar</button>`;
+
+                    let btnResenar = ''; 
+                    if(dataEsVerificado === true){
+                        btnResenar = `<button onclick="resenarOferta(${element.reservaUser.reservaID},${dataEsVerificado});" class="btn btn-danger">Reseñar</button> |`;
+                    }
+                    
                     let btnPuntuar = `<button onclick="puntuarOferta(${element.reservaUser.reservaID});" class="btn btn-danger">Puntuar</button>`;
                     // Agregar una nueva fila a la variable de contenido
                     reservasUsuarioHTML += `
@@ -226,7 +232,7 @@ async function informacionDeOfertas() {
                                     <td>${element.reservaUser.puntaje}</td>
                                     <td>${element.reservaUser.textoReserva}</td>
                                     <td>${element.reservaUser.respuesta}</td>
-                                    <td>${btnResenar}|${btnPuntuar}</td>
+                                    <td>${btnResenar}${btnPuntuar}</td>
                                 </tr>
                             `;
                 });
@@ -354,7 +360,7 @@ function contestarResena(duenoPublicacionID, reservaID){
 
 }
 
-function resenarOferta(reservaID){
+function resenarOferta(reservaID, esVerificado){
 
 }
 

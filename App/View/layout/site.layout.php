@@ -25,7 +25,7 @@
                 <a class="nav-item nav-link active" href="#" aria-current="page" id="icon">RapiBnB<span class="visually-hidden">(current)</span></a>
                 <a class="nav-item nav-link" href="<?=URL_PATH.'/Usuario/home/';?>">Usuario</a>
                 <a class="nav-item nav-link" href="<?=URL_PATH.'/OfertaAlquiler/home';?>">Publicaciones</a>
-                <a class="nav-item nav-link" href="<?=URL_PATH.'/Aplicar/home';?>">Información</a>
+                <a class="nav-item nav-link" href="<?=URL_PATH.'/Aplicar/home';?>">Rentas y Reservas</a>
                 <a class="nav-item nav-link" href="<?=URL_PATH.'/Usuario/LogOut/';?>">Cerrar Sesion</a>
             </div>
         </nav>
