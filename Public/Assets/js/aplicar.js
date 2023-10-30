@@ -217,6 +217,8 @@ async function informacionDeOfertas() {
                 let reservasUsuarioHTML = '';
 
                 dataReservasDelUsuario.forEach(element => {
+                    let btnResenar = `<button onclick="resenarOferta(${element.reservaUser.reservaID});" class="btn btn-danger">Reseñar</button>`;
+                    let btnPuntuar = `<button onclick="puntuarOferta(${element.reservaUser.reservaID});" class="btn btn-danger">Puntuar</button>`;
                     // Agregar una nueva fila a la variable de contenido
                     reservasUsuarioHTML += `
                                 <tr>
@@ -224,7 +226,7 @@ async function informacionDeOfertas() {
                                     <td>${element.reservaUser.puntaje}</td>
                                     <td>${element.reservaUser.textoReserva}</td>
                                     <td>${element.reservaUser.respuesta}</td>
-                                    <td>Resenar|puntuar</td>
+                                    <td>${btnResenar}|${btnPuntuar}</td>
                                 </tr>
                             `;
                 });
@@ -285,13 +287,22 @@ async function informacionDeOfertas() {
                     const tabla = document.createElement('table');
                     tabla.classList.add('table', 'table-striped');
 
+                    let btnContestar = '';
+                    let contestarHTML = '';
+
+                    if(element.reservas.textoReserva != ''){
+                        contestarHTML = '<th scope="col">Contestar resena</th>';
+                        btnContestar = `<button onclick="contestarResena(${element.ofertaUser.creadorID},${element.ofertaUser.reservaID});" class="btn btn-danger">icono</button>`;
+                    }
+
                     const thead = document.createElement('thead');
                     thead.innerHTML = `
                                 <tr>
                                     <th scope="col">Puntuación</th>
                                     <th scope="col">Reseña</th>
                                     <th scope="col">Respuesta</th>
-                                    <th scope="col"></th>
+                                    <th scope="col">Quien reservo</th>
+                                    ${contestarHTML}
                                 </tr>
                             `;
 
@@ -302,7 +313,7 @@ async function informacionDeOfertas() {
                                         <td>${reserva.puntaje}</td>
                                         <td>${reserva.textoReserva}</td>
                                         <td>${reserva.respuesta}</td>
-                                        <td>Responder</td>
+                                        <td>${btnContestar}</td>
                                     </tr>
                                 `;
                     });
@@ -338,3 +349,15 @@ async function informacionDeOfertas() {
 }
 
 informacionDeOfertas();
+
+function contestarResena(duenoPublicacionID, reservaID){
+
+}
+
+function resenarOferta(reservaID){
+
+}
+
+function puntuarOferta(reservaID){
+
+}
