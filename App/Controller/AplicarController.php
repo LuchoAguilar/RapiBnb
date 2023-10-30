@@ -66,14 +66,32 @@
                     }
                 }
             }
+
             // pasar las reservas que hizo el usuario
             $reservasUsuario = $this->reserva->buscarRegistrosRelacionados('usuarios','usuarioID','autorID',$userID);
+            $reservas = [];
+            if($reservasUsuario){
+               $ofertas = $this->ofertas->getAll();
+               foreach($reservasUsuario as $reserva){
+                    foreach($ofertas as $oferta){
+                        if($reserva['ofertaAlquilerID'] === $oferta['ofertaID']){
+                            $reservas[] = [
+                                'oferta' => $oferta,
+                                'reservaUser' => $reserva,
+                            ];
+                        }
+                    }
+               }
+            }
 
             // pasar las reservas que le hicieron a las ofertas publicadas del usuario
             $reservasDeOfertas = [];
             if(count($ofertasPublicadasUser) > 0){
                 foreach($ofertasPublicadasUser as $ofertaPublicada){
-                    $reservasDeOfertas[] = $this->reserva->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
+                    $reservasDeOfertas[] = [
+                        'reservas' => $this->reserva->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']),
+                        'ofertaUser' => $ofertaPublicada,
+                    ];
                 }
             }
             
@@ -84,7 +102,7 @@
             $result->result = [
                 'ofertasAplicantes' => $oferta_con_aplicante,
                 'aplicacionesDelUsuario' => $ofertasAplicadasUsuario,
-                'reservasDelUsuario' => $reservasUsuario,
+                'reservasDelUsuario' => $reservas,
                 'reservasDeOfertasP' => $reservasDeOfertas,
             ];
         
@@ -158,7 +176,7 @@
                         'autorID' => $idUsuario,
                     ]);
                     //hay que pasar sus propias aplicaciones. darle a que oferta aplico
-                    $aplicacionesDelUsuario = $this->aplicaOferta->buscarRegistrosRelacionados('usuarios','usuarioID','usuarioAplicoID',$userID);
+                    $aplicacionesDelUsuario = $this->aplicaOferta->buscarRegistrosRelacionados('usuarios','usuarioID','usuarioAplicoID',$idUsuario);
                     if($aplicacionesDelUsuario){
                         foreach($aplicacionesDelUsuario as $apliUser){
                             if($apliUser['ofertaAlquilerID'] === $idOferta){
@@ -168,6 +186,9 @@
                                 $this->reserva->insert([
                                     'ofertaAlquilerID' => $idOferta,
                                     'autorID' => $idUsuario,
+                                    'textoReserva' => '',
+                                    'respuesta' => '',
+                                    'puntaje' => 0,
                                 ]);
                                 $result->success = true;
                                 $result->message = 'reserva creada con éxito';
