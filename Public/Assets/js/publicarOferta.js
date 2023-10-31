@@ -24,15 +24,15 @@ async function ofertasAlquilerCard() {
                 divCard.innerHTML += `
                 <div class="card mb-3" style="max-width: 600px; margin:auto;">
                     
-                    <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div id="imageCarousel${element.ofertaID}" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
                             ${carrouselHTML}
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+                        <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel${element.ofertaID}" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Anterior</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                        <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel${element.ofertaID}" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Siguiente</span>
                         </button>

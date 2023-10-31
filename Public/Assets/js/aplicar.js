@@ -27,35 +27,39 @@ async function informacionDeOfertas() {
         const dataReservasDelUsuario = reposenseData.result.reservasDelUsuario;
         const dataReservasAOfertas = reposenseData.result.reservasDeOfertasP;
         const dataEsVerificado = reposenseData.result.esVerificado;
-        
+
 
         //controlador de columnas para que se vea bien la page
 
         // Configuración inicial de clases
-        
+
 
         // Luego, ajusta las clases según las condiciones
-        if(dataOfertasYAplicaciones && (dataAplicacionesUsuario != null) && (dataReservasDelUsuario.length > 0 || dataReservasAOfertas.length > 0)){
+        if (dataOfertasYAplicaciones && (dataAplicacionesUsuario != null) && (dataReservasDelUsuario.length > 0 || dataReservasAOfertas.length > 0)) {
             divOfertas.className = 'col-6';
             divAplicacionesYReservas.className = 'col-6';
-        }else{
+        } else {
             if (!dataOfertasYAplicaciones) {
                 divOfertas.className = '';
             } else if ((dataAplicacionesUsuario != null) && (dataReservasDelUsuario.length > 0 || dataReservasAOfertas.length > 0)) {
                 divAplicacionesYReservas.className = 'col-12';
             }
-            
+
             if (!((dataAplicacionesUsuario != null) && (dataReservasDelUsuario.length > 0 || dataReservasAOfertas.length > 0))) {
                 divAplicacionesYReservas.className = '';
             } else if (dataOfertasYAplicaciones) {
                 divOfertas.className = 'col-12';
             }
         }
-       
+
         //--------------------------------------------------------------------------
 
         // hay que tener en cuenta que puede no venir ninguna informacion o alguna de las datas o hasta todas a la vez.
         if (dataOfertasYAplicaciones) {
+            const divCard= document.createElement('div');
+                divCard.classList.add('row');
+
+                divOfertas.appendChild(divCard);
 
             dataOfertasYAplicaciones.forEach(element => {
                 const galeriaFotosStr = element.ofertaPublicada.galeriaFotos;
@@ -110,55 +114,45 @@ async function informacionDeOfertas() {
                 let columnOfertas = '';
                 const numberOfObjects = dataOfertasYAplicaciones.length;
 
-                if (numberOfObjects == 1) {
-                    columnOfertas = 'col-12';
-                } else if (numberOfObjects == 2) {
-                    columnOfertas = 'col-6';
-                } else if (numberOfObjects == 3) {
-                    columnOfertas = 'col-4';
+                if (numberOfObjects === 1) {
+                    columnOfertas = 'col-md-12';
+                } else if (numberOfObjects === 2) {
+                    columnOfertas = 'col-md-6';
+                } else if (numberOfObjects === 3) {
+                    columnOfertas = 'col-md-4';
                 } else if (numberOfObjects >= 4) {
-                    columnOfertas = 'col-3';
+                    columnOfertas = 'col-md-3';
                 }
+                
 
-                divOfertas.insertAdjacentHTML('beforeend', `
-                                <div class="row">
-                                    <div class="${columnOfertas}">
-                                        <div class="card" id="ofertaPublicada">
-                                            <div class="card-header">
-                                                <h3 class="text-center">Oferta/s publicada/s</h3>
-                                            </div>    
-                                            <div class="card-body"> 
-                                                <div class="card mb-3" style="max-width: 400px; max-height: 800px; margin:auto; border-radius: 10px;">
-                                                    <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
-                                                        <div class="carousel-inner">
-                                                            ${carrouselHTML}
-                                                        </div>
-                                                        <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
-                                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                            <span class="visually-hidden">Anterior</span>
-                                                        </button>
-                                                        <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
-                                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                            <span class="visually-hidden">Siguiente</span>
-                                                    </button>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">${element.ofertaPublicada.titulo}</h5>
-                                                        <p class="card-text">${element.ofertaPublicada.descripcion}</p>
-                                                        <p class="card-text"><small class="text-muted">Estado de publicación: ${element.ofertaPublicada.estado}</small></p>
-                                                    </div>
-                                                    <div class="card-footer">
-                                                        ${usuarioHTML}
-                                                    </div>
-                                                </div>    
-                                            </div>
-                                            <div class="card-footer">
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                        `);
+                console.log(numberOfObjects);
+                
+
+                divCard.insertAdjacentHTML('beforeend', `                       
+                    <div class="card ${columnOfertas}" style="max-width: 400px; max-height: 800px;">
+                        <div class="card-header">
+                            <div id="imageCarousel${element.ofertaPublicada.ofertaID}" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                ${carrouselHTML}
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel${element.ofertaPublicada.ofertaID}" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Anterior</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel${element.ofertaPublicada.ofertaID}" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Siguiente</span>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${element.ofertaPublicada.titulo}</h5>
+                            <p class="card-text"><small class="text-muted">Estado de publicación: ${element.ofertaPublicada.estado}</small></p>
+                        </div>
+                        <div class="card-footer">
+                            ${usuarioHTML}
+                        </div>
+                    </div>                                         
+                `);
             });
 
         }
@@ -226,7 +220,7 @@ async function informacionDeOfertas() {
                 let th = '<th scope="col">Evaluar reserva</th>';
                 dataReservasDelUsuario.forEach(element => {
                     // Agregar una nueva fila a la variable de contenido
-                    
+
                     let evaluar = `
                         <td>
                             <form action="" method="post" id="envioData_${element.reservaUser.reservaID}">
@@ -234,10 +228,10 @@ async function informacionDeOfertas() {
                                     <input type="hidden" name="reservaID" value="${element.reservaUser.reservaID}">
                                     <input type="hidden" name="esVerificado" value="${dataEsVerificado}">
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control col-md-3" name="nuevaPuntuacion" value="${element.reservaUser.puntaje}" placeholder="puntuación:">
+                                        <input type="text" class="form-control col-md-3" name="nuevaPuntuacion" placeholder="puntuación:">
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control col-md-3" name="nuevaResena" value="${element.reservaUser.textoReserva}" placeholder="Reseña:">
+                                        <input type="text" class="form-control col-md-3" name="nuevaResena" placeholder="Reseña:">
                                     </div>
                                     <div class="col-md-4">
                                         <button type="submit" onclick="actualizar();" class="btn btn-danger">Enviar</button>
@@ -246,7 +240,7 @@ async function informacionDeOfertas() {
                             </form>
                         </td>
                     `;
-                    if(element.reservaUser.textoReserva && element.reservaUser.puntaje){
+                    if (element.reservaUser.textoReserva && element.reservaUser.puntaje) {
                         evaluar = `
                         <td>${element.reservaUser.puntaje}</td>
                         <td>${element.reservaUser.textoReserva}</td>
@@ -264,9 +258,9 @@ async function informacionDeOfertas() {
                         ${evaluar}
                       </tr>
                     `;
-                    
+
                 });
-        
+
                 // Insertar el contenido en la tabla completa
                 ReservasDelUsuarioHTML = `
                   <div>
@@ -309,7 +303,7 @@ async function informacionDeOfertas() {
 
                     const cardHeader = document.createElement('div');
                     cardHeader.classList.add('card-header');
-                    cardHeader.innerHTML = `<h3 class="text-center">Reservas a publicación: ${publicacionTitulo}</h3>`;
+                    cardHeader.innerHTML = `<h3 class="text-center">Reservas a: ${publicacionTitulo}</h3>`;
 
                     const cardBody = document.createElement('div');
                     cardBody.classList.add('card-body');
@@ -343,9 +337,9 @@ async function informacionDeOfertas() {
                     reservas.forEach(reserva => {
                         tbody.innerHTML += `
                                     <tr>
-                                        <td>${reserva.puntaje}</td>
-                                        <td>${reserva.textoReserva}</td>
-                                        <td>${reserva.respuesta}</td>
+                                        <td>${(reserva.puntaje != null)?reserva.puntaje:''}</td>
+                                        <td>${(reserva.textoReserva != null)?reserva.textoReserva:''}</td>
+                                        <td>${(reserva.respuesta !=null)?reserva.respuesta:''}</td>
                                         <td>${reserva.autorID}</td>
                                         <td>${btnContestar}</td>
                                     </tr>
