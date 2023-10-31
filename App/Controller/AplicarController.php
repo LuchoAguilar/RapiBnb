@@ -40,17 +40,21 @@
             $ofertasPublicadasUser = $this->obtenerOfertasPublicadas($userID); 
 
             // Obtener aplicantes de oferta
-            $aplicantesAlasOfertasUser = [];
-            foreach ($ofertasPublicadasUser as $oferPublicada) {
-                $aplicantesAlasOfertasUser[] = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
+            $aplicantesAlasOfertasUser = '';
+            $oferta_con_aplicante = '';
+            if($ofertasPublicadasUser != null){
+                
+                foreach ($ofertasPublicadasUser as $oferPublicada) {
+                    $aplicantesAlasOfertasUser = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
+                }
+                // obtener las ofertas publicadas del usuario con sus respectivos aplicantes(puede ser solo ofertas publicadas o el arreglo vacio)
+                
+                if(count($ofertasPublicadasUser) > 0 || count($aplicantesAlasOfertasUser) > 0){
+                    $usuarios = $this->usuarios->getAll();
+                    $oferta_con_aplicante = $this->ofertas_y_Aplicantes($usuarios, $ofertasPublicadasUser, $aplicantesAlasOfertasUser);
+                }
             }
-
-            // obtener las ofertas publicadas del usuario con sus respectivos aplicantes(puede ser solo ofertas publicadas o el arreglo vacio)
-            $oferta_con_aplicante = [];
-            if(count($ofertasPublicadasUser) > 0 || count($aplicantesAlasOfertasUser) > 0){
-                $usuarios = $this->usuarios->getAll();
-                $oferta_con_aplicante[] = $this->ofertas_y_Aplicantes($usuarios, $ofertasPublicadasUser, $aplicantesAlasOfertasUser);
-            }
+           
             
             //hay que pasar sus propias aplicaciones. darle a que oferta aplico
             $aplicacionesDelUsuario = $this->aplicaOferta->buscarRegistrosRelacionados('usuarios','usuarioID','usuarioAplicoID',$userID);
@@ -72,6 +76,7 @@
 
             // pasar las reservas que hizo el usuario
             $reservasUsuario = $this->reserva->buscarRegistrosRelacionados('usuarios','usuarioID','autorID',$userID);
+            $result->message = $reservasUsuario;
             $reservas = [];
             if($reservasUsuario){
                $ofertas = $this->ofertas->getAll();

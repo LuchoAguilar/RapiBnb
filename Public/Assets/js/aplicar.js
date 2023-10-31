@@ -32,21 +32,26 @@ async function informacionDeOfertas() {
         //controlador de columnas para que se vea bien la page
 
         // Configuración inicial de clases
-        divOfertas.className = 'col-6';
-        divAplicacionesYReservas.className = 'col-6';
+        
 
         // Luego, ajusta las clases según las condiciones
-        if (!dataOfertasYAplicaciones) {
-            divOfertas.className = '';
-        } else if (!(!dataAplicacionesUsuario) && (!dataReservasDelUsuario || !dataReservasAOfertas)) {
-            divAplicacionesYReservas.className = 'col-12';
+        if(dataOfertasYAplicaciones && (dataAplicacionesUsuario != null) && (dataReservasDelUsuario.length > 0 || dataReservasAOfertas.length > 0)){
+            divOfertas.className = 'col-6';
+            divAplicacionesYReservas.className = 'col-6';
+        }else{
+            if (!dataOfertasYAplicaciones) {
+                divOfertas.className = '';
+            } else if ((dataAplicacionesUsuario != null) && (dataReservasDelUsuario.length > 0 || dataReservasAOfertas.length > 0)) {
+                divAplicacionesYReservas.className = 'col-12';
+            }
+            
+            if (!((dataAplicacionesUsuario != null) && (dataReservasDelUsuario.length > 0 || dataReservasAOfertas.length > 0))) {
+                divAplicacionesYReservas.className = '';
+            } else if (dataOfertasYAplicaciones) {
+                divOfertas.className = 'col-12';
+            }
         }
-
-        if ((!dataAplicacionesUsuario) && (!dataReservasDelUsuario || !dataReservasAOfertas)) {
-            divAplicacionesYReservas.className = '';
-        } else if (dataOfertasYAplicaciones) {
-            divOfertas.className = 'col-12';
-        }
+       
         //--------------------------------------------------------------------------
 
         // hay que tener en cuenta que puede no venir ninguna informacion o alguna de las datas o hasta todas a la vez.
@@ -215,23 +220,29 @@ async function informacionDeOfertas() {
             let ReservasDelUsuarioHTML = '';
             let ReservasAOfertasHTML = '';
 
-            if (dataReservasDelUsuario) {
+            if (dataReservasDelUsuario.length > 0) {
                 // Crear una variable para almacenar el contenido de la tabla
                 let reservasUsuarioHTML = '';
-                let th = 'Evaluar reserva';
+                let th = '<th scope="col">Evaluar reserva</th>';
                 dataReservasDelUsuario.forEach(element => {
                     // Agregar una nueva fila a la variable de contenido
                     
                     let evaluar = `
                         <td>
                             <form action="" method="post" id="envioData_${element.reservaUser.reservaID}">
-                            <input type="hidden" name="reservaID" value="${element.reservaUser.reservaID}">
-                            <input type="hidden" name="esVerificado" value="${dataEsVerificado}">
-                            <label for="nuevaPuntuacion" class="form-label">Puntuacion:</label>
-                            <input type="text" name="nuevaPuntuacion" value="${element.reservaUser.puntaje}">
-                            <label for="nuevaResena" class="form-label">Reseña:</label>
-                            <input type="text" name="nuevaResena" value="${element.reservaUser.textoReserva}">
-                            <button type="submit" onclick="actualizar();" class="btn btn-danger">Enviar</button>
+                                <div class="row">
+                                    <input type="hidden" name="reservaID" value="${element.reservaUser.reservaID}">
+                                    <input type="hidden" name="esVerificado" value="${dataEsVerificado}">
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control col-md-3" name="nuevaPuntuacion" value="${element.reservaUser.puntaje}" placeholder="puntuación:">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control col-md-3" name="nuevaResena" value="${element.reservaUser.textoReserva}" placeholder="Reseña:">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" onclick="actualizar();" class="btn btn-danger">Enviar</button>
+                                    </div>
+                                </div>
                             </form>
                         </td>
                     `;
@@ -284,7 +295,7 @@ async function informacionDeOfertas() {
             }
 
 
-            if (dataReservasAOfertas) {
+            if (dataReservasAOfertas.length > 0) {
                 dataReservasAOfertas.forEach(element => {
                     const publicacionTitulo = element.ofertaUser.titulo;
                     const reservas = element.reservas;
