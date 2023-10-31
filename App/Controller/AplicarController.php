@@ -40,14 +40,16 @@
             $ofertasPublicadasUser = $this->obtenerOfertasPublicadas($userID); 
 
             // Obtener aplicantes de oferta
+            $aplicantesAlasOfertasUser = [];
             foreach ($ofertasPublicadasUser as $oferPublicada) {
-                $aplicantesAlasOfertasUser = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
+                $aplicantesAlasOfertasUser[] = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
             }
 
             // obtener las ofertas publicadas del usuario con sus respectivos aplicantes(puede ser solo ofertas publicadas o el arreglo vacio)
+            $oferta_con_aplicante = [];
             if(count($ofertasPublicadasUser) > 0 || count($aplicantesAlasOfertasUser) > 0){
                 $usuarios = $this->usuarios->getAll();
-                $oferta_con_aplicante = $this->ofertas_y_Aplicantes($usuarios, $ofertasPublicadasUser, $aplicantesAlasOfertasUser);
+                $oferta_con_aplicante[] = $this->ofertas_y_Aplicantes($usuarios, $ofertasPublicadasUser, $aplicantesAlasOfertasUser);
             }
             
             //hay que pasar sus propias aplicaciones. darle a que oferta aplico
@@ -215,10 +217,27 @@
         public function resenar(){
             $result = new Result();
             if($_SERVER["REQUEST_METHOD"] == "POST"){
+                $idReserva = (isset($_POST['reservaID']))? $_POST['reservaID']:'';
+                $esVerificado = (isset($_POST['esVerificado']))? $_POST['esVerificado']:'';
+                $resena = (isset($_POST['resena']))? $_POST['resena']:'';
+                if($idReserva != null && $esVerificado != null && is_numeric($idReserva) && $resena != ''){
+                    if($esVerificado === true){
+                        $this->reserva->update($idReserva,[
+                            'textoReserva' => $resena,
+                        ]);
+                    }else{
+                        $result->success = false;
+                        $result->message = "Error: usuario no verificado";
+                    }
+                    
+                }else{
+                    $result->success = false;
+                    $result->message = "Error: información inválida";
+                }
 
             }else{
                 $result->success = false;
-                $result->message = 'Error: Solicitud invalida';
+                $result->message = 'Error: Solicitud inválida';
             }
             echo json_encode($result);
         }
@@ -226,6 +245,16 @@
         public function puntuar(){
             $result = new Result();
             if($_SERVER["REQUEST_METHOD"] == "POST"){
+                $idReserva = (isset($_POST['reservaID']))? $_POST['reservaID']:'';
+                $puntuacion = (isset($_POST['puntuacion']))? $_POST['puntuacion']:'';
+                if($idReserva != null && is_numeric($idReserva) && $puntuacion != null && is_numeric($puntuancion)){
+                    $this->reserva->update($idReserva,[
+                        'puntaje' => $puntuacion,
+                    ]);
+                }else{
+                    $result->success = false;
+                    $result->message = "Error: información inválida";
+                }
 
             }else{
                 $result->success = false;
@@ -237,7 +266,14 @@
         public function contestar(){
             $result = new Result();
             if($_SERVER["REQUEST_METHOD"] == "POST"){
-
+                $idReserva = (isset($_POST['reservaID']))? $_POST['reservaID']:'';
+                $contestacion = (isset($_POST['contestacion']))? $_POST['contestacion']:'';
+                $resena = (isset($_POST['resena']))? $_POST['resena']:'';
+                if($idReserva != null && is_numeric($idReserva) && $contestacion != '' && $resena != ''){
+                    $this->reserva->update($idReserva,[
+                        'respuesta' => $contestacion,
+                    ]);
+                }
             }else{
                 $result->success = false;
                 $result->message = 'Error: Solicitud invalida';
@@ -250,7 +286,7 @@
         //---------------------------------------------------------Rentas--------------------------------------------------------------------//
 
         public function aplicar(){
-            
+            //upsert para usuarios no verificados e insert comun para los verificados.
         }
 
         public function rechazar(){

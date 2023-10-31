@@ -260,9 +260,15 @@
                         $result->message = "Oferta modificada con éxito";
                     } else {
                         $result->success = false;
-                        $result->message = "Identificador inválido";
+                        $result->message = "oferta no encontrada";
                     }
+                }else{
+                    $result->success = false;
+                    $result->message = "Identificador inválido";
                 }
+            }else{
+                $result->success = false;
+                $result->message = "Solicitud invalidad";
             }
             echo json_encode($result);
         }

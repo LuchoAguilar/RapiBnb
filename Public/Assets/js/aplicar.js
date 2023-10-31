@@ -5,6 +5,7 @@
         *reservas hechas por el usuario 
         *y reservas hechas a las publicaciones del usuario. 
         */
+
 async function informacionDeOfertas() {
 
     let reposense = await fetch(URL_PATH + '/Aplicar/table');
@@ -23,9 +24,10 @@ async function informacionDeOfertas() {
 
         const dataOfertasYAplicaciones = reposenseData.result.ofertasAplicantes;
         const dataAplicacionesUsuario = reposenseData.result.aplicacionesDelUsuario;
-        const dataReservasDelUsuario = reposenseData.result.reservasDelUsuario.reservas;
-        const dataReservasAOfertas = reposenseData.result.reservasDeOfertasP.reservasDeOfertas;
+        const dataReservasDelUsuario = reposenseData.result.reservasDelUsuario;
+        const dataReservasAOfertas = reposenseData.result.reservasDeOfertasP;
         const dataEsVerificado = reposenseData.result.esVerificado;
+        
 
         //controlador de columnas para que se vea bien la page
 
@@ -216,55 +218,69 @@ async function informacionDeOfertas() {
             if (dataReservasDelUsuario) {
                 // Crear una variable para almacenar el contenido de la tabla
                 let reservasUsuarioHTML = '';
-
+                let th = 'Evaluar reserva';
                 dataReservasDelUsuario.forEach(element => {
-
-                    let btnResenar = ''; 
-                    if(dataEsVerificado === true){
-                        btnResenar = `<button onclick="resenarOferta(${element.reservaUser.reservaID},${dataEsVerificado});" class="btn btn-danger">Reseñar</button> |`;
-                    }
-                    
-                    let btnPuntuar = `<button onclick="puntuarOferta(${element.reservaUser.reservaID});" class="btn btn-danger">Puntuar</button>`;
                     // Agregar una nueva fila a la variable de contenido
-                    reservasUsuarioHTML += `
-                                <tr>
-                                    <td>${element.oferta.titulo}</td>
-                                    <td>${element.reservaUser.puntaje}</td>
-                                    <td>${element.reservaUser.textoReserva}</td>
-                                    <td>${element.reservaUser.respuesta}</td>
-                                    <td>${btnResenar}${btnPuntuar}</td>
-                                </tr>
-                            `;
-                });
-
-                // Insertar el contenido en la tabla completa
-                ReservasDelUsuarioHTML.innerHTML = `
-                            <div>
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3 class="text-center">Reservas hechas</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Publicación</th>
-                                                        <th scope="col">Puntuación</th>
-                                                        <th scope="col">Reseña</th>
-                                                        <th scope="col">Respuesta</th>
-                                                        <th scope="col">Evaluar reserva</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="tablaUsuarios">
-                                                    ${reservasUsuarioHTML}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    
+                    let evaluar = `
+                        <td>
+                            <form action="" method="post" id="envioData_${element.reservaUser.reservaID}">
+                            <input type="hidden" name="reservaID" value="${element.reservaUser.reservaID}">
+                            <input type="hidden" name="esVerificado" value="${dataEsVerificado}">
+                            <label for="nuevaPuntuacion" class="form-label">Puntuacion:</label>
+                            <input type="text" name="nuevaPuntuacion" value="${element.reservaUser.puntaje}">
+                            <label for="nuevaResena" class="form-label">Reseña:</label>
+                            <input type="text" name="nuevaResena" value="${element.reservaUser.textoReserva}">
+                            <button type="submit" onclick="actualizar();" class="btn btn-danger">Enviar</button>
+                            </form>
+                        </td>
+                    `;
+                    if(element.reservaUser.textoReserva && element.reservaUser.puntaje){
+                        evaluar = `
+                        <td>${element.reservaUser.puntaje}</td>
+                        <td>${element.reservaUser.textoReserva}</td>
+                        <td>${element.reservaUser.respuesta}</td>
                         `;
+                        th = `
+                            <th scope="col">Puntaje</th>
+                            <th scope="col">Reseña</th>
+                            <th scope="col">Respuesta</th>
+                        `;
+                    }
+                    reservasUsuarioHTML += `
+                      <tr>
+                        <td>${element.oferta.titulo}</td>
+                        ${evaluar}
+                      </tr>
+                    `;
+                    
+                });
+        
+                // Insertar el contenido en la tabla completa
+                ReservasDelUsuarioHTML = `
+                  <div>
+                    <div class="card">
+                      <div class="card-header">
+                        <h3 class="text-center">Reservas hechas</h3>
+                      </div>
+                      <div class="card-body text-center">
+                        <div class="table-responsive">
+                          <table class="table table-striped">
+                            <thead>
+                              <tr>
+                                <th scope="col">Publicación</th>
+                                ${th}
+                              </tr>
+                            </thead>
+                            <tbody id="tablaUsuarios">
+                              ${reservasUsuarioHTML}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                `;
             }
 
 
@@ -296,7 +312,7 @@ async function informacionDeOfertas() {
                     let btnContestar = '';
                     let contestarHTML = '';
 
-                    if(element.reservas.textoReserva != ''){
+                    if (element.reservas.textoReserva != '') {
                         contestarHTML = '<th scope="col">Contestar resena</th>';
                         btnContestar = `<button onclick="contestarResena(${element.ofertaUser.creadorID},${element.ofertaUser.reservaID});" class="btn btn-danger">icono</button>`;
                     }
@@ -319,6 +335,7 @@ async function informacionDeOfertas() {
                                         <td>${reserva.puntaje}</td>
                                         <td>${reserva.textoReserva}</td>
                                         <td>${reserva.respuesta}</td>
+                                        <td>${reserva.autorID}</td>
                                         <td>${btnContestar}</td>
                                     </tr>
                                 `;
@@ -334,8 +351,8 @@ async function informacionDeOfertas() {
                     reservasContainer.appendChild(reservasTable);
 
                     // Añade el contenedor de reservas al elemento adecuado en tu HTML
-                    const ReservasAOfertasHTML = document.getElementById('ReservasAOfertasHTML');
-                    ReservasAOfertasHTML.appendChild(reservasContainer);
+
+                    ReservasAOfertasHTML += reservasContainer.outerHTML;
                 });
             }
 
@@ -356,14 +373,42 @@ async function informacionDeOfertas() {
 
 informacionDeOfertas();
 
-function contestarResena(duenoPublicacionID, reservaID){
+function actualizar() {
+    const formulario = document.getElementById('envioData');
+    formulario.addEventListener('submit', (e) => {
+        e.preventDefault();
+        enviarInformacion(formulario);
+    });
+}
+
+function enviarInformacion(formulario) {
+    const formData = new FormData(formulario);
+
+    fetch(URL_PATH + '/Usuario/create/', { method: 'POST', body: formData })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.replace(URL_PATH + '/Usuario/home');
+            } else {
+                const divErr = document.getElementById('errores');
+                divErr.innerHTML = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+              <strong>${data.message}</strong>
+            </div>
+          `;
+            }
+        });
+}
+
+function contestarResena(duenoPublicacionID, reservaID) {
 
 }
 
-function resenarOferta(reservaID, esVerificado){
+function resenarOferta(reservaID, esVerificado) {
 
 }
 
-function puntuarOferta(reservaID){
+function puntuarOferta(reservaID) {
 
 }
