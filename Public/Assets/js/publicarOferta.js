@@ -92,7 +92,6 @@ function eliminarOferta(id) {
                 });
         }
     });
-
 }
 
 function crearOferta(esVerificado,cantOfertas) {

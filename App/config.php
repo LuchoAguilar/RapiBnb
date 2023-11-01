@@ -13,7 +13,8 @@
     //constantes de estados de oferta
     define('PUBLICADO','publicado');
     define('ESPERA', 'espera');
-    //constantes de estado de aplicacion
-    define('ACEPTADO','aceptado');
-    define('RECHAZADO','rechazado');
+    //constantes de estado de renta
+    define('ACEPTADO','Aceptado');
+    define('RECHAZADO','Rechazado');
+    define('ESPERA_RENTA', 'Espera');
 ?>

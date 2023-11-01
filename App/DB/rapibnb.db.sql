@@ -60,6 +60,8 @@ CREATE TABLE aplicacion_a_oferta_alquiler(
     fechaAplico TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     estado ENUM('Aceptado', 'Rechazado','Espera'),
     usuarioAplicoID INT,
+    ofertaAlquilerID INT,
+    FOREIGN KEY (ofertaAlquilerID) REFERENCES oferta_de_alquiler (ofertaID),
     FOREIGN KEY (usuarioAplicoID) REFERENCES usuarios (usuarioID)
 );
 

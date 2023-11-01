@@ -56,10 +56,10 @@ async function informacionDeOfertas() {
 
         // hay que tener en cuenta que puede no venir ninguna informacion o alguna de las datas o hasta todas a la vez.
         if (dataOfertasYAplicaciones) {
-            const divCard= document.createElement('div');
-                divCard.classList.add('row');
+            const divCard = document.createElement('div');
+            divCard.classList.add('row');
 
-                divOfertas.appendChild(divCard);
+            divOfertas.appendChild(divCard);
 
             dataOfertasYAplicaciones.forEach(element => {
                 const galeriaFotosStr = element.ofertaPublicada.galeriaFotos;
@@ -96,7 +96,7 @@ async function informacionDeOfertas() {
                                         </div>
                                         <div class="card-footer">
                                             <button onclick="AceptarOferta(${usuarioAplicante.usuarioID},${element.ofertaPublicada.ofertaID});" class="btn btn-info">Aceptar Oferta</button>
-                                            <button onclick="rechazarOferta(${usuarioAplicante.usuarioID});" class="btn btn-info">Rechazar Oferta</button>
+                                            <button onclick="rechazarOferta(${usuarioAplicante.usuarioID},${element.ofertaPublicada.ofertaID});" class="btn btn-info">Rechazar Oferta</button>
                                         </div>
                                     </div>
                                 `;
@@ -123,10 +123,10 @@ async function informacionDeOfertas() {
                 } else if (numberOfObjects >= 4) {
                     columnOfertas = 'col-md-3';
                 }
-                
+
 
                 console.log(numberOfObjects);
-                
+
 
                 divCard.insertAdjacentHTML('beforeend', `                       
                     <div class="card ${columnOfertas}" style="max-width: 400px; max-height: 800px; margin: auto;">
@@ -242,11 +242,11 @@ async function informacionDeOfertas() {
                         </td>
                     `;
                     if (element.reservaUser.textoReserva != null && element.reservaUser.puntaje) {
-                        
+
                         evaluar = `
                         <td>${element.reservaUser.puntaje}</td>
                         <td>${element.reservaUser.textoReserva}</td>
-                        <td>${(element.reservaUser.respuesta !=null)?element.reservaUser.respuesta:''}</td>
+                        <td>${(element.reservaUser.respuesta != null) ? element.reservaUser.respuesta : ''}</td>
                         `;
                         th = `
                             <th scope="col">Puntaje</th>
@@ -295,33 +295,33 @@ async function informacionDeOfertas() {
                 dataReservasAOfertas.forEach(element => {
                     const publicacionTitulo = element.ofertaUser.titulo;
                     const reservas = element.reservas;
-            
+
                     // Crea un contenedor para cada tabla de reservas
                     const reservasContainer = document.createElement('div');
                     reservasContainer.classList.add('variado');
-            
+
                     const reservasTable = document.createElement('div');
                     reservasTable.classList.add('card');
-            
+
                     const cardHeader = document.createElement('div');
                     cardHeader.classList.add('card-header');
                     cardHeader.innerHTML = `<h3 class="text-center">Reservas a: ${publicacionTitulo}</h3>`;
-            
+
                     const cardBody = document.createElement('div');
                     cardBody.classList.add('card-body');
-            
+
                     const tableContainer = document.createElement('div');
                     tableContainer.classList.add('table-responsive');
-            
+
                     const tabla = document.createElement('table');
                     tabla.classList.add('table', 'table-striped');
-            
+
                     let contestarHTML = '';
-            
+
                     if (reservas.length > 0 && reservas[0].textoReserva !== null) {
                         contestarHTML = '<th scope="col">Contestar reseña</th>';
                     }
-            
+
                     const thead = document.createElement('thead');
                     thead.innerHTML = `
                         <tr>
@@ -331,15 +331,15 @@ async function informacionDeOfertas() {
                             ${contestarHTML}
                         </tr>
                     `;
-            
+
                     const tbody = document.createElement('tbody');
                     reservas.forEach(reserva => {
-                        let evaluar = '';
-                        let respuesta = '';
-                        if(reserva.respuesta){
-                            respuesta = `${reserva.respuesta !== null ? reserva.respuesta : ''}`;
-                            evaluar = '';
-                        }else if(reserva.textoReserva !== null && reserva.textoReserva !== ''){
+                        let evaluar = '<td></td>';
+                        let respuesta = '<td></td>';
+                        if (reserva.respuesta) {
+                            respuesta = `<td>${reserva.respuesta !== null ? reserva.respuesta : ''}</td>`;
+                            evaluar = '<td></td>';
+                        } else if (reserva.textoReserva !== null && reserva.textoReserva !== '') {
                             evaluar = `
                             <td>
                                 <form action="" method="post" id="Respuesta_${reserva.reservaID}">
@@ -357,17 +357,17 @@ async function informacionDeOfertas() {
                             </td>
                             `;
                         }
-            
+
                         tbody.innerHTML += `
                             <tr>
                                 <td>${reserva.puntaje !== null ? reserva.puntaje : ''}</td>
                                 <td>${reserva.textoReserva !== null ? reserva.textoReserva : ''}</td>
-                                <td>${respuesta}</td>
+                                ${respuesta}
                                 ${evaluar}
                             </tr>
                         `;
                     });
-            
+
                     // Agrega todos los elementos al DOM
                     tabla.appendChild(thead);
                     tabla.appendChild(tbody);
@@ -376,13 +376,13 @@ async function informacionDeOfertas() {
                     reservasTable.appendChild(cardHeader);
                     reservasTable.appendChild(cardBody);
                     reservasContainer.appendChild(reservasTable);
-            
+
                     // Añade el contenedor de reservas al elemento adecuado en tu HTML
                     ReservasAOfertasHTML += reservasContainer.outerHTML;
                 });
             }
-            
-            
+
+
 
 
             divReservas.innerHTML = `
@@ -429,7 +429,7 @@ function enviarEvaluacion(formulario) {
         });
 }
 
-function actualizarRespuesta(id){
+function actualizarRespuesta(id) {
     const formulario = document.getElementById(`Respuesta_${id}`);
     formulario.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -457,10 +457,32 @@ function enviarRespuesta(formulario) {
         });
 }
 
-function resenarOferta(reservaID, esVerificado) {
+function AceptarOferta(usuarioID, ofertaID) {
 
+    Modal.confirm({
+        title: '¿Desea Aceptar oferta?',
+        confirm: true,
+        onAccept: () => {
+            const data = new FormData();
+            data.append('usuario', usuarioID);
+            data.append('oferta', ofertaID);
+
+            fetch(URL_PATH + '/Rentas/aceptarRenta/', {
+                method: 'POST',
+                body: data
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log(data.message);
+                        window.location.replace(URL_PATH + '/Rentas/home');
+                    }else{
+                        console.log(data.message);
+                    }
+                });
+        }
+    });
 }
 
-function puntuarOferta(reservaID) {
+function rechazarOferta(usuarioID, ofertaID) {
 
 }

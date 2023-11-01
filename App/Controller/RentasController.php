@@ -137,15 +137,17 @@
         public function ofertas_y_Aplicantes($usuariosAll, $ofertasPublicadasUser, $aplicantesAlasOfertasUser){
             $oferta_con_aplicante = [];
             if(count($aplicantesAlasOfertasUser) > 0){
-                foreach($aplicantesAlasOfertasUser as $aplicante){
-                    foreach($usuariosAll as $usuario){
-                        if($aplicante['usuarioAplicoID'] === $usuario['usuarioID']){
-                            foreach($ofertasPublicadasUser as $oferPublicada){
-                                if($aplicante['ofertaAlquilerID'] === $oferPublicada['ofertaID']){
-                                    $oferta_con_aplicante[] = [
-                                        'ofertaPublicada' => $oferPublicada,
-                                        'usuarioAplicante' => $usuario,
-                                    ];
+                foreach($aplicantesAlasOfertasUser as $renta){
+                    if($renta['estado'] === ESPERA_RENTA){
+                        foreach($usuariosAll as $usuario){
+                            if($renta['usuarioAplicoID'] === $usuario['usuarioID']){
+                                foreach($ofertasPublicadasUser as $ofertaUser){
+                                    if($renta['ofertaAlquilerID'] === $ofertaUser['ofertaID']){
+                                        $oferta_con_aplicante[] = [
+                                            'ofertaPublicada' => $ofertaUser,
+                                            'usuarioAplicante' => $usuario,
+                                        ];
+                                    }
                                 }
                             }
                         }
@@ -170,54 +172,7 @@
         }
 
         //---------------------------------------------------------------------------------------------------------------------------------------------//
-        //---------------------------------------------------- Reservas crear y modificar -------------------------------------------------------------//
-        public function crearReserva(){
-            // entender que una reserva se crea cuando se acepta una aplicacion(en caso de verificado se hace una aplicacion aceptada y de ahi la reserva) por lo que se debera enviar la data sacada de las aplicaciones.
-            $result = new Result();
-            if($_SERVER["REQUEST_METHOD"] == "POST"){
-                $idOferta = (isset($_POST['ofertaID']))? $_POST['ofertaID']:'';
-                $idUsuario = (isset($_POST['usuarioID'])) ? $_POST['usuarioID']:'';
-                // debo anular la foranea de oferta en aplicar_oferta
-                // para crear la reserva y que no se muestre en la parte de informacion
-
-                if($idOferta != '' && $idUsuario !='' && is_numeric($idUsuario) && is_numeric($idOferta)){
-                    //hay que pasar sus propias aplicaciones. darle a que oferta aplico
-                    $aplicacionesDelUsuario = $this->aplicaOferta->buscarRegistrosRelacionados('usuarios','usuarioID','usuarioAplicoID',$idUsuario);
-
-                    if($aplicacionesDelUsuario){
-                        foreach($aplicacionesDelUsuario as $apliUser){
-                            if($apliUser['ofertaAlquilerID'] === $idOferta){
-                                $this->aplicaOferta->update($apliUser['aplicacionID'],[
-                                    'ofertaAlquilerID' => null,
-                                ]);
-                                $this->reserva->insert([
-                                    'ofertaAlquilerID' => $idOferta,
-                                    'autorID' => $idUsuario,
-                                    'textoReserva' => '',
-                                    'respuesta' => '',
-                                    'puntaje' => 0,
-                                ]);
-                                $result->success = true;
-                                $result->message = 'reserva creada con éxito';
-                            }
-                        }
-                        
-                    }else{
-                        $result->success = false;
-                        $result->message = 'Error: usuario sin aplicaciones a publicaciones';
-                    }
-                    
-                    
-                }else{
-                    $result->success = false;
-                    $result->message = 'Error: al traer la informacion';
-                }
-            }else{
-                $result->success = false;
-                $result->message = 'Error: Solicitud invalida';
-            }
-            echo json_encode($result);
-        }
+        //---------------------------------------------------- Reservas reseñar, puntuar y contestar reseña-------------------------------------------------------------//
 
         public function resenar(){
             $result = new Result();
@@ -233,7 +188,7 @@
                             'puntaje' => $puntuacion,
                         ]);
                         $result->success = true;
-                        $result->message = "Evaluación realizada con éxito";
+                        $result->message = "Evaluación realizada con éxito.";
                     }else{
                         if($esVerificado === 'true' && $resena != null && $puntuacion != null){
                             $this->reserva->updateById($idReserva,[
@@ -242,22 +197,22 @@
                             ]);
     
                             $result->success = true;
-                            $result->message = "Evaluación realizada con éxito";
+                            $result->message = "Evaluación realizada con éxito.";
                         }else{
                             $result->success = false;
-                            $result->message = "Error: usuario no verificado".$puntuacion.$resena;
+                            $result->message = "Error: usuario no verificado.".$puntuacion.$resena;
                         }
                     }
                     
                     
                 }else{
                     $result->success = false;
-                    $result->message = "Error: información inválida";
+                    $result->message = "Error: información inválida.";
                 }
 
             }else{
                 $result->success = false;
-                $result->message = 'Error: Solicitud inválida';
+                $result->message = 'Error: Solicitud inválida.';
             }
             echo json_encode($result);
         }
@@ -273,14 +228,14 @@
                         'respuesta' => $contestacion,
                     ]);
                     $result->success = true;
-                    $result->message = "Respuesta enviada con éxito";
+                    $result->message = "Respuesta enviada con éxito.";
                 }else{
                     $result->success = false;
-                    $result->message = "Error: información inválida";
+                    $result->message = "Error: información inválida.";
                 }
             }else{
                 $result->success = false;
-                $result->message = 'Error: Solicitud invalida';
+                $result->message = 'Error: Solicitud invalida.';
             }
             echo json_encode($result);
         }
@@ -289,12 +244,171 @@
 
         //---------------------------------------------------------Rentas--------------------------------------------------------------------//
 
-        public function aplicar(){
-            //upsert para usuarios no verificados e insert comun para los verificados.
+        public function crearReserva($idUsuarioReserva,$idOferta){
+            $result = [];
+            if(is_numeric($idUsuario) && is_numeric($idOferta)){
+                $rentas = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $idOferta);
+                if($rentas){
+                    foreach($rentas as $renta){
+                        if($renta['usuarioAplicoID'] === $idUsuario){
+                            $this->aplicaOferta->updateById($renta['aplicacionID'],[
+                                'estado' => ACEPTADO,
+                            ]);
+                        }
+                    } 
+                    $this->reserva->insert([
+                        'ofertaAlquilerID' => $idOferta,
+                        'autorID' => $idUsuarioReserva,
+                    ]);
+                    $result = [
+                        'success' => true,
+                        'message' => 'Reserva creada con éxito.';
+                    ];
+                }else{
+                    $result = [
+                        'success' => false,
+                        'message' => 'Error: no existe la aplicación a la oferta hecha por el usuario.';
+                    ];
+                }
+            }else{
+                $result = [
+                    'success' => false,
+                    'message' => 'Error: información inválida.';
+                ];
+            }
+            return $result;   
         }
 
-        public function rechazar(){
+        public function rentar(){
+            //upsert para usuarios no verificados e insert comun para los verificados.
+            $result = new Result();
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+                $idOferta = (isset($_POST['ofertaID']))? $_POST['ofertaID']:'';
+                $idUsuario = (isset($_POST['usuarioID'])) ? $_POST['usuarioID']:'';
+                $esVerificado = (isset($_POST['esVerificado']))? $_POST['esVerificado']:'';
+                if($idOferta != '' && $idUsuario !='' && is_numeric($idUsuario) && is_numeric($idOferta) && $esVerificado != null){
+                    //si es verificado debe crear la aplicacion con estado aceptado else con estado espera
+                    if($esVerificado === 'true'){
+                        $this->aplicaOferta->insert([
+                            'estado' => ACEPTADO,
+                            'usuarioAplicoID' => $idUsuario,
+                            'ofertaAlquilerID' => $idOferta,
+                        ]);
+                        $resultado = crearReserva($idUsuario,$idOferta);
+                        if($resultado['success'] === true){
+                            $result->success = true;
+                            $result->message = "Renta verificada creada con éxito.";
+                        }else{
+                            $result->success = $resultado['success'];
+                            $result->message = $resultado['message'];
+                        }
+                        
+                    }else{
+                        $rentasUser = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $idUsuario);
+                        if(count($rentasUser) > 0){
+                            $rentaId = '';
+                            foreach($rentasUser as $renta){
+                                $rentaId = $renta['aplicacionID'];
+                            }
+                            $renta = $this->aplicaOferta->getById($rentaId);
+                            if($renta){
+                                if($renta['estado'] === ESPERA_RENTA){
+                                    $this->aplicaOferta->insert([
+                                        'estado' => ESPERA_RENTA,
+                                        'usuarioAplicoID' => $idUsuario,
+                                        'ofertaAlquilerID' => $idOferta,
+                                    ]);
+                                    $result->success = true;
+                                    $result->message = "Renta creada con éxito.";
+                                }else{
+                                    $result->success = false;
+                                    $result->message = "Error: usuario tiene ya tiene una renta en proceso.";
+                                }
+                            }else{
+                                $result->success = false;
+                                $result->message = "Error: de proceso.";
+                            }
+                        }else{
+                            else{
+                                $this->aplicaOferta->insert([
+                                    'estado' => ESPERA_RENTA,
+                                    'usuarioAplicoID' => $idUsuario,
+                                    'ofertaAlquilerID' => $idOferta,
+                                ]);
+                                $result->success = true;
+                                $result->message = "Renta creada con éxito.";
+                            }
+                        }
+                        
+                    }
 
+                }else{
+                    $result->success = false;
+                    $result->message = "Error: información inválida.";
+                } 
+            }else{
+                $result->success = false;
+                $result->message = 'Error: Solicitud invalida.';
+            }
+            echo json_encode($result);
+        }
+
+        public function aceptarRenta(){
+            $result = new Result();
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+                $idOferta = (isset($_POST['ofertaID']))? $_POST['ofertaID']:'';
+                $idUsuario = (isset($_POST['usuarioID'])) ? $_POST['usuarioID']:'';
+                if($idOferta != '' && $idUsuario !='' && is_numeric($idUsuario) && is_numeric($idOferta)){
+                    $resultado = crearReserva($idUsuario,$idOferta);
+                    if($resultado['success'] === true){
+                        $result->success = true;
+                        $result->message = "Reserva creada con éxito.";
+                    }else{
+                        $result->success = $resultado['success'];
+                        $result->message = $resultado['message'];
+                    }
+                }else{
+                    $result->success = false;
+                    $result->message = "Error: información inválida.";
+                }
+            }else{
+                $result->success = false;
+                $result->message = 'Error: Solicitud invalida.';
+            }
+            echo json_encode($result);
+        }
+
+        public function rechazarRenta(){
+            $result = new Result();
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+                $idOferta = (isset($_POST['ofertaID']))? $_POST['ofertaID']:'';
+                $idUsuario = (isset($_POST['usuarioID'])) ? $_POST['usuarioID']:'';
+                if($idOferta != '' && $idUsuario !='' && is_numeric($idUsuario) && is_numeric($idOferta)){
+                    $rentas = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $idOferta);
+                    if($rentas){
+                        foreach($rentas as $renta){
+                            if($renta['usuarioAplicoID'] === $idUsuario){
+                                $this->aplicaOferta->updateById($renta['aplicacionID'],[
+                                    'estado' => RECHAZADO,
+                                ]);
+                            }
+                        }
+                        $result->success = true;
+                        $result->message = "renta rechazada con éxito.";
+                    }else{
+                        $result->success = false;
+                        $result->message = 'Error: Oferta no encontrada.';
+                    } 
+                }else{
+                    $result->success = false;
+                    $result->message = 'Error: información invalida.';
+                }
+
+            }else{
+                $result->success = false;
+                $result->message = 'Error: Solicitud invalida.';
+            }
+            echo json_encode($result);
         }
         //---------------------------------------------------------------------------------------------------------------------------------------------//
 
