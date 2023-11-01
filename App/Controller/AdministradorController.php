@@ -196,7 +196,7 @@
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $idPostulante = (isset($_POST['id'])) ? $_POST['id'] : '';
                 
-                if ($idPostulante != '') {
+                if ($idPostulante != '' && is_numeric($idPostulante)) {
                     if ($this->delete($idPostulante)) {
                         $fechaVencimiento = new DateTime();
                         $fechaVencimiento->modify('+30 days');
@@ -208,7 +208,7 @@
                         ]);
         
                         $result->success = true;
-                        $result->message = 'Verificación creada correctamente';
+                        $result->message = "Verificación creada correctamente.";
                     } else {
                         $result->success = false;
                         $result->message = "Error al borrar la postulación.";
@@ -224,6 +224,7 @@
             
             // Devuelve los resultados como JSON
             header('Content-Type: application/json');
+
             echo json_encode($result);
         }
         

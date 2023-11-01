@@ -13,4 +13,4 @@
     </div>
 </main>
 
-<script src="<?= URL_PATH?>/Assets/js/aplicar.js"></script>
+<script src="<?= URL_PATH?>/Assets/js/rentas.js"></script>

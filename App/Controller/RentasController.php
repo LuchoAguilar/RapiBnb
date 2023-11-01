@@ -5,7 +5,7 @@
     require_once(__DIR__.'/../Model/reserva.php');
     require_once(__DIR__.'/../Model/aplicaOferta.php');
 
-    class AplicarController extends Controller{
+    class RentasController extends Controller{
 
         private $ofertas;
         private $usuarios;
@@ -25,7 +25,7 @@
 
         public function home(){
             if($this->userSession->Roll() === LOG){
-                $this->render('aplicar', [] ,'site');
+                $this->render('rentas', [] ,'site');
             }else{
                 header("Location: ".URL_PATH);
             }
@@ -97,7 +97,7 @@
             if(count($ofertasPublicadasUser) > 0){
                 foreach($ofertasPublicadasUser as $ofertaPublicada){
                     $reservasDeOfertas[] = [
-                        'reservas' => $this->reserva->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']),
+                        'reservas' => $this->reserva->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $ofertaPublicada['ofertaID']),
                         'ofertaUser' => $ofertaPublicada,
                     ];
                 }
@@ -223,17 +223,32 @@
             $result = new Result();
             if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $idReserva = (isset($_POST['reservaID']))? $_POST['reservaID']:'';
-                $esVerificado = (isset($_POST['esVerificado']))? $_POST['esVerificado']:'';
-                $resena = (isset($_POST['resena']))? $_POST['resena']:'';
-                if($idReserva != null && $esVerificado != null && is_numeric($idReserva) && $resena != ''){
-                    if($esVerificado === true){
-                        $this->reserva->update($idReserva,[
-                            'textoReserva' => $resena,
+                $esVerificado = (isset($_POST['esVerificado']))? $_POST['esVerificado']:''; 
+                $resena = (isset($_POST['nuevaResena']))? $_POST['nuevaResena']:'';
+                $puntuacion = (isset($_POST['nuevaPuntuacion']))? $_POST['nuevaPuntuacion']:'';
+                if($idReserva != null && $esVerificado != null && is_numeric($idReserva)){
+
+                    if(empty($resena) && $puntuacion != null){
+                        $this->reserva->updateById($idReserva,[
+                            'puntaje' => $puntuacion,
                         ]);
+                        $result->success = true;
+                        $result->message = "Evaluación realizada con éxito";
                     }else{
-                        $result->success = false;
-                        $result->message = "Error: usuario no verificado";
+                        if($esVerificado === 'true' && $resena != null && $puntuacion != null){
+                            $this->reserva->updateById($idReserva,[
+                                'textoReserva' => $resena,
+                                'puntaje' => $puntuacion,
+                            ]);
+    
+                            $result->success = true;
+                            $result->message = "Evaluación realizada con éxito";
+                        }else{
+                            $result->success = false;
+                            $result->message = "Error: usuario no verificado".$puntuacion.$resena;
+                        }
                     }
+                    
                     
                 }else{
                     $result->success = false;
@@ -247,37 +262,21 @@
             echo json_encode($result);
         }
 
-        public function puntuar(){
+        public function responder(){
             $result = new Result();
             if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $idReserva = (isset($_POST['reservaID']))? $_POST['reservaID']:'';
-                $puntuacion = (isset($_POST['puntuacion']))? $_POST['puntuacion']:'';
-                if($idReserva != null && is_numeric($idReserva) && $puntuacion != null && is_numeric($puntuancion)){
-                    $this->reserva->update($idReserva,[
-                        'puntaje' => $puntuacion,
+                $contestacion = (isset($_POST['responder']))? $_POST['responder']:'';
+
+                if($idReserva != null && is_numeric($idReserva) && $contestacion != null){
+                    $this->reserva->updateById($idReserva,[
+                        'respuesta' => $contestacion,
                     ]);
+                    $result->success = true;
+                    $result->message = "Respuesta enviada con éxito";
                 }else{
                     $result->success = false;
                     $result->message = "Error: información inválida";
-                }
-
-            }else{
-                $result->success = false;
-                $result->message = 'Error: Solicitud invalida';
-            }
-            echo json_encode($result);
-        }
-
-        public function contestar(){
-            $result = new Result();
-            if($_SERVER["REQUEST_METHOD"] == "POST"){
-                $idReserva = (isset($_POST['reservaID']))? $_POST['reservaID']:'';
-                $contestacion = (isset($_POST['contestacion']))? $_POST['contestacion']:'';
-                $resena = (isset($_POST['resena']))? $_POST['resena']:'';
-                if($idReserva != null && is_numeric($idReserva) && $contestacion != '' && $resena != ''){
-                    $this->reserva->update($idReserva,[
-                        'respuesta' => $contestacion,
-                    ]);
                 }
             }else{
                 $result->success = false;

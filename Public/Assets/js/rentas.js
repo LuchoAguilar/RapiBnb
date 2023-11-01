@@ -8,7 +8,7 @@
 
 async function informacionDeOfertas() {
 
-    let reposense = await fetch(URL_PATH + '/Aplicar/table');
+    let reposense = await fetch(URL_PATH + '/Rentas/table');
     let reposenseData = await reposense.json();
 
     if (reposenseData.success) {
@@ -129,7 +129,7 @@ async function informacionDeOfertas() {
                 
 
                 divCard.insertAdjacentHTML('beforeend', `                       
-                    <div class="card ${columnOfertas}" style="max-width: 400px; max-height: 800px;">
+                    <div class="card ${columnOfertas}" style="max-width: 400px; max-height: 800px; margin: auto;">
                         <div class="card-header">
                             <div id="imageCarousel${element.ofertaPublicada.ofertaID}" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
@@ -220,7 +220,7 @@ async function informacionDeOfertas() {
                 let th = '<th scope="col">Evaluar reserva</th>';
                 dataReservasDelUsuario.forEach(element => {
                     // Agregar una nueva fila a la variable de contenido
-
+                    console.log(element.reservaUser.textoReserva);
                     let evaluar = `
                         <td>
                             <form action="" method="post" id="envioData_${element.reservaUser.reservaID}">
@@ -228,23 +228,25 @@ async function informacionDeOfertas() {
                                     <input type="hidden" name="reservaID" value="${element.reservaUser.reservaID}">
                                     <input type="hidden" name="esVerificado" value="${dataEsVerificado}">
                                     <div class="col-md-4">
-                                        <input type="text" class="form-control col-md-3" name="nuevaPuntuacion" placeholder="puntuación:">
+                                        <input type="number" class="form-control" name="nuevaPuntuacion" min="0" max="10" placeholder="puntaje:" required>
                                     </div>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control col-md-3" name="nuevaResena" placeholder="Reseña:">
                                     </div>
                                     <div class="col-md-4">
-                                        <button type="submit" onclick="actualizar();" class="btn btn-danger">Enviar</button>
+                                        <button type="submit" onclick="actualizar(${element.reservaUser.reservaID});" class="btn btn-danger">Enviar</button>
                                     </div>
                                 </div>
                             </form>
+                            <div class="container" id="errores_${element.reservaUser.reservaID}"> </div>
                         </td>
                     `;
-                    if (element.reservaUser.textoReserva && element.reservaUser.puntaje) {
+                    if (element.reservaUser.textoReserva != null && element.reservaUser.puntaje) {
+                        
                         evaluar = `
                         <td>${element.reservaUser.puntaje}</td>
                         <td>${element.reservaUser.textoReserva}</td>
-                        <td>${element.reservaUser.respuesta}</td>
+                        <td>${(element.reservaUser.respuesta !=null)?element.reservaUser.respuesta:''}</td>
                         `;
                         th = `
                             <th scope="col">Puntaje</th>
@@ -293,59 +295,79 @@ async function informacionDeOfertas() {
                 dataReservasAOfertas.forEach(element => {
                     const publicacionTitulo = element.ofertaUser.titulo;
                     const reservas = element.reservas;
-
+            
                     // Crea un contenedor para cada tabla de reservas
                     const reservasContainer = document.createElement('div');
                     reservasContainer.classList.add('variado');
-
+            
                     const reservasTable = document.createElement('div');
                     reservasTable.classList.add('card');
-
+            
                     const cardHeader = document.createElement('div');
                     cardHeader.classList.add('card-header');
                     cardHeader.innerHTML = `<h3 class="text-center">Reservas a: ${publicacionTitulo}</h3>`;
-
+            
                     const cardBody = document.createElement('div');
                     cardBody.classList.add('card-body');
-
+            
                     const tableContainer = document.createElement('div');
                     tableContainer.classList.add('table-responsive');
-
+            
                     const tabla = document.createElement('table');
                     tabla.classList.add('table', 'table-striped');
-
-                    let btnContestar = '';
+            
                     let contestarHTML = '';
-
-                    if (element.reservas.textoReserva != '') {
-                        contestarHTML = '<th scope="col">Contestar resena</th>';
-                        btnContestar = `<button onclick="contestarResena(${element.ofertaUser.creadorID},${element.ofertaUser.reservaID});" class="btn btn-danger">icono</button>`;
+            
+                    if (reservas.length > 0 && reservas[0].textoReserva !== null) {
+                        contestarHTML = '<th scope="col">Contestar reseña</th>';
                     }
-
+            
                     const thead = document.createElement('thead');
                     thead.innerHTML = `
-                                <tr>
-                                    <th scope="col">Puntuación</th>
-                                    <th scope="col">Reseña</th>
-                                    <th scope="col">Respuesta</th>
-                                    <th scope="col">Quien reservo</th>
-                                    ${contestarHTML}
-                                </tr>
-                            `;
-
+                        <tr>
+                            <th scope="col">Puntuación</th>
+                            <th scope="col">Reseña</th>
+                            <th scope="col">Respuesta</th>
+                            ${contestarHTML}
+                        </tr>
+                    `;
+            
                     const tbody = document.createElement('tbody');
                     reservas.forEach(reserva => {
+                        let evaluar = '';
+                        let respuesta = '';
+                        if(reserva.respuesta){
+                            respuesta = `${reserva.respuesta !== null ? reserva.respuesta : ''}`;
+                            evaluar = '';
+                        }else if(reserva.textoReserva !== null && reserva.textoReserva !== ''){
+                            evaluar = `
+                            <td>
+                                <form action="" method="post" id="Respuesta_${reserva.reservaID}">
+                                    <div class="row">
+                                        <input type="hidden" name="reservaID" value="${reserva.reservaID}">
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control col-md-3" name="responder" placeholder="Responder Reseña:">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="submit" onclick="actualizarRespuesta(${reserva.reservaID});" class="btn btn-danger">Responder</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="container" id="errores_${reserva.reservaID}"> </div>
+                            </td>
+                            `;
+                        }
+            
                         tbody.innerHTML += `
-                                    <tr>
-                                        <td>${(reserva.puntaje != null)?reserva.puntaje:''}</td>
-                                        <td>${(reserva.textoReserva != null)?reserva.textoReserva:''}</td>
-                                        <td>${(reserva.respuesta !=null)?reserva.respuesta:''}</td>
-                                        <td>${reserva.autorID}</td>
-                                        <td>${btnContestar}</td>
-                                    </tr>
-                                `;
+                            <tr>
+                                <td>${reserva.puntaje !== null ? reserva.puntaje : ''}</td>
+                                <td>${reserva.textoReserva !== null ? reserva.textoReserva : ''}</td>
+                                <td>${respuesta}</td>
+                                ${evaluar}
+                            </tr>
+                        `;
                     });
-
+            
                     // Agrega todos los elementos al DOM
                     tabla.appendChild(thead);
                     tabla.appendChild(tbody);
@@ -354,12 +376,13 @@ async function informacionDeOfertas() {
                     reservasTable.appendChild(cardHeader);
                     reservasTable.appendChild(cardBody);
                     reservasContainer.appendChild(reservasTable);
-
+            
                     // Añade el contenedor de reservas al elemento adecuado en tu HTML
-
                     ReservasAOfertasHTML += reservasContainer.outerHTML;
                 });
             }
+            
+            
 
 
             divReservas.innerHTML = `
@@ -378,24 +401,24 @@ async function informacionDeOfertas() {
 
 informacionDeOfertas();
 
-function actualizar() {
-    const formulario = document.getElementById('envioData');
+function actualizar(id) {
+    const formulario = document.getElementById(`envioData_${id}`);
     formulario.addEventListener('submit', (e) => {
         e.preventDefault();
-        enviarInformacion(formulario);
+        enviarEvaluacion(formulario);
     });
 }
 
-function enviarInformacion(formulario) {
+function enviarEvaluacion(formulario) {
     const formData = new FormData(formulario);
 
-    fetch(URL_PATH + '/Usuario/create/', { method: 'POST', body: formData })
+    fetch(URL_PATH + '/Rentas/resenar/', { method: 'POST', body: formData })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.replace(URL_PATH + '/Usuario/home');
+                window.location.replace(URL_PATH + '/Rentas/home');
             } else {
-                const divErr = document.getElementById('errores');
+                const divErr = document.getElementById('errores_${id}');
                 divErr.innerHTML = `
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
@@ -406,8 +429,32 @@ function enviarInformacion(formulario) {
         });
 }
 
-function contestarResena(duenoPublicacionID, reservaID) {
+function actualizarRespuesta(id){
+    const formulario = document.getElementById(`Respuesta_${id}`);
+    formulario.addEventListener('submit', (e) => {
+        e.preventDefault();
+        enviarRespuesta(formulario);
+    });
+}
 
+function enviarRespuesta(formulario) {
+    const formData = new FormData(formulario);
+
+    fetch(URL_PATH + '/Rentas/responder/', { method: 'POST', body: formData })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.replace(URL_PATH + '/Rentas/home');
+            } else {
+                const divErr = document.getElementById('errores_${id}');
+                divErr.innerHTML = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+              <strong>${data.message}</strong>
+            </div>
+          `;
+            }
+        });
 }
 
 function resenarOferta(reservaID, esVerificado) {
