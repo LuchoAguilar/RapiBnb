@@ -31,6 +31,7 @@ CREATE TABLE oferta_de_alquiler(
     fechaFin DATE,
     creadorID INT,
     estado VARCHAR(255),
+    userVerificado VARCHAR(255),
     fechaRegistro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (creadorID) REFERENCES usuarios (usuarioID)
 );

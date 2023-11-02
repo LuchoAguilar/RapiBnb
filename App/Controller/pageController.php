@@ -7,9 +7,15 @@
     class PageController extends Controller{
 
         private $userSessionControl;
+        private $ofertas;
+        private $usuarios;
+        private $reservas;
 
         public function __construct($connect,$session){
             $this->userSessionControl = new ControladorDeSessiones($session,$connect);
+            $this->ofertas = new OfertaAlquiler($connect);
+            $this->usuarios = new Usuario($connect);
+            $this->reservas = new Reserva($connect);
         }
 
         public function home(){
@@ -27,9 +33,16 @@
          * las ofertas se deben mostrar en cards, que deben mostrar:
          * la oferta de manera resumida : fotos,titulo,ubicacion.
          * al darle click a la oferta se debe abrir un modal pantalla completa/o page nueva, que muestre el resto de la data de la oferta y las reseñas y respuestas hechas(si las tiene) y quienes la hicieron(foto perfil y nombre).
+         * se va a trabaja en la page home tanto para usuarios logeados y para los no logeados.
         */
         public function listarOfertas(){
             //tienen que ser solo con estado:publicado y de users normales.
+            $result = new Result();
+            $consulta = "WHERE estado = 'publicado' AND userVerificado = 'si' ";
+            $ofertasPublicadas = $this->ofertas->paginationWithConditions(1,4,'*',$consulta);
+            $result->success = true;
+            $result->result = $ofertasPublicadas;
+            echo json_encode($result);
         }
 
         public function listarOfertasVerificados(){

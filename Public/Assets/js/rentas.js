@@ -124,10 +124,6 @@ async function informacionDeOfertas() {
                     columnOfertas = 'col-md-3';
                 }
 
-
-                console.log(numberOfObjects);
-
-
                 divCard.insertAdjacentHTML('beforeend', `                       
                     <div class="card ${columnOfertas}" style="max-width: 400px; max-height: 800px; margin: auto;">
                         <div class="card-header">

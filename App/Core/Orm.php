@@ -76,6 +76,8 @@
             } 
         }
 
+        //---------------------------------------------Metodos de creacion y modificacion de tablas---------------------------------------------------//
+
         public function updateById($idP,$data){
             try{
                 // creamos un string para tomar cada dato que venga de data y asi transformarlo en un string que sirva para la consulta ej: nombre=?
@@ -153,9 +155,23 @@
                 throw $e;
             }
         }
-        
 
-        public function pagination($page, $limit){
+        public function upsert($id,$data){
+
+            $existeEnTabla = $this->getById($id);
+            
+            if($existeEnTabla){
+                return $this->updateById($id,$data);
+            }else{
+                return $this->insert($data);
+            }
+            
+        }
+
+        //---------------------------------------------------------------------------------------------------------//
+        
+        //------------------------------------ metodos de paginacion----------------------------------------------//
+        public function paginacion($page, $limit){
             try{
                 $offSet = ($page - 1) * $limit;
                 // obtener la cantidad de rows
@@ -195,6 +211,67 @@
                 throw $e;
             }
         }
+        /**
+         * Muestra segun:
+         * @param int $page es la pagina en la que se encuentra.
+         * @param int $limit es la cantidad de elementos que se van a mostrar por pagina.
+         * @param string $columns te permite especificar qué columnas deseas seleccionar en la consulta SQL. Por defecto, se seleccionan todas las columnas ('*').
+         * @param string $conditions es el parametro que puedes usar para especificar las condiciones que deseas aplicar a la consulta SQL, el cual por defecto esta vacio para mostrar todo el contenido de la tabla si asi se quiere. 
+         * Ejemplo de uso:
+         *  $page = 1;
+         *  $limit = 10;
+         *  $contents = 'nombre, edad'; // Selecciona solo las columnas 'nombre' y 'edad'
+         *  $conditions = 'WHERE edad > 25'; // Filtra los registros donde 'edad' es mayor de 25
+         *
+         *  $resultado = $yourObject->paginationWithConditions($page, $limit, $contents, $conditions);
+         */
+
+        public function paginationWithConditions($page, $limit, $columns = '*', $conditions = "") {
+            try {
+                $offSet = ($page - 1) * $limit;
+                
+                // Obtener la cantidad de filas con condiciones aplicadas
+                $countQuery = "SELECT COUNT(*) FROM {$this->table} {$conditions}";
+                $res = mysqli_query($this->bd, $countQuery);
+                $row = mysqli_fetch_array($res);
+                $rows = $row[0];
+        
+                $pages = ceil($rows / $limit);
+        
+                $consulta = "SELECT {$columns} FROM {$this->table} {$conditions} LIMIT {$offSet}, {$limit}";
+                $stmt = mysqli_prepare($this->bd, $consulta);
+        
+                if ($stmt) {
+                    if (mysqli_stmt_execute($stmt)) {
+                        $resultado = mysqli_stmt_get_result($stmt);
+                        $registro = [];
+                        $i = 0;
+                        while ($row = mysqli_fetch_assoc($resultado)) {
+                            $registro[$i] = $row;
+                            $i++;
+                        }
+                        return [
+                            'data' => $registro,
+                            'page' => $page,
+                            'limit' => $limit,
+                            'pages' => $pages,
+                            'rows' => $rows,
+                        ];
+                    } else {
+                        throw new Exception("Error al ejecutar la consulta: " . mysqli_error($this->bd));
+                    }
+                    mysqli_stmt_close($stmt);
+                } else {
+                    throw new Exception("Error en la preparación de la consulta: " . mysqli_error($this->bd));
+                }
+            } catch (Exception $e) {
+                throw $e;
+            }
+        }
+        
+        //---------------------------------------------------------------------------------------------------------//
+
+        //-----------------------------verifica si existe en una columna un dato especifico----------------------------//
 
         public function exists($col, $colData) {
             try {
@@ -225,19 +302,11 @@
                 throw $e;
             }
         }
+
+        //---------------------------------------------------------------------------------------------------------//
         
-
-        public function upsert($id,$data){
-
-            $existeEnTabla = $this->getById($id);
-            
-            if($existeEnTabla){
-                return $this->updateById($id,$data);
-            }else{
-                return $this->insert($data);
-            }
-            
-        }
+        //--------------------------------------- Busqueda de registros relacionados entre tablas ------------------------------------------------//
+        
         
         public function busquedaForanea($tabla, $idTabla, $idForanea){
             try{
@@ -305,6 +374,9 @@
                 throw $e;
             }
         }
+
+        //---------------------------------------------------------------------------------------------------------//
+        //------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
     }
 ?>

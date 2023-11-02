@@ -92,3 +92,32 @@ const Modal = {
     }
 }
 
+function botonesPaginacion(page, limit, pages, paginacionContainer) {
+    const paginasAMostrar = 5;
+    const mitad = Math.floor(paginasAMostrar / 2);
+
+    let inicio = Math.max(1, page - mitad);
+    let final = Math.min(pages, page + mitad);
+    const anterior = (page > 1) ? page - 1 : 1;
+    const siguiente = (page < pages) ? page + 1 : pages;
+
+    function createPageButton(text, pageNumber) {
+        const button = document.createElement('a');
+        button.href = `?page=${pageNumber}&limit=${limit}`;
+        button.textContent = text;
+        button.classList.add('btn', 'btn-primary'); // Agrega clases de Bootstrap
+        return button;
+    }
+    paginacionContainer.innerHTML = '';
+    paginacionContainer.appendChild(createPageButton('Anterior', anterior));
+
+    for (let i = inicio; i <= final; i++) {
+        const button = createPageButton(i, i);
+        if (i === page) {
+            button.classList.add('active'); // Agrega la clase 'active' de Bootstrap
+        }
+        paginacionContainer.appendChild(button);
+    }
+
+    paginacionContainer.appendChild(createPageButton('Siguiente', siguiente));
+}

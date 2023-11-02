@@ -19,6 +19,7 @@
     <header>
         <nav class="navbar navbar-expand navbar-ligth bg-light">
             <div class="nav navbar-nav">
+                <a class="nav-item nav-link" href="<?=URL_PATH.'/Page/home/';?>">Home</a>
                 <a class="nav-item nav-link" href="<?=URL_PATH.'/Usuario/Login/';?>">Iniciar Sesion</a>
                 <a class="nav-item nav-link" href="<?=URL_PATH.'/Usuario/signUp/';?>">Crear cuenta</a>
             </div>

@@ -86,10 +86,13 @@
             }
             $esVerificado = $this->userSession->esVerificado();
             $estado = '';
+            $esVerificado = '';
             if($esVerificado === true){
                 $estado = 'publicado';
+                $esVerificado = 'si';
             }else{
                 $estado = 'espera';
+                $esVerificado = 'no';
             }
 
             $id = $this->userSession->ID();
@@ -108,6 +111,7 @@
                 'fechaInicio' => $fechaIni,
                 'fechaFin' => $fechaFin,
                 'estado' => $estado,
+                'userVerificado' => $esVerificado,
                 'creadorID' => $id
             ]);
 
