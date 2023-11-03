@@ -1,22 +1,67 @@
-async function ofertasAlquilerCard() {
-    let reposense = await fetch(URL_PATH + '/Page/listarOfertas');
-    let reposenseData = await reposense.json();
+function limpiarContenido(contenedor) {
+    contenedor.innerHTML = '';
+}
 
-    if(reposenseData.success){
-        const ofertas = reposenseData.result;
+function botonesPaginacion(page, pages, paginacionContainer) {
+    const paginasAMostrar = 5;
+    const mitad = Math.floor(paginasAMostrar / 2);
 
-        const divPrueba = document.getElementById('prueba');
-        const dataPaginacion = document.getElementById('dataPaginacion');
-        
-        if(ofertas){
-            
-            const pagina = ofertas.page;
+    let inicio = Math.max(1, page - mitad);
+    let final = Math.min(inicio + paginasAMostrar - 1, pages); // Asegúrate de que 'final' no exceda el número total de páginas
+    const anterior = (page > 1) ? page - 1 : 1;
+    const siguiente = (page < final) ? page + 1 : final;
+    console.log(inicio,final, page, pages);
+    function createPageButton(text, pageNumber) {
+        const button = document.createElement('a');
+        button.href = `javascript:void(0);`;  // Evita que el enlace cargue una nueva página
+        button.textContent = text;
+        button.classList.add('btn', 'btn-primary');
+        if (pageNumber === page) {
+            button.classList.add('active');
+        }
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+            // Envía el número de página al servidor
+            envioDePagina(pageNumber);
+        });
+        return button;
+    }
+
+    paginacionContainer.innerHTML = '';
+    paginacionContainer.appendChild(createPageButton('Anterior', anterior));
+
+    for (let i = inicio; i <= final; i++) {
+        const button = createPageButton(i, i);
+        paginacionContainer.appendChild(button);
+    }
+
+    paginacionContainer.appendChild(createPageButton('Siguiente', siguiente));
+}
+
+
+
+async function ofertasAlquilerCard(pageNumber) {
+    let reposense = await fetch(URL_PATH + '/Page/listarOfertas/', {
+        method: 'POST',
+        body: new URLSearchParams({ pageNumber: pageNumber }),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    });
+
+    if (reposense.ok) {
+        let reposenseData = await reposense.json();
+
+        if (reposenseData.success) {
+            const ofertas = reposenseData.result;
+            const divPrueba = document.getElementById('prueba');
+            const dataPaginacion = document.getElementById('dataPaginacion');
+
             const limite = ofertas.limit;
             const paginas = ofertas.pages;
+            const pagina = parseInt(ofertas.page, 10);
+            botonesPaginacion(pagina, paginas, dataPaginacion);
 
-            botonesPaginacion(pagina, limite, paginas, dataPaginacion);
+            limpiarContenido(divPrueba); // Limpiar el contenido antes de agregar nuevas tarjetas
 
-            
             ofertas.data.forEach(element => {
 
                 const galeriaFotosStr = element.galeriaFotos;
@@ -32,20 +77,8 @@ async function ofertasAlquilerCard() {
                                 `;
                 });
 
-                /*const numberOfObjects = ofertas.length;
-
-                if (numberOfObjects === 1) {
-                    columnOfertas = 'col-md-12';
-                } else if (numberOfObjects === 2) {
-                    columnOfertas = 'col-md-6';
-                } else if (numberOfObjects === 3) {
-                    columnOfertas = 'col-md-4';
-                } else if (numberOfObjects >= 4) {
-                    columnOfertas = 'col-md-3';
-                }*/
-
                 divPrueba.insertAdjacentHTML('beforeend', `
-                    <div class="card col-6" style="max-width: 400px; max-height: 800px; margin: auto;">
+                    <div class="card col-3" style="max-width: 400px; max-height: 800px; margin: auto;">
                         <div class="card-header">
                             <div id="imageCarousel${element.ofertaID}" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
@@ -70,10 +103,26 @@ async function ofertasAlquilerCard() {
                     </div> 
                 `);
             });
-            
         }
-        
     }
 }
 
-ofertasAlquilerCard();
+async function envioDePagina(pageNumber) {
+    const data = new FormData();
+    data.append('pageNumber', pageNumber);
+    fetch(URL_PATH + '/Page/listarOfertas/', {
+        method: 'POST',
+        body: data
+    }).then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log(data.message);
+                ofertasAlquilerCard(pageNumber); // Actualiza el contenido con la nueva página
+            }
+        });
+}
+
+// Llama a 'ofertasAlquilerCard' con la página inicial
+ofertasAlquilerCard(1);
+
+

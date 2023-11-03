@@ -38,12 +38,25 @@
         public function listarOfertas(){
             //tienen que ser solo con estado:publicado y de users normales.
             $result = new Result();
-            $consulta = "WHERE estado = 'publicado' AND userVerificado = 'si' ";
-            $ofertasPublicadas = $this->ofertas->paginationWithConditions(1,4,'*',$consulta);
-            $result->success = true;
-            $result->result = $ofertasPublicadas;
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+                $page = (isset($_POST['pageNumber']))? $_POST['pageNumber'] : 1;
+
+                $consulta = "WHERE estado = 'publicado' AND userVerificado = 'si' ";
+                $ofertasPublicadas = $this->ofertas->paginationWithConditions($page,4,'*',$consulta);
+                $result->success = true;
+                $result->result = $ofertasPublicadas;
+                $result->message = $page;
+            }else{
+                $consulta = "WHERE estado = 'publicado' AND userVerificado = 'si' ";
+                $page = 1;
+                $ofertasPublicadas = $this->ofertas->paginationWithConditions($page,4,'*',$consulta);
+                $result->success = true;
+                $result->result = $ofertasPublicadas;
+            }
+            
             echo json_encode($result);
         }
+
 
         public function listarOfertasVerificados(){
             // son las ofertas que deben aparecer de manera destacada
@@ -52,6 +65,7 @@
         public function listarRecomentaciones(){
             // son las que salen del pareo de intereses(usuario) y etiquetas(ofertas alquiler)
         }
+        //---------------------------------------------------------------------------------------------------------------------------//
 
         //---------------------------------------------------------------------------------------------------------------------------//
     }
