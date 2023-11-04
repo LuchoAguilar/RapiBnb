@@ -75,23 +75,23 @@
                             <div class="col-md-12">
                                 <label for="etiqueta" class="form-label">Tipo de propiedad:</label>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="etiqueta[]" value="casa" id="Casa">
+                                    <input class="form-check-input" type="radio" name="etiqueta" value="casa" id="Casa">
                                     <label class="form-check-label" for="casa">Casa</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="etiqueta[]" value="hotel" id="Hotel">
+                                    <input class="form-check-input" type="radio" name="etiqueta" value="hotel" id="Hotel">
                                     <label class="form-check-label" for="hotel">Hotel</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="etiqueta[]" value="departamento" id="Departamento">
+                                    <input class="form-check-input" type="radio" name="etiqueta" value="departamento" id="Departamento">
                                     <label class="form-check-label" for="departamento">Departamento</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="etiqueta[]" value="cabana" id="Cabaña">
+                                    <input class="form-check-input" type="radio" name="etiqueta" value="cabana" id="Cabaña">
                                     <label class="form-check-label" for="cabana">Cabaña</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="etiqueta[]" value="habitaciones" id="Habitaciones">
+                                    <input class="form-check-input" type="radio" name="etiqueta" value="habitaciones" id="Habitaciones">
                                     <label class="form-check-label" for="habitaciones">Habitaciones</label>
                                 </div>
                             </div>

@@ -164,7 +164,7 @@
 
                 $texto = (isset($_POST['buscarPorTexto']))? $_POST['buscarPorTexto'] : '';
                 $ubicacion = (isset($_POST['ubicacion']))? $_POST['ubicacion']: '';
-                $etiqueta = (isset($_POST['etiqueta'])) ? implode(", ", $_POST['etiqueta']) : '';
+                $etiqueta = (isset($_POST['etiqueta'])) ? $_POST['etiqueta'] : '';
                 $listServicios = isset($_POST['servicios']) ? implode(", ", $_POST['servicios']) : '';
 
                 if($texto === '' && $ubicacion === '' && $etiqueta === '' && $listServicios === ''){
