@@ -18,7 +18,11 @@ async function user() {
 
         if (intereses && intereses.length > 0) {
             interesesHTML = intereses.map(interes => {
-                return `<p style="font-weight: 400;">${interes.nombresDeInteres}</p>`;
+                return `
+                <p style="font-weight: 400;">Ubicacion/es: ${interes.ubicacion}</p>
+                <p style="font-weight: 400;">Tipo de propiedad: ${interes.etiquetas}</p>
+                <p style="font-weight: 400;">Servicios: ${interes.listServicios}</p>
+                `;
             }).join("");
         } else {
             interesesHTML = "Aún no ha agregado sus intereses";

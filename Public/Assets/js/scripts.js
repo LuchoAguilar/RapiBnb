@@ -92,3 +92,87 @@ const Modal = {
     }
 }
 
+function limpiarContenido(contenedor) {
+    contenedor.innerHTML = '';
+}
+
+function botonesPaginacion(page, pages, paginacionContainer, div) {
+    const paginasAMostrar = 5;
+    const mitad = Math.floor(paginasAMostrar / 2);
+
+    let inicio = Math.max(1, page - mitad);
+    let final = Math.min(inicio + paginasAMostrar - 1, pages); // Asegúrate de que 'final' no exceda el número total de páginas
+    const anterior = (page > 1) ? page - 1 : 1;
+    const siguiente = (page < final) ? page + 1 : final;
+
+
+    function createPageButton(text, pageNumber) {
+        const button = document.createElement('a');
+        button.href = `javascript:void(0);`;  // Evita que el enlace cargue una nueva página
+        button.textContent = text;
+        button.classList.add('btn', 'btn-primary');
+        if (pageNumber === page) {
+            button.classList.add('active');
+        }
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+            // Envía el número de página al servidor
+            envioDePagina(pageNumber, div);
+        });
+        return button;
+    }
+
+    paginacionContainer.innerHTML = '';
+    paginacionContainer.appendChild(createPageButton('Anterior', anterior));
+
+    for (let i = inicio; i <= final; i++) {
+        const button = createPageButton(i, i);
+        paginacionContainer.appendChild(button);
+    }
+
+    paginacionContainer.appendChild(createPageButton('Siguiente', siguiente));
+}
+
+async function envioDePagina(pageNumber, div) {
+    if(div === 'ofertas'){
+        const data = new FormData();
+        data.append('pageNumber', pageNumber);
+        fetch(URL_PATH + '/Page/listarOfertas/', {
+            method: 'POST',
+            body: data
+        }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(data.message);
+                    ofertasAlquiler(pageNumber); // Actualiza el contenido con la nueva página
+                }
+            });
+    }else if(div === 'prueba'){
+        const data = new FormData();
+        data.append('pageNumber', pageNumber);
+        fetch(URL_PATH + '/Page/listarOfertasVerificados/', {
+            method: 'POST',
+            body: data
+        }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(data.message);
+                    ofertasAlquilerCard(pageNumber); // Actualiza el contenido con la nueva página
+                }
+            });
+    }else if(div === 'ofertasRecomendadas'){
+        const data = new FormData();
+        data.append('pageNumber', pageNumber);
+        fetch(URL_PATH + '/Page/listarRecomentaciones/', {
+            method: 'POST',
+            body: data
+        }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(data.message);
+                    ofertasAlquilerRecomendadas(pageNumber); // Actualiza el contenido con la nueva página
+                }
+            });
+    }
+    
+}

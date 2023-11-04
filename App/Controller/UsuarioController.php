@@ -320,23 +320,23 @@
 
                 $id = (isset($_POST['textID'])) ? $_POST['textID']: '';
 
-                $ubicacion = (isset($_POST['ubicacion'])) ? implode(", ", $_POST['ubicacion']) : '';
+                $ubicacion = (isset($_POST['ubicacion'])) ? implode("- ", $_POST['ubicacion']) : '';
                 $etiqueta = (isset($_POST['etiqueta'])) ? implode(", ", $_POST['etiqueta']) : '';
                 $listServicios = isset($_POST['servicios']) ? implode(", ", $_POST['servicios']) : '';
 
-                $datosCombinados = "$ubicacion | $etiqueta | $listServicios";
-
                 // Verifica si los datos combinados no están vacíos antes de actualizar o insertar en la base de datos
-                if (!empty($datosCombinados)) {
+                if ($ubicacion || $etiqueta || $listServicios) {
                     $this->intereses->upsert($id, [
-                        'nombresDeInteres' => $datosCombinados,
-                        'userInteresesID' => $user
+                        'ubicacion' => $ubicacion,
+                        'etiquetas' => $etiqueta,
+                        'listServicios' => $listServicios,
+                        'userInteresesID' => $user,
                     ]);
                     $result->success = true;
                     $result->message = "Datos cargados con éxito";
                 } else {
                     $result->success = false;
-                    $result->message = "Datos combinados vacíos. Por favor, seleccione al menos una opción.";
+                    $result->message = "Datos combinados vacíos. Por favor, seleccione al menos una opción. ".$ubicacion .$etiqueta . $listServicios;
                 }
             } else {
                 $result->success = false;

@@ -1,5 +1,5 @@
-async function ofertasAlquiler(pageNumber) {
-    let reposense = await fetch(URL_PATH + '/Page/listarOfertas/', {
+async function ofertasAlquilerCard(pageNumber) {
+    let reposense = await fetch(URL_PATH + '/Page/listarOfertasVerificados/', {
         method: 'POST',
         body: new URLSearchParams({ pageNumber: pageNumber }),
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -7,19 +7,18 @@ async function ofertasAlquiler(pageNumber) {
 
     if (reposense.ok) {
         let reposenseData = await reposense.json();
-        console.log(reposenseData);
 
-        if(reposenseData.success){
+        if (reposenseData.success) {
             const ofertas = reposenseData.result;
-            const divOfertas = document.getElementById('ofertas');
-            const dataPaginacion = document.getElementById('botonesPaginacion');
+            const divPrueba = document.getElementById('prueba');
+            const dataPaginacion = document.getElementById('dataPaginacion');
 
+            const limite = ofertas.limit;
             const paginas = ofertas.pages;
             const pagina = parseInt(ofertas.page, 10);
+            botonesPaginacion(pagina, paginas, dataPaginacion, 'prueba');
 
-            botonesPaginacion(pagina, paginas, dataPaginacion, 'ofertas');
-
-            limpiarContenido(divOfertas);
+            limpiarContenido(divPrueba); // Limpiar el contenido antes de agregar nuevas tarjetas
 
             ofertas.data.forEach(element => {
 
@@ -36,18 +35,18 @@ async function ofertasAlquiler(pageNumber) {
                                 `;
                 });
 
-                divOfertas.insertAdjacentHTML('beforeend', `
+                divPrueba.insertAdjacentHTML('beforeend', `
                     <div class="card col-3" style="max-width: 400px; max-height: 600px; margin: auto;">
                         <div class="card-header">
-                            <div id="imageCarousel${element.ofertaID + 33}" class="carousel slide" data-bs-ride="carousel">
+                            <div id="imageCarousel${element.ofertaID + 7}" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
                                 ${carrouselHTML}
                             </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel${element.ofertaID + 33}" data-bs-slide="prev">
+                            <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel${element.ofertaID + 7}" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Anterior</span>
                             </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel${element.ofertaID + 33}" data-bs-slide="next">
+                            <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel${element.ofertaID + 7}" data-bs-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Siguiente</span>
                             </button>
@@ -61,10 +60,13 @@ async function ofertasAlquiler(pageNumber) {
                         </div>
                     </div> 
                 `);
-
             });
         }
     }
 }
 
-ofertasAlquiler(1);
+
+// Llama a 'ofertasAlquilerCard' con la página inicial
+ofertasAlquilerCard(1);
+
+

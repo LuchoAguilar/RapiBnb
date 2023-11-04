@@ -24,6 +24,7 @@
             <div class="nav navbar-nav" id="nav">
                 <a class="nav-item nav-link active" href="#" aria-current="page" id="icon">RapiBnB<span class="visually-hidden">(current)</span></a>
                 <a class="nav-item nav-link" href="<?=URL_PATH.'/Page/home/';?>">Home</a>
+                <a class="nav-item nav-link" href="<?=URL_PATH.'/Page/buscar/';?>">Buscar</a>
                 <a class="nav-item nav-link" href="<?=URL_PATH.'/Usuario/home/';?>">Usuario</a>
                 <a class="nav-item nav-link" href="<?=URL_PATH.'/OfertaAlquiler/home';?>">Publicaciones</a>
                 <a class="nav-item nav-link" href="<?=URL_PATH.'/Rentas/home';?>">Rentas</a>

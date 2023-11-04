@@ -68,7 +68,9 @@ CREATE TABLE aplicacion_a_oferta_alquiler(
 
 CREATE TABLE interes(
     interesID INT AUTO_INCREMENT PRIMARY KEY,
-    nombresDeInteres VARCHAR(255),
+    ubicacion VARCHAR(255),
+    etiquetas VARCHAR(255),
+    listServicios VARCHAR(255),
     userInteresesID INT,
     FOREIGN KEY (userInteresesID) REFERENCES usuarios (usuarioID)
 );
