@@ -173,6 +173,19 @@ async function envioDePagina(pageNumber, div) {
                     ofertasAlquilerRecomendadas(pageNumber); // Actualiza el contenido con la nueva página
                 }
             });
+    }else if(div === 'cardBusqueda'){
+        const data = new FormData();
+        data.append('pageNumber', pageNumber);
+        fetch(URL_PATH + '/Page/listarBusqueda/', {
+            method: 'POST',
+            body: data
+        }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(data.message);
+                    ofertasBuscador(pageNumber); // Actualiza el contenido con la nueva página
+                }
+            });
     }
     
 }

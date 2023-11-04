@@ -51,12 +51,8 @@
                 $result->result = $ofertasPublicadas;
                 $result->message = $page;
             }else{
-                $page = 1;
-                $consulta = "WHERE estado = 'publicado' AND userVerificado = 'no' ";
-                $ofertasPublicadas = $this->ofertas->paginationWithConditions($page,4,'*',$consulta);
-                $result->success = true;
-                $result->result = $ofertasPublicadas;
-                $result->message = $page;
+                $result->success = false;
+                $result->message = 'Error: Solicitud no válida.';
             }
             echo json_encode($result);
         }
@@ -75,11 +71,8 @@
                 $result->result = $ofertasPublicadas;
                 $result->message = $page;
             }else{
-                $consulta = "WHERE estado = 'publicado' AND userVerificado = 'si' ";
-                $page = 1;
-                $ofertasPublicadas = $this->ofertas->paginationWithConditions($page,4,'*',$consulta);
-                $result->success = true;
-                $result->result = $ofertasPublicadas;
+                $result->success = false;
+                $result->message = 'Error: Solicitud no válida.';
             }
             
             echo json_encode($result);
@@ -141,50 +134,13 @@
                     $result->result = $ofertasPublicadas;
                     $result->message = $page;
                 }else{
-    
-                    $consulta = 'WHERE '; // Inicializa la consulta como una cadena vacía
-                    $condiciones = []; // Inicializa un array para las condiciones
-
-                    
-                    if (!empty($ubicaciones)) {
-                        $ubicaciones = !empty($ubicaciones) ? explode('- ', $ubicaciones) : [];
-                        $ubicaciones = array_map(function ($ubicacion) {
-                            return "'" . $ubicacion . "'";
-                        }, $ubicaciones);
-                        $condiciones[] = 'ubicacion IN (' . implode('- ', $ubicaciones) . ')';
-                    }
-                    
-                    if (!empty($etiquetas)) {
-                        $etiquetas = !empty($etiquetas) ? explode(', ', $etiquetas) : [];
-                        $etiquetas = array_map(function ($etiqueta) {
-                            return "'" . $etiqueta . "'";
-                        }, $etiquetas);
-                        $condiciones[] = 'etiquetas IN (' . implode(', ', $etiquetas) . ')';
-                    }
-                    
-                    if (!empty($servicios)) {
-                        $servicios = !empty($servicios) ? explode(', ', $servicios) : [];
-                        $servicios = array_map(function ($servicio) {
-                            return "'" . $servicio . "'";
-                        }, $servicios);
-                        $condiciones[] = 'listServicios IN (' . implode(', ', $servicios) . ')';
-                    }
-                    
-                    if (!empty($condiciones)) {
-                        $consulta .= implode(' OR ', $condiciones);
-                    } 
-
-                    $page = 1;
-                    $ofertasPublicadas = $this->ofertas->paginationWithConditions($page, 4, '*', $consulta);
-                    $result->success = true;
-                    $result->result = $ofertasPublicadas;
+                    $result->success = false;
+                    $result->message = 'Error: Solicitud no válida.';
                 }
             }else{
                 $result->success = false;
-                $result->message = $interesesUser;
+                $result->message = 'El usuario no tiene intereses cargados.';
             }
-            
-            
             
             echo json_encode($result);
         }
@@ -199,6 +155,79 @@
             }
         }
 
+        public function listarBusqueda(){
+            $result = new Result();
+
+            if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+                $page = (isset($_POST['pageNumber']))? $_POST['pageNumber'] : 1;
+
+                $texto = (isset($_POST['buscarPorTexto']))? $_POST['buscarPorTexto'] : '';
+                $ubicacion = (isset($_POST['ubicacion']))? $_POST['ubicacion']: '';
+                $etiqueta = (isset($_POST['etiqueta'])) ? implode(", ", $_POST['etiqueta']) : '';
+                $listServicios = isset($_POST['servicios']) ? implode(", ", $_POST['servicios']) : '';
+
+                if($texto === '' && $ubicacion === '' && $etiqueta === '' && $listServicios === ''){
+                    // aca si no hay busqueda hecha(tambien seria el por defecto)
+                    $consulta = '';
+                    $ofertasPublicadas = $this->ofertas->paginationWithConditions($page, 8, '*', $consulta);
+
+                    $result->success = true;
+                    $result->result = $ofertasPublicadas;
+                }else{
+                    // aca va si hay alguna busqueda hecha
+                    $consulta = 'WHERE ';// Inicializa la consulta como una cadena vacía
+                    $condiciones = [];
+                    $condicionTextoCompleta = '';
+                    if (!empty($texto)) {
+                        // Crear un array de condiciones para la búsqueda de texto
+                        $condicionesTexto = [];
+                    
+                        // Dividir el texto de búsqueda en palabras clave (por ejemplo, palabras separadas por espacios)
+                        $palabrasClave = explode(' ', $texto);
+                    
+                        // Iterar sobre las palabras clave y agregar condiciones para cada una
+                        foreach ($palabrasClave as $palabra) {
+                            // Utiliza el operador LIKE para buscar coincidencias en el título y la descripción
+                            $condicionesTexto[] = "(titulo LIKE '%$palabra%' OR descripcion LIKE '%$palabra%')";
+                        }
+                        
+                        // Combina las condiciones con el operador OR para buscar cualquier coincidencia
+                        $condicionTextoCompleta = implode(' OR ', $condicionesTexto);
+                    
+                        // Agrega esta condición a la consulta general
+                        $condiciones[] = "($condicionTextoCompleta)";
+                    }
+                    
+                    if(!empty($ubicacion)){
+                        $condiciones[] = "ubicacion IN ('$ubicacion')";
+                    }
+                    if(!empty($etiqueta)){
+                        $condiciones[] = "etiquetas IN ('$etiqueta')";
+                    }
+                    if(!empty($listServicios)){
+                        $condiciones[] = "listServicios IN ('$listServicios')";
+                    }
+                    
+
+                    if (!empty($condiciones)) {
+                        $consulta .= implode(' OR ', $condiciones);
+                    }
+
+
+                    $ofertasPublicadas = $this->ofertas->paginationWithConditions($page, 8, '*', $consulta);
+                    $result->success = true;
+                    $result->result = $ofertasPublicadas;
+                    $result->message = $condicionTextoCompleta;
+                }
+                
+            }else{
+                $result->success = false;
+                $result->message = 'Error: Solicitud no válida.';
+            }
+
+            echo json_encode($result);
+        }
 
 
         //---------------------------------------------------------------------------------------------------------------------------//

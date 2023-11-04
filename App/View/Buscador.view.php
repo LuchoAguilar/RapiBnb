@@ -1,18 +1,16 @@
-<main class="container mt-5">
+<main class="container-fluid mt-5">
     <br><br>
     <div class="row">
         <!--donde van a estar las etiquetas-->
         <section class="col-md-4">
-            <form action="" method="post" id="usuarioIntereses">
+            <form action="" method="post" id="busquedaEtiquetas">
                 <div class="card">
                     <div class="card-body">
                         <!--donde va a estar el buscador-->
                         <section class="container" style="display: flex; justify-content: center; align-items: center;">
                             <div class="input-group" style="width: 300px;">
-                                <div class="form-outline">
-                                    <input type="search" id="form1" class="form-control" placeholder="Buscar" />
-                                </div>
-                                <button type="button" class="btn btn-primary">
+                                <input type="search" id="buscarPorTexto" name="buscarPorTexto" class="form-control" placeholder="Buscar" />
+                                <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-search"></i>
                                 </button>
                             </div>
