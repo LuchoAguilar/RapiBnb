@@ -37,29 +37,35 @@ async function ofertasAlquiler(pageNumber) {
                 });
 
                 divOfertas.insertAdjacentHTML('beforeend', `
-                    <div class="card col-3" style="max-width: 400px; max-height: 600px; margin: auto;">
-                        <div class="card-header">
-                            <div id="imageCarousel${element.ofertaID + 33}" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner">
-                                ${carrouselHTML}
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel${element.ofertaID + 33}" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Anterior</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel${element.ofertaID + 33}" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Siguiente</span>
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">${element.titulo}</h5>
-                            <p class="card-text"><small class="text-muted">Ubicación: ${element.ubicacion}</small></p>
-                        </div>
-                        <div class="card-footer">
-                            
-                        </div>
-                    </div> 
+                    
+                        <div class="card col-3"" style="max-width: 400px; max-height: 600px; margin: auto;">
+                            <a href="${URL_PATH}/Page/oferta/?ofertaID=${element.ofertaID}" style="text-decoration: none;" class="d-block">
+                                <div class="card-header">
+                                    <div id="imageCarousel${element.ofertaID + 33}" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-inner">
+                                            ${carrouselHTML}
+                                        </div>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel${element.ofertaID + 33}" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Anterior</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel${element.ofertaID + 33}" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Siguiente</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">${element.titulo}</h5>
+                                    <p class="card-text"><small class="text-muted">Ubicación: ${element.ubicacion}</small></p>
+                                </div>
+                                <div class="card-footer">
+                                    
+                                </div>
+                            </a>
+                        </div> 
+                        
+                    
                 `);
 
             });

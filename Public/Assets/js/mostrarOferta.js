@@ -1,0 +1,1 @@
+// probablemente envie la informacion a rentas para poder aplicar

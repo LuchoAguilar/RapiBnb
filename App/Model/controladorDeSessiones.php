@@ -34,6 +34,14 @@ class ControladorDeSessiones {
         return 0;
     }
 
+    public function estaConectado(){
+        if($this->session->exists()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public function Roll() {
         if ($this->session->exists()) {
             $users = $this->usuarios->getAll();

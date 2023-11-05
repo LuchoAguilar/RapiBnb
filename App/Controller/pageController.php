@@ -228,8 +228,26 @@
 
             echo json_encode($result);
         }
-
-
+        //---------------------------------------------------------------------------------------------------------------------------//
+        //---------------------------------------------------mostrar Oferta------------------------------------------------------------//
+        public function oferta(){
+            if($this->userSessionControl->Roll() === NO_LOG){
+                $idOferta = $_GET['ofertaID'];
+                $oferta = $this->ofertas->getById($idOferta);
+                // las resenas hechas a la oferta y los usuarios que resenaron y el user dueno de la oferta.
+                $this->render('mostrarOferta',[
+                    'oferta' => $oferta,
+                ],'noLog');
+            }elseif($this->userSessionControl->Roll() === LOG){
+                $idOferta = $_GET['ofertaID'];
+                $oferta = $this->ofertas->getById($idOferta);
+                // las resenas hechas a la oferta y los usuarios que resenaron y el user dueno de la oferta.
+                $this->render('mostrarOferta',[
+                    'oferta' => $oferta,
+                ],'site');
+            }
+        }
+        //---------------------------------------------------------------------------------------------------------------------------//
         //---------------------------------------------------------------------------------------------------------------------------//
     }
 ?>

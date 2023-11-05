@@ -37,6 +37,7 @@ async function ofertasAlquilerRecomendadas(pageNumber) {
 
                 divRecomendada.insertAdjacentHTML('beforeend', `
                     <div class="card col-3" style="max-width: 400px; max-height: 600px; margin: auto;">
+                    <a href="${URL_PATH}/Page/oferta/?ofertaID=${element.ofertaID}"  class="d-block" style="text-decoration: none;>
                         <div class="card-header">
                             <div id="imageCarousel${element.ofertaID + 23}" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
@@ -58,6 +59,7 @@ async function ofertasAlquilerRecomendadas(pageNumber) {
                         <div class="card-footer">
                             
                         </div>
+                     </a>   
                     </div> 
                 `);
             });
