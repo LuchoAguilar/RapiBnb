@@ -67,15 +67,22 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="card">
+            <div class="card" style="max-width: 600px; max-height: 800px; margin: auto; width: 600px; height: 732px;">
                 <div class="card-body">
-                            mensajes
+                    <div class="card" >
+                        <div class="card-body">
+                        <div class="row" id="reservas"></div>
+                        </div>
+                        <div class="card-footer text-end" id="btnPaginacion">anterior|siguiente</div>
+                    </div>
                 </div>
             </div>
         </div>  
     </div>
-       
+    
 </main>
-
-
+<script>
+    var idOferta = <?= $parameters['oferta']['ofertaID'] ?? '' ?>;
+</script>
 <script src="<?= URL_PATH?>/Assets/js/mostrarOferta.js"></script>
+

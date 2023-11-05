@@ -141,12 +141,12 @@ async function envioDePagina(pageNumber, div) {
             method: 'POST',
             body: data
         }).then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log(data.message);
-                    ofertasAlquiler(pageNumber); // Actualiza el contenido con la nueva página
-                }
-            });
+        .then(data => {
+            if (data.success) {
+                console.log(data.message);
+                ofertasAlquiler(pageNumber); 
+            }
+        });
     }else if(div === 'prueba'){
         const data = new FormData();
         data.append('pageNumber', pageNumber);
@@ -154,12 +154,12 @@ async function envioDePagina(pageNumber, div) {
             method: 'POST',
             body: data
         }).then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log(data.message);
-                    ofertasAlquilerCard(pageNumber); // Actualiza el contenido con la nueva página
-                }
-            });
+        .then(data => {
+            if (data.success) {
+                console.log(data.message);
+                ofertasAlquilerCard(pageNumber); 
+            }
+        });
     }else if(div === 'ofertasRecomendadas'){
         const data = new FormData();
         data.append('pageNumber', pageNumber);
@@ -167,12 +167,12 @@ async function envioDePagina(pageNumber, div) {
             method: 'POST',
             body: data
         }).then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log(data.message);
-                    ofertasAlquilerRecomendadas(pageNumber); // Actualiza el contenido con la nueva página
-                }
-            });
+        .then(data => {
+            if (data.success) {
+                console.log(data.message);
+                ofertasAlquilerRecomendadas(pageNumber);
+            }
+        });
     }else if(div === 'cardBusqueda'){
         const data = new FormData();
         data.append('pageNumber', pageNumber);
@@ -180,12 +180,25 @@ async function envioDePagina(pageNumber, div) {
             method: 'POST',
             body: data
         }).then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log(data.message);
-                    ofertasBuscador(pageNumber); // Actualiza el contenido con la nueva página
-                }
-            });
+        .then(data => {
+            if (data.success) {
+                console.log(data.message);
+                ofertasBuscador(pageNumber);
+            }
+        });
+    }else if(div === 'reservas'){
+        const data = new FormData();
+        data.append('pageNumber', pageNumber);
+        fetch(URL_PATH + '/Page/mostrarReservasOferta/', {
+            method: 'POST',
+            body: data
+        }).then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log(data.message);
+                ofertasBuscador(pageNumber);
+            }
+        });
     }
     
 }

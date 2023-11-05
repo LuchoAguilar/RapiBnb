@@ -247,6 +247,44 @@
                 ],'site');
             }
         }
+        
+        public function mostrarReservasOferta(){
+            $result = new Result();
+
+                $page = (isset($_GET['pageNumber']))? $_GET['pageNumber'] : 1;
+                $ofertaID = (isset($_GET['id']))? $_GET['id'] : '';
+                $result->message = $ofertaID;
+                if($ofertaID != '' && is_numeric($ofertaID)){
+                    $consulta = "WHERE puntaje != '' AND ofertaAlquilerID = $ofertaID";
+                    $reservasOferta = $this->reservas->paginationWithConditions($page, 6, '*', $consulta);
+                    if($reservasOferta){
+                        $reservaUsers = [];
+                        $users = $this->usuarios->getAll();
+                        foreach($reservasOferta['data'] as $reserva){
+                            foreach($users as $user){
+                                if($reserva['autorID'] === $user['usuarioID']){
+                                    $reservaUsers[] = [
+                                        'usuario' => $user,
+                                        'reserva' => $reserva,
+                                    ];
+                                }
+                            } 
+                        }
+                        $result->success = true;
+                        $result->result = $reservaUsers;
+                        $result->message = $reservasOferta;
+                    }else{
+                        $result->success = false;
+                        $result->message = 'no tiene reservas hechas o minimamente puntuadas.';
+                    }
+                    
+                }else{
+                    $result->success = false;
+                    $result->message = 'pepe';
+                }
+
+            echo json_encode($result);
+        }
         //---------------------------------------------------------------------------------------------------------------------------//
         //---------------------------------------------------------------------------------------------------------------------------//
     }
