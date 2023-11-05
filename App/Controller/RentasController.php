@@ -262,18 +262,18 @@
                     ]);
                     $result = [
                         'success' => true,
-                        'message' => 'Reserva creada con éxito.';
+                        'message' => 'Reserva creada con éxito.',
                     ];
                 }else{
                     $result = [
                         'success' => false,
-                        'message' => 'Error: no existe la aplicación a la oferta hecha por el usuario.';
+                        'message' => 'Error: no existe la aplicación a la oferta hecha por el usuario.',
                     ];
                 }
             }else{
                 $result = [
                     'success' => false,
-                    'message' => 'Error: información inválida.';
+                    'message' => 'Error: información inválida.',
                 ];
             }
             return $result;   
@@ -284,8 +284,8 @@
             $result = new Result();
             if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $idOferta = (isset($_POST['ofertaID']))? $_POST['ofertaID']:'';
-                $idUsuario = (isset($_POST['usuarioID'])) ? $_POST['usuarioID']:'';
-                $esVerificado = (isset($_POST['esVerificado']))? $_POST['esVerificado']:'';
+                $idUsuario = $this->userSession->ID();
+                $esVerificado = $this->userSession->esVerificado();
                 if($idOferta != '' && $idUsuario !='' && is_numeric($idUsuario) && is_numeric($idOferta) && $esVerificado != null){
                     //si es verificado debe crear la aplicacion con estado aceptado else con estado espera
                     if($esVerificado === 'true'){
@@ -329,15 +329,13 @@
                                 $result->message = "Error: de proceso.";
                             }
                         }else{
-                            else{
-                                $this->aplicaOferta->insert([
-                                    'estado' => ESPERA_RENTA,
-                                    'usuarioAplicoID' => $idUsuario,
-                                    'ofertaAlquilerID' => $idOferta,
-                                ]);
-                                $result->success = true;
-                                $result->message = "Renta creada con éxito.";
-                            }
+                            $this->aplicaOferta->insert([
+                                'estado' => ESPERA_RENTA,
+                                'usuarioAplicoID' => $idUsuario,
+                                'ofertaAlquilerID' => $idOferta,
+                            ]);
+                            $result->success = true;
+                            $result->message = "Renta creada con éxito.";
                         }
                         
                     }

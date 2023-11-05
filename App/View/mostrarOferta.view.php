@@ -63,17 +63,19 @@
             </div>
 
             <div class="card-footer">
-                
+                <div class="container" id="ofertar"></div>
+                <div class="container" id="errores"></div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" id="valoraciones">
             <div class="card" style="max-width: 600px; max-height: 800px; margin: auto; width: 600px; height: 732px;">
                 <div class="card-body">
                     <div class="card" >
+                        <div class="card-header"><h3>Valoraciones de la oferta</h3></div>
                         <div class="card-body">
                         <div class="row" id="reservas"></div>
                         </div>
-                        <div class="card-footer text-end" id="btnPaginacion">anterior|siguiente</div>
+                        <div class="card-footer text-end" id="btnPaginacion"></div>
                     </div>
                 </div>
             </div>

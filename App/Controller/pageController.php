@@ -257,7 +257,8 @@
                 if($ofertaID != '' && is_numeric($ofertaID)){
                     $consulta = "WHERE puntaje != '' AND ofertaAlquilerID = $ofertaID";
                     $reservasOferta = $this->reservas->paginationWithConditions($page, 6, '*', $consulta);
-                    if($reservasOferta){
+                    $userLog = $this->userSessionControl->estaConectado();
+                    if(count($reservasOferta['data']) > 0){
                         $reservaUsers = [];
                         $users = $this->usuarios->getAll();
                         foreach($reservasOferta['data'] as $reserva){
@@ -271,16 +272,22 @@
                             } 
                         }
                         $result->success = true;
-                        $result->result = $reservaUsers;
-                        $result->message = $reservasOferta;
+                        $result->result = [
+                           'info' => $reservaUsers,
+                           'page' => $reservasOferta['page'],
+                           'pages' => $reservasOferta['pages'],
+                           'userLog' => $userLog, 
+                        ];
+
                     }else{
                         $result->success = false;
+                        $result->result = $userLog;
                         $result->message = 'no tiene reservas hechas o minimamente puntuadas.';
                     }
                     
                 }else{
                     $result->success = false;
-                    $result->message = 'pepe';
+                    $result->message = 'Error: informacion invalida';
                 }
 
             echo json_encode($result);
