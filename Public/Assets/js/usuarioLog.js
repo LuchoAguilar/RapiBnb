@@ -26,7 +26,7 @@ async function usuarioLogSubmit(){
                     <label for="contrasena" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" name="contrasena" id="contrasena" aria-describedby="helpId" placeholder="">
                 </div>
-                <button type="submit" class="btn btn-success">Ingresar</button>
+                <button type="submit" class="btn confirmacion">Ingresar</button>
                 <div class="card-footer">
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
@@ -48,7 +48,7 @@ async function usuarioLogSubmit(){
                     <label for="contrasena" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" name="contrasena" id="contrasena" aria-describedby="helpId" placeholder="">
                 </div>
-                <button type="submit" class="btn btn-success">Ingresar</button>
+                <button type="submit" class="btn confirmacion">Ingresar</button>
                 <div class="card-footer">
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>

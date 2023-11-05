@@ -1,3 +1,95 @@
-.padding {
-    padding: 3rem !important
+
+.RapiBnB-nav{
+    display: flex;
+    justify-content:right;
 }
+
+.RapiBnB-nav a{
+    margin-left: 2rem;
+    margin-right: 2rem;
+    font-size: 1.5rem;
+    text-decoration: none !important;
+    color: #CCCCCC;
+}
+
+a{
+    color: #CCCCCC;
+}
+
+/*------------------ footer -------------------*/
+
+.RapiBnB-footer{
+    color:#CCCCCC;
+    background-color:#0047AB;
+    border: white;
+    border: 40px;
+    /*position: absolute;*/
+    bottom: 0;
+    width: 100%;
+}
+
+.RapiBnB-footer a{
+    text-decoration: none;
+    color: #CCCCCC;
+}
+
+.RapiBnB-footer h3{
+    margin-left: 2rem;
+    margin-right: 2rem;
+    font-size: 1.5rem;
+    text-decoration: none !important;
+    color: #CCCCCC;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.RapiBnB-footer .list-group-item{
+    color:#CCCCCC;
+    background: #0047AB;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.RapiBnB-footer .list-group-item:hover{
+    background:#000080;
+}
+
+.RapiBnB-footer .btn-social i{
+    color:#CCCCCC;
+}
+
+.RapiBnB-footer .btn-social i:hover{
+    color:#000080;
+}
+
+@media only screen and(max-width:768px){
+    .RapiBnB-footer .btn-social{
+        display: inline-block;
+        margin-top: 15px;
+    }
+}
+
+/*----------------------------------------------*/
+
+/*------------------ botones -------------------*/
+.confirmacion{
+    background: #4169E1;
+    color: #CCCCCC;
+}
+
+.confirmacion:hover{
+    background: #0047AB;
+    color: #CCCCCC;
+}
+/*----------------------------------------------*/
+/*------------------ card -------------------*/
+
+.card-header{
+    background-color:#0047AB;
+    color: #CCCCCC;
+}
+
+.card-footer{
+    background-color:#0047AB;
+    color: #CCCCCC;
+}
+/*----------------------------------------------*/

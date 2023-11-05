@@ -122,8 +122,8 @@
                     </div>
                 </div>
                 <div class="text-center mt-3">
-                    <button type="submit" class="btn btn-success">Crear Oferta</button>
-                    <a name="" id="" class="btn btn-primary" href="<?=URL_PATH.'/OfertaAlquiler/home/';?>" role="button">Cancelar</a>
+                    <button type="submit" class="btn confirmacion">Crear Oferta</button>
+                    <a name="" id="" class="btn confirmacion" href="<?=URL_PATH.'/OfertaAlquiler/home/';?>" role="button">Cancelar</a>
                 </div>
             </form>
         </div>

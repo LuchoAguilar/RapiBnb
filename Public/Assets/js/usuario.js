@@ -30,11 +30,11 @@ async function user() {
 
         if (documentacionData === null && esVerificado === null) {
             documentacionHTML = `
-                    <a class="btn btn-info" href="${URL_PATH}/usuario/verificar/" role="button">Verificar Cuenta</a>
+                    <a class="btn confirmacion" href="${URL_PATH}/usuario/verificar/" role="button">Verificar Cuenta</a>
                 `;
         } else {
             documentacionHTML = `
-                    <a class="btn btn-info d-none" href="" role="button">no ver</a>
+                    <a class="btn confirmacion d-none" href="" role="button">no ver</a>
                 `;
             if (esVerificado === true) {
                 verificado = `
@@ -84,9 +84,9 @@ async function user() {
                             </div>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                            <button onclick="modalRestriccion(${data.usuarioID},${esVerificado});" class="btn btn-info">Editar Perfil</button>
+                            <button onclick="modalRestriccion(${data.usuarioID},${esVerificado});" class="btn confirmacion">Editar Perfil</button>
                             ${documentacionHTML}
-                            <a class="btn btn-info" href="${URL_PATH}/usuario/interesesForm/" role="button">Agregar intereses</a>
+                            <a class="btn confirmacion" href="${URL_PATH}/usuario/interesesForm/" role="button">Agregar intereses</a>
                         </div>
                     </div>
                 </div>

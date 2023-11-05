@@ -10,7 +10,7 @@
                         <section class="container" style="display: flex; justify-content: center; align-items: center;">
                             <div class="input-group" style="width: 300px;">
                                 <input type="search" id="buscarPorTexto" name="buscarPorTexto" class="form-control" placeholder="Buscar" />
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn confirmacion">
                                     <i class="fas fa-search"></i>
                                 </button>
                             </div>

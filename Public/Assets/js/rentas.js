@@ -95,15 +95,15 @@ async function informacionDeOfertas() {
                                             </div>
                                         </div>
                                         <div class="card-footer">
-                                            <button onclick="AceptarOferta(${usuarioAplicante.usuarioID},${element.ofertaPublicada.ofertaID});" class="btn btn-info">Aceptar Oferta</button>
-                                            <button onclick="rechazarOferta(${usuarioAplicante.usuarioID},${element.ofertaPublicada.ofertaID});" class="btn btn-info">Rechazar Oferta</button>
+                                            <button onclick="AceptarOferta(${usuarioAplicante.usuarioID},${element.ofertaPublicada.ofertaID});" class="btn confirmacion">Aceptar Oferta</button>
+                                            <button onclick="rechazarOferta(${usuarioAplicante.usuarioID},${element.ofertaPublicada.ofertaID});" class="btn confirmacion">Rechazar Oferta</button>
                                         </div>
                                     </div>
                                 `;
                 } else {
                     usuarioHTML = `
                             <div class="card">
-                                <div class="card-header">
+                                <div class="card-body">
                                     <h5 class="text-center">Aun no tiene ofertantes</h5>
                                 </div>
                             </div>
@@ -126,27 +126,26 @@ async function informacionDeOfertas() {
 
                 divCard.insertAdjacentHTML('beforeend', `                       
                     <div class="card ${columnOfertas}" style="max-width: 400px; max-height: 800px; margin: auto;">
-                        <div class="card-header">
-                            <div id="imageCarousel${element.ofertaPublicada.ofertaID}" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner">
-                                ${carrouselHTML}
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel${element.ofertaPublicada.ofertaID}" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Anterior</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel${element.ofertaPublicada.ofertaID}" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Siguiente</span>
-                            </button>
+                        <div class="card-header" style="background: white;">
+                            <div id="imageCarousel${element.ofertaPublicada.ofertaID + 7}" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    ${carrouselHTML}
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel${element.ofertaPublicada.ofertaID + 7}" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Anterior</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel${element.ofertaPublicada.ofertaID + 7}" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Siguiente</span>
+                                </button>
+                            </div>    
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">${element.ofertaPublicada.titulo}</h5>
                             <p class="card-text"><small class="text-muted">Estado de publicación: ${element.ofertaPublicada.estado}</small></p>
                         </div>
-                        <div class="card-footer">
-                            ${usuarioHTML}
-                        </div>
+                        ${usuarioHTML}
                     </div>                                         
                 `);
             });
@@ -163,7 +162,7 @@ async function informacionDeOfertas() {
                 let accion = '';
                 if (element.aplicacion.estado === 'aceptado') {
                     accionTb = '<th scope="col">Cancelar pedido</th>';
-                    accion = `<td><button onclick="cancelarPedido(${element.aplicacion.aplicacionID});" class="btn btn-danger">Cancelar</button></td>`;
+                    accion = `<td><button onclick="cancelarPedido(${element.aplicacion.aplicacionID});" class="btn confirmacion">Cancelar</button></td>`;
                 }
 
                 // Agrega el contenido de cada aplicación a la variable aplicacionesUserHTML
@@ -230,7 +229,7 @@ async function informacionDeOfertas() {
                                         <input type="text" class="form-control col-md-3" name="nuevaResena" placeholder="Reseña:">
                                     </div>
                                     <div class="col-md-4">
-                                        <button type="submit" onclick="actualizar(${element.reservaUser.reservaID});" class="btn btn-danger">Enviar</button>
+                                        <button type="submit" onclick="actualizar(${element.reservaUser.reservaID});" class="btn confirmacion">Enviar</button>
                                     </div>
                                 </div>
                             </form>
@@ -345,7 +344,7 @@ async function informacionDeOfertas() {
                                             <input type="text" class="form-control col-md-3" name="responder" placeholder="Responder Reseña:">
                                         </div>
                                         <div class="col-md-4">
-                                            <button type="submit" onclick="actualizarRespuesta(${reserva.reservaID});" class="btn btn-danger">Responder</button>
+                                            <button type="submit" onclick="actualizarRespuesta(${reserva.reservaID});" class="btn confirmacion">Responder</button>
                                         </div>
                                     </div>
                                 </form>

@@ -12,9 +12,6 @@
       <div class="card-body">
         <div class="container row" style="margin: auto;" id="prueba"></div>
       </div>
-      <div class="card-footer">
-
-      </div>
     </div>
   </section>
 
@@ -27,8 +24,6 @@
       </div>
       <div class="card-body">
         <div class="container row" style="margin:auto;" id="ofertas"></div>
-      </div>
-      <div class="card-footer">
       </div>
     </div>
   </section>
@@ -45,8 +40,6 @@
       </div>
       <div class="card-body">
         <div class="container row" style="margin:auto;" id="ofertasRecomendadas"></div>
-      </div>
-      <div class="card-footer">
       </div>
     </div>
   </section>

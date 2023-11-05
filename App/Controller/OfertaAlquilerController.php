@@ -12,6 +12,8 @@
             $this->userSession = new ControladorDeSessiones($session,$connect);
         }
 
+        //------------------------------------------------Mostrar Ofertas ---------------------------------------------------------//
+
         public function home(){
             if($this->userSession->Roll() === LOG){
                 $user = $this->userSession->ID();
@@ -31,6 +33,21 @@
                 header("Location:".URL_PATH);
             }
         }
+
+        public function table(){
+            $result = new Result();
+            $userLogin = $this->userSession->ID();
+            $ofertasUsuario = $this->ofertaModel->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'creadorID' , $userLogin);
+            $result->success = true;
+            $result->result = [
+                'ofertas' => $ofertasUsuario,
+            ];            
+            echo json_encode($result);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------//
+
+        //------------------------------------------------Crear Ofertas ---------------------------------------------------------//
 
         public function crear(){
             if($this->userSession->Roll() === LOG){
@@ -119,7 +136,8 @@
             $result->message = "Oferta de alquiler creada con éxito";
             echo json_encode($result);
         }
-
+        //------------------------------------------------------------------------------------------------------------------------//
+        //---------------------------------------------------------Editar Oferta--------------------------------------------------------//
         public function edit(){
             if($this->userSession->Roll() === LOG){
                 $id = $_GET['id'];
@@ -132,53 +150,6 @@
             }else{
                 header("Location:".URL_PATH);
             } 
-        }
-
-        public function delete(){
-            $result = new Result();
-
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                $idOferta = (isset($_POST['id']))?$_POST['id']:'';
-                if($idOferta != null && is_numeric($idOferta)){
-                    $oferta = $this->ofertaModel->getById($idOferta);
-                    if($oferta){
-                        $imagenes = explode(", ", $oferta['galeriaFotos']);
-                        foreach($imagenes as $imagen){
-                            $imagenPath = 'Assets/images/galeriaFotos/'.$imagen;
-                            if (file_exists($imagenPath)) {
-                                unlink($imagenPath);
-                            }
-                        }
-                        $this->ofertaModel->deleteById($_POST['id']);
-                        $result->success = true;
-                        $result->message = "Oferta eliminada con éxito";
-                    }else{
-                        $result->success = false;
-                        $result->message = "Oferta no encontrada";
-                    }
-
-                }else{
-                    $result->success = false;
-                    $result->message = "Identificador invalido";
-                }
-            }else {
-                $result->success = false;
-                $result->message = "Solicitud no válida";
-            }    
-            
-
-            echo json_encode($result);
-        }
-
-        public function table(){
-            $result = new Result();
-            $userLogin = $this->userSession->ID();
-            $ofertasUsuario = $this->ofertaModel->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'creadorID' , $userLogin);
-            $result->success = true;
-            $result->result = [
-                'ofertas' => $ofertasUsuario,
-            ];            
-            echo json_encode($result);
         }
 
         public function update() {
@@ -276,9 +247,46 @@
             }
             echo json_encode($result);
         }
-        
-        
+
+        //------------------------------------------------Eliminar Oferta------------------------------------------------------------//
+
+        public function delete(){
+            $result = new Result();
+
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                $idOferta = (isset($_POST['id']))?$_POST['id']:'';
+                if($idOferta != null && is_numeric($idOferta)){
+                    $oferta = $this->ofertaModel->getById($idOferta);
+                    if($oferta){
+                        $imagenes = explode(", ", $oferta['galeriaFotos']);
+                        foreach($imagenes as $imagen){
+                            $imagenPath = 'Assets/images/galeriaFotos/'.$imagen;
+                            if (file_exists($imagenPath)) {
+                                unlink($imagenPath);
+                            }
+                        }
+                        $this->ofertaModel->deleteById($_POST['id']);
+                        $result->success = true;
+                        $result->message = "Oferta eliminada con éxito";
+                    }else{
+                        $result->success = false;
+                        $result->message = "Oferta no encontrada";
+                    }
+
+                }else{
+                    $result->success = false;
+                    $result->message = "Identificador invalido";
+                }
+            }else {
+                $result->success = false;
+                $result->message = "Solicitud no válida";
+            }    
+            
+
+            echo json_encode($result);
+        }
+        //------------------------------------------------------------------------------------------------------------------------//
+       
+        //------------------------------------------------------------------------------------------------------------------------//
     }
-
-
 ?>

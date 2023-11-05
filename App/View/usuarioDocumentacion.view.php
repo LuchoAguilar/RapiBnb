@@ -14,8 +14,8 @@
                     <label for="textID" class="form-label">ID</label>
                     <input type="text" class="form-control" value="<?= $parameters['doc'] ?? '' ?>" name="textID" id="textID" placeholder="ID">
                 </div>
-                <button type="submit" class="btn btn-success">Enviar Solicitud</button>
-                <a id="" class="btn btn-primary" href="<?=URL_PATH.'/Usuario/home/';?>" role="button">Cancelar</a>
+                <button type="submit" class="btn confirmacion">Enviar Solicitud</button>
+                <a id="" class="btn confirmacion" href="<?=URL_PATH.'/Usuario/home/';?>" role="button">Cancelar</a>
             </form>
         </div>
     </div>

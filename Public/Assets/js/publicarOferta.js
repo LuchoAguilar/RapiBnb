@@ -20,9 +20,9 @@ async function ofertasAlquilerCard() {
                         </div>
                     `;
                 });
-    
+
                 divCard.innerHTML += `
-                <div class="card mb-3" style="max-width: 600px; margin:auto;">
+                <div class="card col-md-4" style="max-width: 600px; max-height: 800px; margin: auto;">
                     
                     <div id="imageCarousel${element.ofertaID}" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
@@ -40,19 +40,45 @@ async function ofertasAlquilerCard() {
                     <div class="card-body">
                         <h5 class="card-title">${element.titulo}</h5>
                         <p class="card-text">${element.descripcion}</p>
-                        <p class="card-text"><small class="text-muted">Ubicación: ${element.ubicacion}</small></p>
-                        <p class="card-text"><small class="text-muted">Servicios: ${element.listServicios} </small></p>
-                        <p class="card-text"><small class="text-muted">Costo por Día: ${element.costoAlquilerPorDia} $</small></p>
-                        <p class="card-text"><small class="text-muted">Tiempo Mínimo de Permanencia: ${element.tiempoMinPermanencia} días</small></p>
-                        <p class="card-text"><small class="text-muted">Tiempo Máximo de Permanencia: ${element.tiempoMaxPermanencia} días</small></p>
-                        <p class="card-text"><small class="text-muted">Cupo: ${element.cupo} personas</small></p>
-                        <p class="card-text"><small class="text-muted">Fecha de Inicio: ${element.fechaInicio ?? 'No especificada'}</small></p>
-                        <p class="card-text"><small class="text-muted">Fecha de Fin: ${element.fechaFin ?? 'No especificada'}</small></p>
-                        <p class="card-text"><small class="text-muted">Estado de publicación: ${element.estado}</small></p>
-                    </div>
-                    <div class="card-footer">
-                        <a name="" id="" class="btn btn-info" href="${URL_PATH}/OfertaAlquiler/edit/?id=${element.ofertaID}" role="button">Modificar Oferta</a>
-                        <button onclick="eliminarOferta(${element.ofertaID});"  class="btn btn-danger">Eliminar Oferta</button>
+                        <p class="card-text">Ubicación: ${element.ubicacion}</p>
+                        <div class="row border rounded">
+                            <div class="col-md-12 border">
+                                <label for="servicios">Servicios:</label>
+                                <p class="card-text " id="servicios"> ${element.listServicios}</p>
+                            </div>
+                            <div class="col-md-6 border">
+                                <label for="costoPorDia">Costo por día:</label>
+                                <p class="card-text " id="costoPorDia">$${element.costoAlquilerPorDia}</p>
+                            </div>
+                            <div class="col-md-6 border">
+                                <label for="cupoPersonas">Cupo de personas:</label>
+                                <p class="card-text" id="cupoPersonas">${element.cupo} personas</p>
+                            </div>
+                            <div class="col-md-6 border">
+                                <label for="tiempoMinPermanencia">Tiempo mínimo de permanencia:</label>
+                                <p class="card-text" id="tiempoMinPermanencia">${element.tiempoMinPermanencia} días</p>
+                            </div>
+                            <div class="col-md-6 border">
+                                <label for="tiempoMaxPermanencia">Tiempo máximo de permanencia:</label>
+                                <p class="card-text " id="tiempoMaxPermanencia">${element.tiempoMaxPermanencia} días</p>
+                            </div>
+                            <div class="col-md-6 border">
+                                <label for="tiempoMaxPermanencia">Estado de la publicación:</label>
+                                <p class="card-text " id="tiempoMaxPermanencia">${element.estado}</p>
+                            </div>
+                            <div class="col-md-6 border d-none" id="fechaInicio">
+                                <label for="tiempoMaxPermanencia">Fecha en que inicia la estadia:</label>
+                                <p class="card-text" id="tiempoMaxPermanencia">${element.fechaInicio ?? 'No especificada'} días</p>
+                            </div>
+                            <div class="col-md-6 border d-none" id="fechaFin">
+                                <label for="tiempoMaxPermanencia">Fecha en que finaliza la estadia:</label>
+                                <p class="card-text" id="tiempoMaxPermanencia">${element.fechaFin ?? 'No especificada'} días</p>
+                            </div>
+                        </div>
+                        <div class="container mt-1 text-center">
+                            <a name="" id="" class="btn confirmacion" href="${URL_PATH}/OfertaAlquiler/edit/?id=${element.ofertaID}" role="button">Modificar Publicación</a>
+                            <button onclick="eliminarOferta(${element.ofertaID});"  class="btn confirmacion">Eliminar Publicación</button>
+                        </div>
                     </div>
             </div>
                 `;

@@ -25,15 +25,18 @@
                             <input type="password" class="form-control" name="passwordConfirm" id="passwordConfirm" placeholder="Confirmar contraseña" required>
                         </div>
                         <div class="mb-3">
-                            <button type="submit" class="btn btn-success">Crear Usuario</button>
-                            <a href="<?=URL_PATH;?>" class="btn btn-primary">Cancelar</a>
+                            <button type="submit" class="btn confirmacion">Crear Usuario</button>
+                            <a href="<?=URL_PATH;?>" class="btn confirmacion">Volver a inicio</a>
                         </div>
                     </form>
                     <div class="container" id="errores">
 
                     </div>
                 </div>
-                <div class="card-footer"></div>
+                <div class="card-footer">
+                    ¿Ya tienes una cuenta? <a href="<?= URL_PATH ?>/Usuario/login/">Inicia sesión aquí</a>
+                </div>
+
             </div>
         </div>
     </div>

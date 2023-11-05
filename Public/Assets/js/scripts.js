@@ -14,7 +14,7 @@ const Modal = {
 
         const elemento = document.createElement('div');
 
-        const cancelBtn = confirm ? `<button type="button" id="cancel${uniqueID}" class="btn btn-${type}" data-bs-dismiss="modal">${cancelText}</button>` : '';
+        const cancelBtn = confirm ? `<button type="button" id="cancel${uniqueID}" class="btn confirmacion" data-bs-dismiss="modal">${cancelText}</button>` : '';
 
         elemento.innerHTML = `
             <div class="modal fade" id="staticBackdrop${uniqueID}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -29,7 +29,7 @@ const Modal = {
                     </div>
                     <div class="mt-5 text-center">
                     ${cancelBtn}
-                    <button type="button" id="accept${uniqueID}" class="btn btn-${type}">${acceptText}</button>
+                    <button type="button" id="accept${uniqueID}" class="btn confirmacion">${acceptText}</button>
                     </div>
                 </div>
                 </div>
@@ -110,7 +110,7 @@ function botonesPaginacion(page, pages, paginacionContainer, div) {
         const button = document.createElement('a');
         button.href = `javascript:void(0);`;  // Evita que el enlace cargue una nueva página
         button.textContent = text;
-        button.classList.add('btn', 'btn-primary');
+        button.classList.add('btn', 'confirmacion');
         if (pageNumber === page) {
             button.classList.add('active');
         }

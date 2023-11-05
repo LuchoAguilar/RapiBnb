@@ -44,7 +44,7 @@ async function obtenerYMostrarReservas(pageNumber) {
             const ofertar = document.getElementById('ofertar');
             ofertarHTML = '';
             if(userLog === true){
-                ofertarHTML = `<button onclick="realizarRenta();"  class="btn btn-danger">Realizar Oferta</button>`;
+                ofertarHTML = `<button onclick="realizarRenta();"  class="btn confirmacion">Realizar Oferta</button>`;
             }
 
             ofertar.insertAdjacentHTML('beforeend', `

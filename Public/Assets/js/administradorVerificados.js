@@ -17,12 +17,12 @@ async function verificacionList() {
                         <th scope="row">${postulante.nombreUsuario}</th>
                         <td>${postulante.correo}</td>
                         <td>
-                            <button onclick="mostrarDocumentacion('${documentacion.documentoAdjunto}');" class="btn btn-danger">Mostrar</button>
+                            <button onclick="mostrarDocumentacion('${documentacion.documentoAdjunto}');" class="btn confirmacion">Mostrar</button>
                         </td>
                         <td>
-                            <button onclick="verificarCuenta(${postulante.usuarioID});" class="btn btn-info">Si</button>
+                            <button onclick="verificarCuenta(${postulante.usuarioID});" class="btn confirmacion">Si</button>
                             |
-                            <button onclick="eliminarDocumentacion(${postulante.usuarioID});" class="btn btn-danger">No</button>
+                            <button onclick="eliminarDocumentacion(${postulante.usuarioID});" class="btn confirmacionr">No</button>
                         </td>
                     </tr>
                 `);

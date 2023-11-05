@@ -41,8 +41,8 @@
             </div>
 
             <div class="text-center">
-                <button type="submit" class="btn btn-success">Editar</button>
-                <a id="" class="btn btn-primary" href="<?=URL_PATH.'/Usuario/home/';?>" role="button">Cancelar</a>
+                <button type="submit" class="btn confirmacion">Editar</button>
+                <a id="" class="btn confirmacion" href="<?=URL_PATH.'/Usuario/home/';?>" role="button">Cancelar</a>
             </div>
         </form>
     </div>

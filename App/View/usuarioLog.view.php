@@ -17,9 +17,15 @@
                             <label for="contrasena" class="form-label">Contraseña</label>
                             <input type="password" class="form-control" name="contrasena" id="contrasena" aria-describedby="contrasenaHelp">
                         </div>
-                        <button type="submit" class="btn btn-success">Ingresar</button>
+                        <div class="mb-3">
+                            <button type="submit" class="btn confirmacion">Ingresar</button>
+                            <a href="<?=URL_PATH;?>" class="btn confirmacion">Volver a inicio</a>
+                        </div>
                     </form>
-                </div>        
+                </div>     
+                <div class="card-footer">
+                    ¿No tienes una cuenta? <a href="<?= URL_PATH ?>/Usuario/signUp/">Regístrate aquí</a>
+                </div>
             </div>
         </div>
     </div>
