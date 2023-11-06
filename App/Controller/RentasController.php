@@ -38,42 +38,50 @@
             $esVerificado = $this->userSession->esVerificado();
             // Obtener solo las que están publicadas
             $ofertasPublicadasUser = $this->obtenerOfertasPublicadas($userID);
-            $rentas = $this->aplicaOferta->getAll(); 
+            $rentas = $this->aplicaOferta->getAll();
+            $usuarios = $this->usuarios->getAll(); 
 
             // Obtener aplicantes de oferta
             $oferta_con_aplicante = [];
 
             if ($ofertasPublicadasUser != null && $rentas != null) {
-                // Crear un diccionario que mapee ofertas a rentas basado en el ID de oferta
                 $rentasPorOferta = [];
+            
                 foreach ($rentas as $renta) {
-                    $ofertaID = $renta['ofertaAlquilerID'];
-                    if (!array_key_exists($ofertaID, $rentasPorOferta)) {
-                        $rentasPorOferta[$ofertaID] = [];
+                    $ofertaID = ($renta['estado'] === ESPERA_RENTA) ? $renta['ofertaAlquilerID'] : null;
+                    if (!is_null($ofertaID)) {
+                        if (!array_key_exists($ofertaID, $rentasPorOferta)) {
+                            $rentasPorOferta[$ofertaID] = [];
+                        }
+                        $rentasPorOferta[$ofertaID][] = $renta;
                     }
-                    $rentasPorOferta[$ofertaID][] = $renta;
                 }
-
-                // Combinar ofertas publicadas con aplicantes
+            
+                $oferta_con_aplicante = [];
+            
                 foreach ($ofertasPublicadasUser as $oferPublicada) {
                     $ofertaID = $oferPublicada['ofertaID'];
                     $aplicantes = isset($rentasPorOferta[$ofertaID]) ? $rentasPorOferta[$ofertaID] : [];
+                    $usuariosAplicantes = [];
+            
+                    foreach ($usuarios as $usuario) {
+                        foreach ($aplicantes as $aplicante) {
+                            if ($aplicante['usuarioAplicoID'] === $usuario['usuarioID']) {
+                                $usuariosAplicantes[] = $usuario;
+                            }
+                        }
+                    }
+            
                     $oferta_con_aplicante[] = [
                         'ofertaPublicada' => $oferPublicada,
-                        'usuariosAplicantes' => $aplicantes,
+                        'usuariosAplicantes' => $usuariosAplicantes,
                     ];
                 }
             } else {
-                $oferta_con_aplicante[] = [
-                    'ofertaPublicada' => [],
-                    'usuariosAplicantes' => [],
-                ];
+                $oferta_con_aplicante = [];
             }
-
-
-            $result->message = $oferta_con_aplicante;
-           
             
+       
             //hay que pasar sus propias aplicaciones. darle a que oferta aplico
             $aplicacionesDelUsuario = $this->aplicaOferta->buscarRegistrosRelacionados('usuarios','usuarioID','usuarioAplicoID',$userID);
 
@@ -339,8 +347,8 @@
         public function aceptarRenta(){
             $result = new Result();
             if($_SERVER["REQUEST_METHOD"] == "POST"){
-                $idOferta = (isset($_POST['ofertaID']))? $_POST['ofertaID']:'';
-                $idUsuario = (isset($_POST['usuarioID'])) ? $_POST['usuarioID']:'';
+                $idOferta = (isset($_POST['oferta'])) ? intval($_POST['oferta']) : 0;
+                $idUsuario = (isset($_POST['usuario'])) ? intval($_POST['usuario']) : 0;
                 if($idOferta != '' && $idUsuario !='' && is_numeric($idUsuario) && is_numeric($idOferta)){
                     $oferta = $this->ofertas->getById($idOferta);
                     if($oferta['creadorID'] !== $idUsuario){
@@ -371,8 +379,9 @@
         public function rechazarRenta(){
             $result = new Result();
             if($_SERVER["REQUEST_METHOD"] == "POST"){
-                $idOferta = (isset($_POST['ofertaID']))? $_POST['ofertaID']:'';
-                $idUsuario = (isset($_POST['usuarioID'])) ? $_POST['usuarioID']:'';
+                $idOferta = (isset($_POST['oferta'])) ? intval($_POST['oferta']) : 0;
+                $idUsuario = (isset($_POST['usuario'])) ? intval($_POST['usuario']) : 0;
+
                 if($idOferta != '' && $idUsuario !='' && is_numeric($idUsuario) && is_numeric($idOferta)){
                     $rentas = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $idOferta);
                     if($rentas){
@@ -384,7 +393,7 @@
                             }
                         }
                         $result->success = true;
-                        $result->message = "renta rechazada con éxito.";
+                        $result->message = $idOferta;
                     }else{
                         $result->success = false;
                         $result->message = 'Error: Oferta no encontrada.';

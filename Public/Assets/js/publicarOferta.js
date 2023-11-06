@@ -63,7 +63,7 @@ async function ofertasAlquilerCard() {
                                 <p class="card-text " id="tiempoMaxPermanencia">${element.tiempoMaxPermanencia} días</p>
                             </div>
                             <div class="col-md-6 border">
-                                <label for="tiempoMaxPermanencia">Estado de la publicación:</label>
+                                <label for="tiempoMaxPermanencia">Estado:</label>
                                 <p class="card-text " id="tiempoMaxPermanencia">${element.estado}</p>
                             </div>
                             <div class="col-md-6 border d-none" id="fechaInicio">

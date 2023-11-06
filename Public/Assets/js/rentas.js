@@ -36,21 +36,9 @@ async function informacionDeOfertas() {
 
         // Luego, ajusta las clases según las condiciones
         if (dataOfertasYAplicaciones && (dataAplicacionesUsuario != null) && (dataReservasDelUsuario.length > 0 || dataReservasAOfertas.length > 0)) {
-            divOfertas.className = 'col-6';
-            divAplicacionesYReservas.className = 'col-6';
-        } else {
-            if (!dataOfertasYAplicaciones) {
-                divOfertas.className = '';
-            } else if ((dataAplicacionesUsuario != null) && (dataReservasDelUsuario.length > 0 || dataReservasAOfertas.length > 0)) {
-                divAplicacionesYReservas.className = 'col-12';
-            }
-
-            if (!((dataAplicacionesUsuario != null) && (dataReservasDelUsuario.length > 0 || dataReservasAOfertas.length > 0))) {
-                divAplicacionesYReservas.className = '';
-            } else if (dataOfertasYAplicaciones) {
-                divOfertas.className = 'col-12';
-            }
-        }
+            divOfertas.className = 'container col-12';
+            divAplicacionesYReservas.className = 'container col-12';
+        } 
 
         //--------------------------------------------------------------------------
 
@@ -62,92 +50,54 @@ async function informacionDeOfertas() {
             divOfertas.appendChild(divCard);
 
             dataOfertasYAplicaciones.forEach(element => {
-                const galeriaFotosStr = element.ofertaPublicada.galeriaFotos;
-                const galeriaFotosArray = galeriaFotosStr.split(", ");
+                const usuariosAplicantes = element.usuariosAplicantes; // Un array de usuarios aplicantes
 
-                let carrouselHTML = '';
-                galeriaFotosArray.forEach((foto, index) => {
-                    const activeClass = index === 0 ? 'active' : '';
-                    carrouselHTML += `
-                                    <div class="carousel-item ${activeClass}">
-                                        <img src="${URL_PATH}/Assets/images/galeriaFotos/${foto}" style="width: 400px; height: 300px;" alt="Imagen">
-                                    </div>
-                                `;
-                });
+                let usuarioHTML = ''; // Inicializa la variable
 
-                const usuarioAplicante = element.usuarioAplicante;
-                let usuarioHTML = '';
-
-                if (usuarioAplicante && usuarioAplicante.length > 0) {
+                if (usuariosAplicantes && usuariosAplicantes.length > 0) {
                     usuarioHTML = `
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="">
-                                                <img src="${URL_PATH}/Assets/images/fotoPerfil/${usuarioAplicante.fotoRostro}" style="border-radius: 50%; max-width: 100px;" alt="User-Profile-Image">
-                                            </div>
-                                            <div>
-                                                <p style="font-weight: 600; margin-bottom: 10px;">Nombre Completo:</p>
-                                                <p style="font-weight: 400;">${usuarioAplicante.nombreCompleto}</p>
-                                            </div>
-                                            <div>
-                                                <p style="font-weight: 600; margin-bottom: 10px;">Telefono:</p>
-                                                <p style="font-weight: 400;">${usuarioAplicante.telefono}</p>
-                                            </div>
-                                        </div>
-                                        <div class="card-footer">
-                                            <button onclick="AceptarOferta(${usuarioAplicante.usuarioID},${element.ofertaPublicada.ofertaID});" class="btn confirmacion">Aceptar Oferta</button>
-                                            <button onclick="rechazarOferta(${usuarioAplicante.usuarioID},${element.ofertaPublicada.ofertaID});" class="btn confirmacion">Rechazar Oferta</button>
-                                        </div>
-                                    </div>
-                                `;
-                } else {
-                    usuarioHTML = `
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="text-center">Aun no tiene ofertantes</h5>
-                                </div>
-                            </div>
-                            `;
-                }
-
-                // tambien se debe corregir como se muestran las cards de ofertas y aplicantes si son varias(4 en 4)
-                let columnOfertas = '';
-                const numberOfObjects = dataOfertasYAplicaciones.length;
-
-                if (numberOfObjects === 1) {
-                    columnOfertas = 'col-md-12';
-                } else if (numberOfObjects === 2) {
-                    columnOfertas = 'col-md-6';
-                } else if (numberOfObjects === 3) {
-                    columnOfertas = 'col-md-4';
-                } else if (numberOfObjects >= 4) {
-                    columnOfertas = 'col-md-3';
-                }
-
-                divCard.insertAdjacentHTML('beforeend', `                       
-                    <div class="card ${columnOfertas}" style="max-width: 400px; max-height: 800px; margin: auto;">
-                        <div class="card-header" style="background: white;">
-                            <div id="imageCarousel${element.ofertaPublicada.ofertaID + 7}" class="carousel slide" data-bs-ride="carousel">
-                                <div class="carousel-inner">
-                                    ${carrouselHTML}
-                                </div>
-                                <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel${element.ofertaPublicada.ofertaID + 7}" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Anterior</span>
-                                </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel${element.ofertaPublicada.ofertaID + 7}" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Siguiente</span>
-                                </button>
-                            </div>    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="text-center">Ofertas a ${element.ofertaPublicada.titulo}</h3>
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">${element.ofertaPublicada.titulo}</h5>
-                            <p class="card-text"><small class="text-muted">Estado de publicación: ${element.ofertaPublicada.estado}</small></p>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Foto</th>
+                                            <th>Nombre Completo</th>
+                                            <th>Teléfono</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${usuariosAplicantes.map((usuarioAplicante) => {
+                                            return `
+                                                <tr>
+                                                    <td><img src="${URL_PATH}/Assets/images/fotoPerfil/${usuarioAplicante.fotoRostro}" style="border-radius: 50%; max-width: 100px;" alt="User-Profile-Image"></td>
+                                                    <td>${usuarioAplicante.nombreCompleto}</td>
+                                                    <td>${usuarioAplicante.telefono}</td>
+                                                    <td>
+                                                        <button onclick="AceptarOferta(${usuarioAplicante.usuarioID},${element.ofertaPublicada.ofertaID});" class="btn confirmacion">Aceptar Oferta</button>
+                                                        <button onclick="rechazarOferta(${usuarioAplicante.usuarioID},${element.ofertaPublicada.ofertaID});" class="btn confirmacion">Rechazar Oferta</button>
+                                                    </td>
+                                                </tr>
+                                            `;
+                                        }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        ${usuarioHTML}
-                    </div>                                         
+                    </div>
+                    `;
+                }
+
+                const divRentaAOfertas = document.getElementById('aplicacionAofertas');
+                divRentaAOfertas.insertAdjacentHTML('beforeend', ` 
+                    ${usuarioHTML}
                 `);
+        
             });
 
         }
@@ -236,11 +186,11 @@ async function informacionDeOfertas() {
                             <div class="container" id="errores_${element.reservaUser.reservaID}"> </div>
                         </td>
                     `;
-                    if (element.reservaUser.textoReserva != null && element.reservaUser.puntaje) {
+                    if (element.reservaUser.textoReserva !== null || element.reservaUser.puntaje !== null) {
 
                         evaluar = `
                         <td>${element.reservaUser.puntaje}</td>
-                        <td>${element.reservaUser.textoReserva}</td>
+                        <td>${(element.reservaUser.textoReserva !== null)? element.reservaUser.textoReserva : ''}</td>
                         <td>${(element.reservaUser.respuesta != null) ? element.reservaUser.respuesta : ''}</td>
                         `;
                         th = `
@@ -300,7 +250,7 @@ async function informacionDeOfertas() {
 
                     const cardHeader = document.createElement('div');
                     cardHeader.classList.add('card-header');
-                    cardHeader.innerHTML = `<h3 class="text-center">Reservas a: ${publicacionTitulo}</h3>`;
+                    cardHeader.innerHTML = `<h3 class="text-center">Reservas a publicación: ${publicacionTitulo}</h3>`;
 
                     const cardBody = document.createElement('div');
                     cardBody.classList.add('card-body');
@@ -320,13 +270,13 @@ async function informacionDeOfertas() {
                     const thead = document.createElement('thead');
                     thead.innerHTML = `
                         <tr>
+                            <th scope="col">Fecha de registro</th>
                             <th scope="col">Puntuación</th>
                             <th scope="col">Reseña</th>
                             <th scope="col">Respuesta</th>
                             ${contestarHTML}
                         </tr>
                     `;
-
                     const tbody = document.createElement('tbody');
                     reservas.forEach(reserva => {
                         let evaluar = '<td></td>';
@@ -355,6 +305,7 @@ async function informacionDeOfertas() {
 
                         tbody.innerHTML += `
                             <tr>
+                                <td>${reserva.fechaRegistro}</td>
                                 <td>${reserva.puntaje !== null ? reserva.puntaje : ''}</td>
                                 <td>${reserva.textoReserva !== null ? reserva.textoReserva : ''}</td>
                                 ${respuesta}

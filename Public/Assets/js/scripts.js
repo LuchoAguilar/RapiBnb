@@ -29,7 +29,7 @@ const Modal = {
                     </div>
                     <div class="modal-footer">
                         ${cancelBtn}
-                        <button type="button" id="accept${uniqueID}" class="btn btn-primary">${acceptText}</button> <!-- Usa una clase de botón Bootstrap -->
+                        <button type="button" id="accept${uniqueID}" class="btn confirmacion">${acceptText}</button> <!-- Usa una clase de botón Bootstrap -->
                     </div>
                 </div>
             </div>

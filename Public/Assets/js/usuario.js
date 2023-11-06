@@ -56,7 +56,9 @@ async function user() {
                         <div style="text-align: center;">
                             <img src="${URL_PATH}/Assets/images/fotoPerfil/${foto}" style="border-radius: 50%; max-width: 100px;" alt="User-Profile-Image">
                             <h6 style="font-weight: 600; margin-top: 10px;">${data.nombreUsuario}</h6>
+                            
                         </div>
+                        
                         <div>
                             <h6 style="font-weight: 600; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #ccc;">Información</h6>
                             <div>
@@ -78,15 +80,16 @@ async function user() {
                             <div>
                                 <h6 style="font-weight: 600; margin-bottom: 10px;">Intereses:</h6>
                                 ${interesesHTML}
+                                <a class="btn confirmacion text-end" href="${URL_PATH}/usuario/interesesForm/" role="button">Agregar intereses</a>
                             </div>
                             <div>
                                 ${verificado}
+                                
                             </div>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                            <button onclick="modalRestriccion(${data.usuarioID},${esVerificado});" class="btn confirmacion">Editar Perfil</button>
+                            <button onclick="modalRestriccion(${data.usuarioID},${esVerificado});" class="btn confirmacion"><i class="fas fa-pencil-alt"></i>Perfil</button>
                             ${documentacionHTML}
-                            <a class="btn confirmacion" href="${URL_PATH}/usuario/interesesForm/" role="button">Agregar intereses</a>
                         </div>
                     </div>
                 </div>
