@@ -30,14 +30,23 @@ async function obtenerYMostrarReservas(pageNumber) {
                 }
                 divReservas.insertAdjacentHTML('beforeend', `
                     <div class="col-md-12">
-                        <div class="row border rounded" style="margin: auto;">
-                            <div class="col-md-4"><img src="${URL_PATH}/Assets/images/fotoPerfil/${element.usuario.fotoRostro}" style="border-radius: 50%; max-width: 70px;" alt="User-Profile-Image"></div>
-                            <div class="col-md-4">${element.usuario.nombreUsuario}</div>
-                            <div class="col-md-4">Califico: ${element.reserva.puntaje}/10 pts</div>
-                            ${resenaHTML}
-                            ${respuestaHTML}
+                        <div class="row border rounded" style="margin: auto; padding: 10px;">
+                            <div class="col-md-2 align-self-center">
+                                <img src="${URL_PATH}/Assets/images/fotoPerfil/${element.usuario.fotoRostro}" style="border-radius: 50%; max-width: 70px;" alt="User-Profile-Image">
+                            </div>
+                            <div class="col-md-3 align-self-center">
+                                <strong>${element.usuario.nombreUsuario}</strong>
+                            </div>
+                            <div class="col-md-3 align-self-center">
+                                <span class="badge bg-primary">Calificación: ${element.reserva.puntaje}/10</span>
+                            </div>
+                            <div class="col-md-4">
+                                ${resenaHTML}
+                                ${respuestaHTML}
+                            </div>
                         </div>
                     </div>
+            
                 `);
             });
 
@@ -55,6 +64,16 @@ async function obtenerYMostrarReservas(pageNumber) {
             valoraciones.className = 'd-none';
             const oferta = document.getElementById('ofertaDeAlquiler');
             oferta.className = 'card col-md-12';
+
+            const ofertar = document.getElementById('ofertar');
+            ofertarHTML = '';
+            if(data.result === true){
+                ofertarHTML = `<button onclick="realizarRenta();"  class="btn confirmacion">Realizar Oferta</button>`;
+            }
+
+            ofertar.insertAdjacentHTML('beforeend', `
+                ${ofertarHTML}
+            `);
         }
     }    
 }

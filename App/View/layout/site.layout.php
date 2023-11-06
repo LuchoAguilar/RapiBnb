@@ -147,7 +147,5 @@
 
         </div>
     </footer>
-
-    <script src="<?= URL_PATH?>/Assets/js/nav.js"></script>
 </body>
 </html>

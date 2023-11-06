@@ -16,6 +16,12 @@ a{
     color: #CCCCCC;
 }
 
+.dropdown-menu :hover{
+    background-color: white;
+    color: #0047AB;
+}
+
+
 /*------------------ footer -------------------*/
 
 .RapiBnB-footer{
@@ -72,6 +78,12 @@ a{
 
 /*------------------ botones -------------------*/
 .confirmacion{
+    padding: 10px 40px;
+    border: none;
+    font-size: 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    outline: none;
     background: #4169E1;
     color: #CCCCCC;
 }
@@ -84,12 +96,59 @@ a{
 /*------------------ card -------------------*/
 
 .card-header{
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: sans-serif;
+    width: 100%;
+    margin: auto;
     background-color:#0047AB;
     color: #CCCCCC;
 }
 
 .card-footer{
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: sans-serif;
+    width: 100%;
+    margin: auto;
     background-color:#0047AB;
     color: #CCCCCC;
 }
 /*----------------------------------------------*/
+
+section{
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: sans-serif;
+    width: 100%;
+    padding: 20px;
+    margin: auto;
+    margin-top: 10px;
+}
+
+form{
+    width: 100%;
+    padding: 40px 20px;
+    background-color: white;
+}
+
+form h2{
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: navy;
+}
+
+form input{
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    background: #F2F2F2;
+    font-size: 16px;
+    outline: none;
+    border-radius: 12px;
+}
+
+
+

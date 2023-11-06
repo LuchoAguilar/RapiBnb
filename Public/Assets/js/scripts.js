@@ -17,23 +17,24 @@ const Modal = {
         const cancelBtn = confirm ? `<button type="button" id="cancel${uniqueID}" class="btn confirmacion" data-bs-dismiss="modal">${cancelText}</button>` : '';
 
         elemento.innerHTML = `
-            <div class="modal fade" id="staticBackdrop${uniqueID}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
+        <div class="modal fade" id="staticBackdrop${uniqueID}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered"> <!-- Centra la modal verticalmente -->
                 <div class="modal-content">
                     <div class="modal-body text-center">
                         <div class="fs-1 text-${type}"><i class="${icon}"></i></div>
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">${title}</h1>
-                        <div>
-                        ${content}
+                        <h1 class="modal-title fs-4 mb-4" id="staticBackdropLabel">${title}</h1>
+                        <div class="modal-content-text mb-4">
+                            ${content}
                         </div>
                     </div>
-                    <div class="mt-5 text-center">
-                    ${cancelBtn}
-                    <button type="button" id="accept${uniqueID}" class="btn confirmacion">${acceptText}</button>
+                    <div class="modal-footer">
+                        ${cancelBtn}
+                        <button type="button" id="accept${uniqueID}" class="btn btn-primary">${acceptText}</button> <!-- Usa una clase de botón Bootstrap -->
                     </div>
                 </div>
-                </div>
             </div>
+        </div>
+    
         `;
 
         document.body.appendChild(elemento);

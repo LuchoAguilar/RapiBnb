@@ -8,9 +8,9 @@
                     <div class="card-body">
                         <!--donde va a estar el buscador-->
                         <section class="container" style="display: flex; justify-content: center; align-items: center;">
-                            <div class="input-group" style="width: 300px;">
+                            <div class="input-group">
                                 <input type="search" id="buscarPorTexto" name="buscarPorTexto" class="form-control" placeholder="Buscar" />
-                                <button type="submit" class="btn confirmacion">
+                                <button type="submit" class="btn confirmacion" style="padding: 5px 20px;">
                                     <i class="fas fa-search"></i>
                                 </button>
                             </div>

@@ -29,9 +29,9 @@
     </header>
 
     <?php echo $content ?>
-     <footer>
+    <footer>
 
-     </footer>
+    </footer>
     
 </body>
 </html>
