@@ -22,7 +22,7 @@ async function ofertasAlquilerCard() {
                 });
 
                 divCard.innerHTML += `
-                <div class="card col-md-4" style="max-width: 600px; max-height: 800px; margin: auto;">
+                <div class="card col-md-4" style="max-width: 600px; max-height: 850px; margin: auto;">
                     
                     <div id="imageCarousel${element.ofertaID}" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
@@ -75,9 +75,15 @@ async function ofertasAlquilerCard() {
                                 <p class="card-text" id="tiempoMaxPermanencia">${element.fechaFin ?? 'No especificada'} días</p>
                             </div>
                         </div>
-                        <div class="container mt-1 text-center">
-                            <a name="" id="" class="btn confirmacion" href="${URL_PATH}/OfertaAlquiler/edit/?id=${element.ofertaID}" role="button">Modificar Publicación</a>
+                        <div class="container mt-1">
+                        <div class="row">
+                            <div class="col-md-6">
+                            <a name="" id="" class="btn confirmacion" href="${URL_PATH}/OfertaAlquiler/edit/?id=${element.ofertaID}" role="button"><i class="fas fa-pencil-alt"></i>Publicación</a>
+                            </div>
+                            <div class="col-md-6">
                             <button onclick="eliminarOferta(${element.ofertaID});"  class="btn confirmacion">Eliminar Publicación</button>
+                            </div>
+                        </div>
                         </div>
                     </div>
             </div>
