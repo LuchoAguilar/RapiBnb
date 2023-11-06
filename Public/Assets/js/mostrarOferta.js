@@ -79,7 +79,6 @@ async function obtenerYMostrarReservas(pageNumber) {
 }
 obtenerYMostrarReservas(1);
 
-
 function realizarRenta() {
     const data = new FormData();
     console.log(idOferta);

@@ -28,7 +28,7 @@ async function informacionDeOfertas() {
         const dataReservasAOfertas = reposenseData.result.reservasDeOfertasP;
         const dataEsVerificado = reposenseData.result.esVerificado;
 
-
+        console.log(dataOfertasYAplicaciones);
         //controlador de columnas para que se vea bien la page
 
         // Configuración inicial de clases
@@ -223,7 +223,7 @@ async function informacionDeOfertas() {
                                     <input type="hidden" name="reservaID" value="${element.reservaUser.reservaID}">
                                     <input type="hidden" name="esVerificado" value="${dataEsVerificado}">
                                     <div class="col-md-4">
-                                        <input type="number" class="form-control" name="nuevaPuntuacion" min="0" max="10" placeholder="puntaje:" required>
+                                        <input type="number" class="form-control"  name="nuevaPuntuacion" min="0" max="10" placeholder="puntaje:" required>
                                     </div>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control col-md-3" name="nuevaResena" placeholder="Reseña:">
@@ -479,5 +479,26 @@ function AceptarOferta(usuarioID, ofertaID) {
 }
 
 function rechazarOferta(usuarioID, ofertaID) {
+    Modal.danger({
+        title: '¿Desea Aceptar oferta?',
+        confirm: true,
+        onAccept: () => {
+            const data = new FormData();
+            data.append('usuario', usuarioID);
+            data.append('oferta', ofertaID);
 
+            fetch(URL_PATH + '/Rentas/rechazarRenta/', {
+                method: 'POST',
+                body: data
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log(data.message);
+                        window.location.replace(URL_PATH + '/Rentas/home');
+                    }else{
+                        console.log(data.message);
+                    }
+                });
+        }
+    });
 }

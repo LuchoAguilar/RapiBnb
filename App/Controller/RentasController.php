@@ -37,23 +37,41 @@
             $userID = $this->userSession->ID();
             $esVerificado = $this->userSession->esVerificado();
             // Obtener solo las que están publicadas
-            $ofertasPublicadasUser = $this->obtenerOfertasPublicadas($userID); 
+            $ofertasPublicadasUser = $this->obtenerOfertasPublicadas($userID);
+            $rentas = $this->aplicaOferta->getAll(); 
 
             // Obtener aplicantes de oferta
-            $aplicantesAlasOfertasUser = '';
-            $oferta_con_aplicante = '';
-            if($ofertasPublicadasUser != null){
-                
+            $oferta_con_aplicante = [];
+
+            if ($ofertasPublicadasUser != null && $rentas != null) {
+                // Crear un diccionario que mapee ofertas a rentas basado en el ID de oferta
+                $rentasPorOferta = [];
+                foreach ($rentas as $renta) {
+                    $ofertaID = $renta['ofertaAlquilerID'];
+                    if (!array_key_exists($ofertaID, $rentasPorOferta)) {
+                        $rentasPorOferta[$ofertaID] = [];
+                    }
+                    $rentasPorOferta[$ofertaID][] = $renta;
+                }
+
+                // Combinar ofertas publicadas con aplicantes
                 foreach ($ofertasPublicadasUser as $oferPublicada) {
-                    $aplicantesAlasOfertasUser = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $oferPublicada['ofertaID']);
+                    $ofertaID = $oferPublicada['ofertaID'];
+                    $aplicantes = isset($rentasPorOferta[$ofertaID]) ? $rentasPorOferta[$ofertaID] : [];
+                    $oferta_con_aplicante[] = [
+                        'ofertaPublicada' => $oferPublicada,
+                        'usuariosAplicantes' => $aplicantes,
+                    ];
                 }
-                // obtener las ofertas publicadas del usuario con sus respectivos aplicantes(puede ser solo ofertas publicadas o el arreglo vacio)
-                
-                if(count($ofertasPublicadasUser) > 0 || count($aplicantesAlasOfertasUser) > 0){
-                    $usuarios = $this->usuarios->getAll();
-                    $oferta_con_aplicante = $this->ofertas_y_Aplicantes($usuarios, $ofertasPublicadasUser, $aplicantesAlasOfertasUser);
-                }
+            } else {
+                $oferta_con_aplicante[] = [
+                    'ofertaPublicada' => [],
+                    'usuariosAplicantes' => [],
+                ];
             }
+
+
+            $result->message = $oferta_con_aplicante;
            
             
             //hay que pasar sus propias aplicaciones. darle a que oferta aplico
@@ -76,7 +94,6 @@
 
             // pasar las reservas que hizo el usuario
             $reservasUsuario = $this->reserva->buscarRegistrosRelacionados('usuarios','usuarioID','autorID',$userID);
-            $result->message = $reservasUsuario;
             $reservas = [];
             if($reservasUsuario){
                $ofertas = $this->ofertas->getAll();
@@ -134,42 +151,6 @@
             return $ofertasPublicadas;
         }
 
-        public function ofertas_y_Aplicantes($usuariosAll, $ofertasPublicadasUser, $aplicantesAlasOfertasUser){
-            $oferta_con_aplicante = [];
-            if(count($aplicantesAlasOfertasUser) > 0){
-                foreach($aplicantesAlasOfertasUser as $renta){
-                    if($renta['estado'] === ESPERA_RENTA){
-                        foreach($usuariosAll as $usuario){
-                            if($renta['usuarioAplicoID'] === $usuario['usuarioID']){
-                                foreach($ofertasPublicadasUser as $ofertaUser){
-                                    if($renta['ofertaAlquilerID'] === $ofertaUser['ofertaID']){
-                                        $oferta_con_aplicante[] = [
-                                            'ofertaPublicada' => $ofertaUser,
-                                            'usuarioAplicante' => $usuario,
-                                        ];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                return $oferta_con_aplicante; // retorna el arreglo de las ofertas publicadas y sus aplicantes
-
-            }elseif(count($ofertasPublicadasUser) > 0){
-                foreach($ofertasPublicadasUser as $oferta){
-                    
-                    $oferta_con_aplicante[] = [
-                        'ofertaPublicada' => $oferta,
-                        'usuarioAplicante' => [],
-                    ];
-                }
-                return $oferta_con_aplicante; // retorna el arreglo solo las ofertas publicadas
-
-            }else{
-                return $oferta_con_aplicante; // retorna el arreglo vacio
-            }
-            
-        }
 
         //---------------------------------------------------------------------------------------------------------------------------------------------//
         //---------------------------------------------------- Reservas reseñar, puntuar y contestar reseña-------------------------------------------------------------//
@@ -246,11 +227,11 @@
 
         public function crearReserva($idUsuarioReserva,$idOferta){
             $result = [];
-            if(is_numeric($idUsuario) && is_numeric($idOferta)){
+            if(is_numeric($idUsuarioReserva) && is_numeric($idOferta)){
                 $rentas = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $idOferta);
                 if($rentas){
                     foreach($rentas as $renta){
-                        if($renta['usuarioAplicoID'] === $idUsuario){
+                        if($renta['usuarioAplicoID'] === $idUsuarioReserva){
                             $this->aplicaOferta->updateById($renta['aplicacionID'],[
                                 'estado' => ACEPTADO,
                             ]);
@@ -280,66 +261,70 @@
         }
 
         public function rentar(){
-            //upsert para usuarios no verificados e insert comun para los verificados.
             $result = new Result();
             if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $idOferta = (isset($_POST['ofertaID']))? $_POST['ofertaID']:'';
                 $idUsuario = $this->userSession->ID();
                 $esVerificado = $this->userSession->esVerificado();
-                if($idOferta != '' && $idUsuario !='' && is_numeric($idUsuario) && is_numeric($idOferta) && $esVerificado != null){
+                if($idOferta !== '' && $idUsuario !== '' && is_numeric($idUsuario) && is_numeric($idOferta) && $esVerificado !== false){
                     //si es verificado debe crear la aplicacion con estado aceptado else con estado espera
-                    if($esVerificado === 'true'){
-                        $this->aplicaOferta->insert([
-                            'estado' => ACEPTADO,
-                            'usuarioAplicoID' => $idUsuario,
-                            'ofertaAlquilerID' => $idOferta,
-                        ]);
-                        $resultado = crearReserva($idUsuario,$idOferta);
-                        if($resultado['success'] === true){
-                            $result->success = true;
-                            $result->message = "Renta verificada creada con éxito.";
-                        }else{
-                            $result->success = $resultado['success'];
-                            $result->message = $resultado['message'];
-                        }
-                        
-                    }else{
-                        $rentasUser = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $idUsuario);
-                        if(count($rentasUser) > 0){
-                            $rentaId = '';
-                            foreach($rentasUser as $renta){
-                                $rentaId = $renta['aplicacionID'];
-                            }
-                            $renta = $this->aplicaOferta->getById($rentaId);
-                            if($renta){
-                                if($renta['estado'] === ESPERA_RENTA){
-                                    $this->aplicaOferta->insert([
-                                        'estado' => ESPERA_RENTA,
-                                        'usuarioAplicoID' => $idUsuario,
-                                        'ofertaAlquilerID' => $idOferta,
-                                    ]);
-                                    $result->success = true;
-                                    $result->message = "Renta creada con éxito.";
-                                }else{
-                                    $result->success = false;
-                                    $result->message = "Error: usuario tiene ya tiene una renta en proceso.";
-                                }
-                            }else{
-                                $result->success = false;
-                                $result->message = "Error: de proceso.";
-                            }
-                        }else{
+                    $oferta = $this->ofertas->getById($idOferta);
+                    if($oferta['creadorID'] !== $idUsuario){
+                        if($esVerificado === true){
                             $this->aplicaOferta->insert([
-                                'estado' => ESPERA_RENTA,
+                                'estado' => ACEPTADO,
                                 'usuarioAplicoID' => $idUsuario,
                                 'ofertaAlquilerID' => $idOferta,
                             ]);
-                            $result->success = true;
-                            $result->message = "Renta creada con éxito.";
+                            $resultado = $this->crearReserva($idUsuario,$idOferta);
+                            if($resultado['success'] === true){
+                                $result->success = true;
+                                $result->message = "Renta verificada creada con éxito.";
+                            }else{
+                                $result->success = $resultado['success'];
+                                $result->message = $resultado['message'];
+                            }
+                            
+                        }else{
+                            $rentasUser = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $idUsuario);
+                            if(count($rentasUser) > 0){
+                                $rentaId = '';
+                                foreach($rentasUser as $renta){
+                                    $rentaId = $renta['aplicacionID'];
+                                }
+                                $renta = $this->aplicaOferta->getById($rentaId);
+                                if($renta){
+                                    if($renta['estado'] === ESPERA_RENTA){
+                                        $this->aplicaOferta->insert([
+                                            'estado' => ESPERA_RENTA,
+                                            'usuarioAplicoID' => $idUsuario,
+                                            'ofertaAlquilerID' => $idOferta,
+                                        ]);
+                                        $result->success = true;
+                                        $result->message = "Renta creada con éxito.";
+                                    }else{
+                                        $result->success = false;
+                                        $result->message = "Error: usuario tiene ya tiene una renta en proceso.";
+                                    }
+                                }else{
+                                    $result->success = false;
+                                    $result->message = "Error: de proceso.";
+                                }
+                            }else{
+                                $this->aplicaOferta->insert([
+                                    'estado' => ESPERA_RENTA,
+                                    'usuarioAplicoID' => $idUsuario,
+                                    'ofertaAlquilerID' => $idOferta,
+                                ]);
+                                $result->success = true;
+                                $result->message = "Renta creada con éxito.";
+                            }
+                            
                         }
-                        
+                    }else{
+                        $result->success = false;
+                        $result->message = $esVerificado;
                     }
-
                 }else{
                     $result->success = false;
                     $result->message = "Error: información inválida.";
@@ -357,14 +342,21 @@
                 $idOferta = (isset($_POST['ofertaID']))? $_POST['ofertaID']:'';
                 $idUsuario = (isset($_POST['usuarioID'])) ? $_POST['usuarioID']:'';
                 if($idOferta != '' && $idUsuario !='' && is_numeric($idUsuario) && is_numeric($idOferta)){
-                    $resultado = crearReserva($idUsuario,$idOferta);
-                    if($resultado['success'] === true){
-                        $result->success = true;
-                        $result->message = "Reserva creada con éxito.";
+                    $oferta = $this->ofertas->getById($idOferta);
+                    if($oferta['creadorID'] !== $idUsuario){
+                        $resultado = $this->crearReserva($idUsuario,$idOferta);
+                        if($resultado['success'] === true){
+                            $result->success = true;
+                            $result->message = "Reserva creada con éxito.";
+                        }else{
+                            $result->success = $resultado['success'];
+                            $result->message = $resultado['message'];
+                        }
                     }else{
-                        $result->success = $resultado['success'];
-                        $result->message = $resultado['message'];
+                        $result->success = false;
+                        $result->message = "Error: usuario dueño de la oferta.";
                     }
+                    
                 }else{
                     $result->success = false;
                     $result->message = "Error: información inválida.";
