@@ -260,7 +260,7 @@
         public function update() {
             $result = new Result();
         
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if($_SERVER["REQUEST_METHOD"] == "POST") {
                 $idUsuario = (isset($_POST['textID'])) ? $_POST['textID'] : null;
                 $nombre = (isset($_POST['usuario'])) ? $_POST['usuario'] : null;
                 $correo = (isset($_POST['correo'])) ? $_POST['correo'] : null;
@@ -268,75 +268,122 @@
                 $bio = (isset($_POST['bio'])) ? $_POST['bio'] : null;
                 $tel = (isset($_POST['telefono'])) ? $_POST['telefono']: null;
                 $userVerificado = $this->userSessionControl->esVerificado();
+
+                $telValidacion = '';
+                if($tel !== ''){
+                    $telValidacion = $this->validarTelefono($tel);
+                }
+
+                $nombreValidacion = '';
+                if($nombreCompleto !== ''){
+                    $nombreValidacion = $this->validarSoloLetras($nombreCompleto);
+                }
+
         
                 if ($idUsuario !== null && is_numeric($idUsuario)) {
                     $usuario = $this->usuarioModel->getById($idUsuario);
                     
                     if ($usuario) {
-                        // Verificar si se subió una nueva foto y eliminar la foto anterior si existe
-                        $foto = (isset($_FILES['fotoPerfil']['name'])) ? $_FILES['fotoPerfil']['name'] : "";
-                        if ($foto !== "") {
-                            if (isset($usuario['fotoRostro'])) {
-                                $fotoRostroPath =  'Assets/images/fotoPerfil/' . $usuario['fotoRostro'];
-        
-                                if (file_exists($fotoRostroPath)) {
-                                    unlink($fotoRostroPath);
+                        if($telValidacion !== false || $telValidacion === ''){
+                            if($nombreValidacion !== false || $nombreValidacion === ''){
+                                // Verificar si se subió una nueva foto y eliminar la foto anterior si existe
+                                $foto = (isset($_FILES['fotoPerfil']['name'])) ? $_FILES['fotoPerfil']['name'] : "";
+                                if ($foto !== "") {
+                                    if (isset($usuario['fotoRostro'])) {
+                                        $fotoRostroPath =  'Assets/images/fotoPerfil/' . $usuario['fotoRostro'];
+                
+                                        if (file_exists($fotoRostroPath)) {
+                                            unlink($fotoRostroPath);
+                                        }
+                                    }
+                
+                                    // Mover la nueva imagen a la carpeta de imágenes
+                                    $fecha_img = new DateTime();
+                                    $nombre_foto = $fecha_img->getTimestamp() . "_" . $foto;
+                                    $img_tmp = $_FILES['fotoPerfil']['tmp_name'];
+                
+                                    if ($img_tmp !== "") {
+                                        $destinationPath = 'Assets/images/fotoPerfil/' . $nombre_foto;
+                                        move_uploaded_file($img_tmp, $destinationPath);
+                                    }
+                
+                                    // Actualizar los datos del usuario con la nueva foto
+                                    $this->usuarioModel->updateById($idUsuario, [
+                                        'nombreUsuario' => $nombre,
+                                        'correo' => $correo,
+                                        'nombreCompleto' => $nombreCompleto,
+                                        'fotoRostro' => $nombre_foto,
+                                        'bio' => $bio,
+                                        'telefono' => $tel,
+                                    ]);
+                                } else {
+                                    // No se subió una nueva foto, actualizar sin cambios en la foto
+                                    $this->usuarioModel->updateById($idUsuario, [
+                                        'nombreUsuario' => $nombre,
+                                        'correo' => $correo,
+                                        'nombreCompleto' => $nombreCompleto,
+                                        'bio' => $bio,
+                                        'telefono' => $tel,
+                                    ]);
                                 }
-                            }
-        
-                            // Mover la nueva imagen a la carpeta de imágenes
-                            $fecha_img = new DateTime();
-                            $nombre_foto = $fecha_img->getTimestamp() . "_" . $foto;
-                            $img_tmp = $_FILES['fotoPerfil']['tmp_name'];
-        
-                            if ($img_tmp !== "") {
-                                $destinationPath = 'Assets/images/fotoPerfil/' . $nombre_foto;
-                                move_uploaded_file($img_tmp, $destinationPath);
-                            }
-        
-                            // Actualizar los datos del usuario con la nueva foto
-                            $this->usuarioModel->updateById($idUsuario, [
-                                'nombreUsuario' => $nombre,
-                                'correo' => $correo,
-                                'nombreCompleto' => $nombreCompleto,
-                                'fotoRostro' => $nombre_foto,
-                                'bio' => $bio,
-                                'telefono' => $tel,
-                            ]);
-                        } else {
-                            // No se subió una nueva foto, actualizar sin cambios en la foto
-                            $this->usuarioModel->updateById($idUsuario, [
-                                'nombreUsuario' => $nombre,
-                                'correo' => $correo,
-                                'nombreCompleto' => $nombreCompleto,
-                                'bio' => $bio,
-                                'telefono' => $tel,
-                            ]);
-                        }
 
-                        if($userVerificado === true){
-                            $verificado = $this->verificacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usuarioPropuestaID', $idUsuario);
-                            if($verificado){
-                                foreach($verificado as $ver){
-                                    $this->verificacion->deleteById($ver['verificacionID']);
+                                if($userVerificado === true){
+                                    $verificado = $this->verificacion->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usuarioPropuestaID', $idUsuario);
+                                    if($verificado){
+                                        foreach($verificado as $ver){
+                                            $this->verificacion->deleteById($ver['verificacionID']);
+                                        }
+                                    }
                                 }
+                
+                                $result->success = true;
+                                $result->message = "Usuario modificado con éxito";
+                            }else{
+                                $result->success = false;
+                                $result->message = "El nombre solo puede contener letras";
                             }
+                            
+                        }else{
+                            $result->success = false;
+                            $result->message = "Telefono invalido";
                         }
-        
-                        $result->success = true;
-                        $result->message = "Usuario modificado con éxito";
+                        
                     } else {
+                        $result->success = false;
                         $result->message = "Usuario no encontrado";
                     }
                 } else {
+                    $result->success = false;
                     $result->message = "ID de usuario no válido";
                 }
             } else {
+                $result->success = false;
                 $result->message = "Solicitud no válida";
             }
         
             echo json_encode($result);
         }
+
+        function validarTelefono($telefono) {
+            // Eliminar espacios en blanco y guiones para facilitar la validación.
+            $telefono = preg_replace('/[\s-]+/', '', $telefono);
+        
+            // Verificar si el número de teléfono tiene 10 dígitos
+            if (preg_match('/^\d{10}$/', $telefono)) {
+                return true; // Número de teléfono válido
+            } else {
+                return false; // Número de teléfono no válido
+            }
+        }
+        function validarSoloLetras($cadena) {
+            if(preg_match('/^[A-Za-z\'\- ]+$/', $cadena)){
+                return true; 
+            }else{
+                return false;
+            }
+            
+        }
+
         //---------------------------------------------------------------------------------------------------------------------//
 
         //---------------------------------------------intereses del usuario(teniendo en cuenta las etiquetas)--------------------------------------------------//

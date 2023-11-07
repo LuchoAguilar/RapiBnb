@@ -45,6 +45,7 @@
                 <a id="" class="btn confirmacion" href="<?=URL_PATH.'/Usuario/home/';?>" role="button">Cancelar</a>
             </div>
         </form>
+        <div class="container" id="errores"></div>
     </div>
     <div class="card-footer text-muted"></div>
 </div>
