@@ -2,7 +2,7 @@
     <br><br>
     <div class="row">
         <!--donde van a estar las etiquetas-->
-        <section class="col-md-4">
+        <section class="col-md-3">
             <form action="" method="post" id="busquedaEtiquetas">
                 <div class="card">
                     <div class="card-body">
@@ -105,7 +105,7 @@
             </form>
         </section>
         <!--donde van a estar las cards-->
-        <section class="col-md-8">
+        <section class="col-md-9">
             <div class="card">
                 <div class="card-header">
                     <div class="row">

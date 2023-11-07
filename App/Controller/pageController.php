@@ -4,6 +4,7 @@
     require_once(__DIR__.'/../Model/reserva.php');
     require_once(__DIR__.'/../Model/ofertaAlquiler.php');
     require_once(__DIR__.'/../Model/intereses.php');
+    require_once(__DIR__.'/../Model/aplicaOferta.php');
 
     class PageController extends Controller{
 
@@ -12,6 +13,7 @@
         private $usuarios;
         private $reservas;
         private $intereses;
+        private $rentas;
 
         public function __construct($connect,$session){
             $this->userSessionControl = new ControladorDeSessiones($session,$connect);
@@ -19,6 +21,7 @@
             $this->usuarios = new Usuario($connect);
             $this->reservas = new Reserva($connect);
             $this->intereses = new Intereses($connect);
+            $this->rentas = new AplicaOferta($connect);
         }
 
         public function home(){
@@ -234,19 +237,35 @@
             if($this->userSessionControl->Roll() === NO_LOG){
                 $idOferta = $_GET['ofertaID'];
                 $oferta = $this->ofertas->getById($idOferta);
-                // las resenas hechas a la oferta y los usuarios que resenaron y el user dueno de la oferta.
+                $rentasAOferta = $this->rentas->buscarRegistrosRelacionados('oferta_de_alquiler','ofertaID','ofertaAlquilerID',$oferta['ofertaID']);
+                $rentasAE = [];
+                foreach($rentasAOferta as $renta){
+                    if($renta['estado'] === ESPERA_RENTA || $renta['estado'] === ACEPTADO){
+                        $rentasAE[] = $renta;
+                    }
+                }
+            
                 $this->render('mostrarOferta',[
                     'oferta' => $oferta,
+                    'rentas' => $rentasAE,
                 ],'noLog');
             }elseif($this->userSessionControl->Roll() === LOG){
                 $idOferta = $_GET['ofertaID'];
                 $oferta = $this->ofertas->getById($idOferta);
-                // las resenas hechas a la oferta y los usuarios que resenaron y el user dueno de la oferta.
+                $rentasAOferta = $this->rentas->buscarRegistrosRelacionados('oferta_de_alquiler','ofertaID','ofertaAlquilerID',$oferta['ofertaID']);
+                $rentasAE = [];
+                foreach($rentasAOferta as $renta){
+                    if($renta['estado'] === ESPERA_RENTA || $renta['estado'] === ACEPTADO){
+                        $rentasAE[] = $renta;
+                    }
+                }
+
                 $this->render('mostrarOferta',[
                     'oferta' => $oferta,
+                    'rentas' => $rentasAE,
                 ],'site');
             }
-        }
+        } 
         
         public function mostrarReservasOferta(){
             $result = new Result();

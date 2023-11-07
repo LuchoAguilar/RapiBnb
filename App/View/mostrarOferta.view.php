@@ -50,11 +50,11 @@
                         <label for="tiempoMaxPermanencia">Tiempo máximo de permanencia:</label>
                         <p class="card-text " id="tiempoMaxPermanencia"><?= $parameters['oferta']['tiempoMaxPermanencia'] ?? '' ?> días</p>
                     </div>
-                    <div class="col-md-6 border d-none" id="fechaInicio">
+                    <div class="col-md-6 border d-none" id="fechaInicioOP">
                         <label for="tiempoMaxPermanencia">Fecha en que inicia la estadia:</label>
                         <p class="card-text" id="tiempoMaxPermanencia"><?= $parameters['oferta']['tiempoMaxPermanencia'] ?? '' ?> días</p>
                     </div>
-                    <div class="col-md-6 border d-none" id="fechaFin">
+                    <div class="col-md-6 border d-none" id="fechaFinOP">
                         <label for="tiempoMaxPermanencia">Fecha en que finaliza la estadia:</label>
                         <p class="card-text" id="tiempoMaxPermanencia"><?= $parameters['oferta']['tiempoMaxPermanencia'] ?? '' ?> días</p>
                     </div>
@@ -95,7 +95,7 @@
                                 <input type="text" class="form-control" id="fecha-fin" readonly>
                             </div>
                         </div>
-                        <button onclick="realizarRenta();"  class="btn confirmacion mt-2">Realizar Oferta</button> 
+                        <button type="submit" class="btn confirmacion mt-2">Realizar Oferta</button> 
                     </form>
                 </div>
                 <div class="card-footer"></div>
@@ -106,18 +106,27 @@
     var idOferta = <?= $parameters['oferta']['ofertaID'] ?? '' ?>;
 </script>
 
+<script>
+    var ofertas = <?php echo json_encode($parameters['rentas']); ?>;
+    console.log(ofertas);
+</script>
+
 
 <script>
-  // Supongamos que recibes los rangos de fechas utilizados desde el backend en un formato adecuado
-  var rangosUsados = [
-    { inicio: '2023-11-05', fin: '2023-11-10' },
-    { inicio: '2023-11-15', fin: '2023-11-20' }
-    // Agrega más rangos utilizados según sea necesario
-  ];
+  // Crear un arreglo de rangosUsados a partir de las ofertas
+  var rangosUsados = ofertas.map(function (oferta) {
+    return {
+      inicio: oferta.fechaInicio,
+      fin: oferta.fechaFin
+    };
+  });
 
   $(document).ready(function () {
+    var today = new Date(); // Obtenemos la fecha actual
+
     $("#fecha-inicio, #fecha-fin").datepicker({
       dateFormat: 'yy-mm-dd',
+      minDate: today, // Establecemos el día actual como la fecha mínima
       beforeShowDay: function (date) {
         var formattedDate = $.datepicker.formatDate('yy-mm-dd', date);
         var disableDate = false;
@@ -143,6 +152,7 @@
     });
   });
 </script>
+
 
 
 

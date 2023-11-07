@@ -59,6 +59,8 @@ CREATE TABLE certificacion(
 CREATE TABLE aplicacion_a_oferta_alquiler(
     aplicacionID INT AUTO_INCREMENT PRIMARY KEY,
     fechaAplico TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fechaInicio DATE,
+    fechaFin DATE,
     estado ENUM('Aceptado', 'Rechazado','Espera'),
     usuarioAplicoID INT,
     ofertaAlquilerID INT,
