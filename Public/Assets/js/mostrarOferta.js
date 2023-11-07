@@ -107,3 +107,4 @@ function realizarRenta() {
 }
 // debe recibir las reservas paginadas con sus users
 // probablemente envie la informacion a rentas para poder aplicar
+

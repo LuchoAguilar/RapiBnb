@@ -75,12 +75,77 @@
                 <div class="card-footer text-end" id="btnPaginacion"></div>
             </div>
 
+        </div>
+        <div class="container mt-2" id="contenedorForm">
+            <div class="card col-md-12">
+                <div class="card-header">
+                    Realizar Oferta:
+                </div>
+                <div class="card-body" id="formularioRentar">
+                    <form action="" method="post" id="rentarForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="fecha-inicio">Fecha de inicio de alquiler:</label>
+                                <input type="text" class="form-control" id="fecha-inicio">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="fecha-fin">Fecha de fin de alquiler:</label>
+                                <input type="text" class="form-control" id="fecha-fin">
+                            </div>
+                        </div> 
+                    </form>
+                </div>
+                <div class="card-footer"></div>
+            </div>
         </div>  
     </div>
-    
 </main>
 <script>
     var idOferta = <?= $parameters['oferta']['ofertaID'] ?? '' ?>;
 </script>
+
+
+<script>
+  // Supongamos que recibes los rangos de fechas utilizados desde el backend en un formato adecuado
+  var rangosUsados = [
+    { inicio: '2023-11-05', fin: '2023-11-10' },
+    { inicio: '2023-11-15', fin: '2023-11-20' }
+    // Agrega más rangos utilizados según sea necesario
+  ];
+
+  $(document).ready(function () {
+    $("#fecha-inicio, #fecha-fin").datepicker({
+      dateFormat: 'yy-mm-dd',
+      beforeShowDay: function (date) {
+        var formattedDate = $.datepicker.formatDate('yy-mm-dd', date);
+        var disableDate = false;
+
+        for (var i = 0; i < rangosUsados.length; i++) {
+          var rango = rangosUsados[i];
+          if (date >= new Date(rango.inicio) && date <= new Date(rango.fin)) {
+            disableDate = true;
+            break;
+          }
+        }
+
+        return [!disableDate];
+      },
+      onSelect: function (date, inst) {
+        if (inst.id === "fecha-inicio") {
+          // Si se selecciona la fecha de inicio, actualiza la fecha mínima de fecha fin
+          var minDate = new Date(date);
+          minDate.setDate(minDate.getDate() + 1); // Asegura que la fecha mínima de fecha fin sea al menos un día después
+          $("#fecha-fin").datepicker("option", "minDate", minDate);
+        }
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
 <script src="<?= URL_PATH?>/Assets/js/mostrarOferta.js"></script>
 
