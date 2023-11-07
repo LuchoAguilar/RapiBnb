@@ -72,64 +72,115 @@
 
         public function create() {
             $result = new Result();
-        
+            
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
-                $usuario = isset($_POST['usuario']) ? $_POST['usuario'] : '';
-                $correo = isset($_POST['correo']) ? $_POST['correo'] : '';
-                $contrasena = isset($_POST['password']) ? $_POST['password'] : '';
-        
-                // Validación adicional (puedes personalizarla según tus requisitos)
-                if (empty($usuario) || empty($correo) || empty($contrasena) || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-                    $result->success = false;
-                    $result->message = "Datos de registro no válidos.";
-                } else {
-                    // Verificar si el usuario o el correo ya existen
-                    $existsUser = $this->usuarioModel->exists('nombreUsuario', $usuario);
-                    $existsCorreo = $this->usuarioModel->exists('correo', $correo);
-        
-                    if (!$existsUser && !$existsCorreo) {
-
-                        try{
-                            $this->usuarioModel->insert([
-                                'nombreUsuario' => $usuario,
-                                'correo' => $correo,
-                                'contrasena' => password_hash($contrasena ,PASSWORD_BCRYPT)
-                            ]);
-                            $mensaje = $this->userSessionControl->inicioSesion($usuario, $contrasena);
-                            switch ($mensaje) {
-                                    case "Sesión iniciada correctamente.":
-                                        $result->success = true;
-                                        $result->message = "Cuenta y Sesión Realizada con Éxito.";
-                                        break;
-                                    case "Error: El usuario no fue encontrado.":
+                $usuario = (isset($_POST['usuario'])) ? $_POST['usuario'] : '';
+                $correo = (isset($_POST['correo'])) ? $_POST['correo'] : '';
+                $contrasena = (isset($_POST['password'])) ? $_POST['password'] : '';
+                $confirmarPw = (isset($_POST['passwordConfirm'])) ? $_POST['passwordConfirm'] : '';
+                
+                if($usuario !== '' && $correo !== '' && $contrasena !== '' && $confirmarPw !== ''){
+                    $validacionContrasena = $this->validarContrasena($contrasena);
+                    
+                    if ($validacionContrasena === true) {
+                        if ($contrasena === $confirmarPw) {
+                            if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+                                // Verificar si el usuario o el correo ya existen
+                                $existsUser = $this->usuarioModel->exists('nombreUsuario', $usuario);
+                                $existsCorreo = $this->usuarioModel->exists('correo', $correo);
+                                
+                                if (!$existsUser) {
+                                    if (!$existsCorreo) {
+                                        try {
+                                            $this->usuarioModel->insert([
+                                                'nombreUsuario' => $usuario,
+                                                'correo' => $correo,
+                                                'contrasena' => password_hash($contrasena, PASSWORD_BCRYPT)
+                                            ]);
+                                            $mensaje = $this->userSessionControl->inicioSesion($usuario, $contrasena);
+                                            
+                                            switch ($mensaje) {
+                                                case "Sesión iniciada correctamente.":
+                                                    $result->success = true;
+                                                    $result->message = "Cuenta y sesión iniciadas con éxito.";
+                                                    break;
+                                                case "Error: El usuario no fue encontrado.":
+                                                    $result->success = false;
+                                                    $result->message = "Usuario no encontrado.";
+                                                    break;
+                                                case "Error: Contraseña incorrecta.":
+                                                    $result->success = false;
+                                                    $result->message = "Contraseña incorrecta.";
+                                                    break;
+                                                default:
+                                                    $result->success = false;
+                                                    $result->message = "Error desconocido: $mensaje"; // Agrega el mensaje real
+                                            }  
+                                        } catch (Exception $error) {
+                                            $result->success = false;
+                                            $result->message = "Error al registrar usuario: " . $error->getMessage();
+                                        }
+                                    } else {
                                         $result->success = false;
-                                        $result->message = "El usuario no fue encontrado.";
-                                        break;
-                                    case "Error: Contraseña incorrecta.":
-                                        $result->success = false;
-                                        $result->message = "Contraseña incorrecta.";
-                                        break;
-                                    default:
-                                        $result->success = false;
-                                        $result->message = "Error desconocido: $mensaje"; // Agrega el mensaje real
-                                }  
-                        }catch(Exception $error){
+                                        $result->message = "El correo ya existe.";
+                                    }
+                                } else {
+                                    $result->success = false;
+                                    $result->message = "El nombre de usuario ya existe.";
+                                }
+                            } else {
+                                $result->success = false;
+                                $result->message = "El correo no es válido.";
+                            }
+                        } else {
                             $result->success = false;
-                            $result->message = $error;
+                            $result->message = "Las contraseñas no coinciden.";
                         }
-
                     } else {
                         $result->success = false;
-                        $result->message = "El nombre de usuario o correo electrónico ya existen.";
+                        $result->message = "Contraseña no válida: " . $validacionContrasena;
                     }
-
+                } else {
+                    $result->success = false;
+                    $result->message = "Datos de registro incompletos.";
                 }
-                
-            }else{
+            } else {
                 $result->success = false;
-                $result->message = "Solicitud invalida.";
+                $result->message = "Solicitud inválida.";
             } 
-           echo json_encode($result);
+            echo json_encode($result);
+        }
+        
+
+        function validarContrasena($contrasena) {
+            // Longitud mínima
+            if (strlen($contrasena) < 8) {
+                return "La contraseña debe tener al menos 8 caracteres.";
+            }
+            
+            // Longitud máxima
+            if (strlen($contrasena) > 20) {
+                return "La contraseña no puede tener más de 20 caracteres.";
+            }
+        
+            // Uso de letras mayúsculas y minúsculas
+            if (!preg_match('/[A-Z]/', $contrasena) || !preg_match('/[a-z]/', $contrasena)) {
+                return "La contraseña debe incluir al menos una letra mayúscula y una letra minúscula.";
+            }
+        
+            // Uso de números
+            if (!preg_match('/[0-9]/', $contrasena)) {
+                return "La contraseña debe incluir al menos un número.";
+            }
+        
+            // Uso de caracteres especiales
+            if (!preg_match('/[!@#\$%^&*()_+{}:;<>,.?~\-=|\\[\]]/', $contrasena)) {
+                return "La contraseña debe incluir al menos un carácter especial.";
+            }
+        
+            // No debe ser una contraseña común (puedes verificar contra una lista de contraseñas comunes aquí)
+        
+            return true;
         }
         //---------------------------------------------------------------------------------------------------------------------//
 

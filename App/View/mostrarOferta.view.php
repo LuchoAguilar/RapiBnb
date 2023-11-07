@@ -50,18 +50,14 @@
                         <label for="tiempoMaxPermanencia">Tiempo máximo de permanencia:</label>
                         <p class="card-text " id="tiempoMaxPermanencia"><?= $parameters['oferta']['tiempoMaxPermanencia'] ?? '' ?> días</p>
                     </div>
-                    <div class="col-md-6 border d-none" id="fechaInicioOP">
-                        <label for="tiempoMaxPermanencia">Fecha en que inicia la estadia:</label>
-                        <p class="card-text" id="tiempoMaxPermanencia"><?= $parameters['oferta']['tiempoMaxPermanencia'] ?? '' ?> días</p>
+                    <div class="col-md-6 border" id="fechaInicioOP">
+                        <label for="fechaInicioPublicacion">Fecha en que inicia la publicación:</label>
+                        <p class="card-text" id="fechaInicioPublicacion"><?= $parameters['oferta']['fechaInicio'] ?? '' ?></p>
                     </div>
-                    <div class="col-md-6 border d-none" id="fechaFinOP">
-                        <label for="tiempoMaxPermanencia">Fecha en que finaliza la estadia:</label>
-                        <p class="card-text" id="tiempoMaxPermanencia"><?= $parameters['oferta']['tiempoMaxPermanencia'] ?? '' ?> días</p>
+                    <div class="col-md-6 border" id="fechaFinOP">
+                        <label for="fechaFinPublicacion">Fecha en que finaliza la publicación:</label>
+                        <p class="card-text" id="fechaFinPublicacion"><?= $parameters['oferta']['fechaFin'] ?? '' ?></p>
                     </div>
-                </div>
-                <div class="container mt-1 text-center">
-                    <div class="container" id="ofertar"></div>
-                    <div class="container" id="errores"></div>
                 </div>
             </div>
         </div>
@@ -78,7 +74,7 @@
         </div>
           
     </div>
-    <div class="container mt-2 text-center" id="contenedorForm">
+        <div class="container mt-2 text-center" id="contenedorForm">
             <div class="card col-md-12" style="max-width: 40%; margin: auto;">
                 <div class="card-header">
                     Realizar Oferta:
@@ -86,31 +82,34 @@
                 <div class="card-body" id="formularioRentar">
                     <form action="" method="post" id="rentarForm">
                         <div class="row">
-                            <div class="col-md-12">
-                                <label for="fecha-inicio">Fecha de inicio de alquiler:</label>
-                                <input type="text" class="form-control" id="fecha-inicio" readonly>
+                            <div class="col-md-6 d-none">
+                                <label for="ofertaID">idOferta:</label>
+                                <input type="text" class="form-control" name="ofertaID" id="ofertaID" value="<?= $parameters['oferta']['ofertaID'] ?? '' ?>" >
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-6">
+                                <label for="fecha-inicio">Fecha de inicio de alquiler:</label>
+                                <input type="text" class="form-control" name="fecha-inicio" id="fecha-inicio" readonly require>
+                            </div>
+                            <div class="col-md-6">
                                 <label for="fecha-fin">Fecha de fin de alquiler:</label>
-                                <input type="text" class="form-control" id="fecha-fin" readonly>
+                                <input type="text" class="form-control" name="fecha-fin" id="fecha-fin" readonly require>
                             </div>
                         </div>
                         <button type="submit" class="btn confirmacion mt-2">Realizar Oferta</button> 
                     </form>
+                    <div class="container" id="errores"></div>
                 </div>
                 <div class="card-footer"></div>
             </div>
-        </div>
+        </div>            
 </main>
 <script>
     var idOferta = <?= $parameters['oferta']['ofertaID'] ?? '' ?>;
-</script>
-
-<script>
     var ofertas = <?php echo json_encode($parameters['rentas']); ?>;
-    console.log(ofertas);
+    var fechaInicioOfer = <?= $parameters['oferta']['fechaInicio'] ?? '' ?>;
+    var fechaFinOfer = <?= $parameters['oferta']['fechaFin'] ?? '' ?>;
+    console.log(fechaFinOfer);
 </script>
-
 
 <script>
   // Crear un arreglo de rangosUsados a partir de las ofertas
@@ -152,12 +151,6 @@
     });
   });
 </script>
-
-
-
-
-
-
 
 <script src="<?= URL_PATH?>/Assets/js/mostrarOferta.js"></script>
 

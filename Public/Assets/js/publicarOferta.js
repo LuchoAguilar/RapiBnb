@@ -66,13 +66,13 @@ async function ofertasAlquilerCard() {
                                 <label for="tiempoMaxPermanencia">Estado:</label>
                                 <p class="card-text " id="tiempoMaxPermanencia">${element.estado}</p>
                             </div>
-                            <div class="col-md-6 border d-none" id="fechaInicio">
-                                <label for="tiempoMaxPermanencia">Fecha en que inicia la estadia:</label>
-                                <p class="card-text" id="tiempoMaxPermanencia">${element.fechaInicio ?? 'No especificada'} días</p>
+                            <div class="col-md-6 border">
+                                <label for="fechaInicio">Fecha en que inicia la publicación:</label>
+                                <p class="card-text" id="fechaInicio">${element.fechaInicio ?? 'No especificada'}</p>
                             </div>
-                            <div class="col-md-6 border d-none" id="fechaFin">
-                                <label for="tiempoMaxPermanencia">Fecha en que finaliza la estadia:</label>
-                                <p class="card-text" id="tiempoMaxPermanencia">${element.fechaFin ?? 'No especificada'} días</p>
+                            <div class="col-md-6 border">
+                                <label for="fechaFin">Fecha en que finaliza la publicación:</label>
+                                <p class="card-text" id="fechaFin">${element.fechaFin ?? 'No especificada'}</p>
                             </div>
                         </div>
                         <div class="container mt-1">

@@ -71,32 +71,47 @@ async function obtenerYMostrarReservas(pageNumber) {
 }
 obtenerYMostrarReservas(1);
 
-function realizarRenta() {
-    const data = new FormData();
-    console.log(idOferta);
-    data.append('ofertaID', idOferta);
-        fetch(URL_PATH + '/Rentas/rentar/', {
-            method: 'POST',
-            body: data
-        }).then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                Modal.confirm({
-                    title: 'Oferta enviada con éxito',
-                    confirm: false,
-                });
-            }else{
-                const divErr = document.getElementById('errores');
-                divErr.innerHTML = `
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
-                    <strong>${data.message}</strong>
-                </div>
-                `;
-            }
-        });    
+
+const formOferta = document.getElementById('rentarForm');
+formOferta.addEventListener('submit', (e) => {
+    e.preventDefault();
+    ofertaSubmit();
+});
+
+function ofertaSubmit() {
+    const formulario = document.getElementById('rentarForm');
+    const formData = new FormData(formulario);
+    
+    fetch(URL_PATH + '/Rentas/rentar/', {method: 'POST', body: formData}
+    ).then(response => response.json()
+    ).then(data => {
+        if(data.success){
+            Modal.confirm({
+                title: 'Oferta enviada con éxito',
+                confirm: false,
+                onAccept:()=>{
+                    window.location.replace(URL_PATH + '/Page/home');
+                }
+            });
+        }else{
+            const divErr = document.getElementById('errores');
+            divErr.innerHTML = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+                <strong>${data.message}</strong>
+            </div>
+            `;
+        }
+    });
     
 }
-// debe recibir las reservas paginadas con sus users
-// probablemente envie la informacion a rentas para poder aplicar
 
+const divFechaIniPubli = document.getElementById('fechaInicioOP');
+if(fechaInicioOfer === 0){
+    divFechaIniPubli.className = 'd-none';
+}
+
+const divFechaFinPubli = document.getElementById('fechaFinOP');
+if(fechaFinOfer === 0){
+    divFechaFinPubli.className = 'd-none';
+}

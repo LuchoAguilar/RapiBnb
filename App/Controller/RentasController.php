@@ -277,71 +277,121 @@
             $result = new Result();
             if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $idOferta = (isset($_POST['ofertaID']))? $_POST['ofertaID']:'';
+                $fechaInicio = (isset($_POST['fecha-inicio'])) ? $_POST['fecha-inicio'] : '';
+                $fechaFin = (isset($_POST['fecha-fin'])) ? $_POST['fecha-fin'] : '';
                 $idUsuario = $this->userSession->ID();
                 $esVerificado = $this->userSession->esVerificado();
-                if($idOferta !== '' && $idUsuario !== '' && is_numeric($idUsuario) && is_numeric($idOferta) && $esVerificado !== false){
+                if($idOferta !== '' && $idUsuario !== '' && is_numeric($idUsuario) && is_numeric($idOferta) && $esVerificado !== false && $fechaInicio !== '' && $fechaFin !== ''){
                     //si es verificado debe crear la aplicacion con estado aceptado else con estado espera
                     $oferta = $this->ofertas->getById($idOferta);
-                    if($oferta['creadorID'] !== $idUsuario){
-                        if($esVerificado === true){
-                            $this->aplicaOferta->insert([
-                                'estado' => ACEPTADO,
-                                'usuarioAplicoID' => $idUsuario,
-                                'ofertaAlquilerID' => $idOferta,
-                            ]);
-                            $resultado = $this->crearReserva($idUsuario,$idOferta);
-                            if($resultado['success'] === true){
-                                $result->success = true;
-                                $result->message = "Renta verificada creada con éxito.";
-                            }else{
-                                $result->success = $resultado['success'];
-                                $result->message = $resultado['message'];
-                            }
-                            
+                    $timestampInicio = strtotime($fechaInicio);
+                    $timestampFin = strtotime($fechaFin);
+                    $diferenciaEnSegundos = $timestampFin - $timestampInicio;
+                    $duracionEnDias = $diferenciaEnSegundos / 86400;
+                    $validacionIniFin = null;
+                    if($oferta['fechaInicio'] !== '0000-00-00' && $oferta['fechaFin'] !== '0000-00-00'){
+                        $timestampFormIni = strtotime($fechaInicio);
+                        $timestampOfertaIni = strtotime($oferta['fechaInicio']);
+                        $timestampFormFin = strtotime($fechaFin);
+                        $timestampOfertaFin = strtotime($oferta['fechaFin']);
+                        if($timestampFormIni > $timestampOfertaIni && $timestampFormFin < $timestampOfertaFin ){
+                            $validacionIniFin = true;
                         }else{
-                            $rentasUser = $this->aplicaOferta->buscarRegistrosRelacionados('oferta_de_alquiler', 'ofertaID', 'ofertaAlquilerID', $idUsuario);
-                            if(count($rentasUser) > 0){
-                                $rentaId = '';
-                                foreach($rentasUser as $renta){
-                                    $rentaId = $renta['aplicacionID'];
-                                }
-                                $renta = $this->aplicaOferta->getById($rentaId);
-                                if($renta){
-                                    if($renta['estado'] === ESPERA_RENTA){
+                            $validacionIniFin = false;
+                        }
+                    }else{
+                        $validacionIniFin = null;
+                    }
+                    
+                    if($oferta['creadorID'] !== $idUsuario){
+                        if($duracionEnDias > $oferta['tiempoMinPermanencia']){
+                            if($duracionEnDias < $oferta['tiempoMaxPermanencia']){
+                                if($validacionIniFin !== false){
+                                    if($esVerificado === true){
                                         $this->aplicaOferta->insert([
-                                            'estado' => ESPERA_RENTA,
+                                            'estado' => ACEPTADO,
+                                            'fechaInicio' => $fechaInicio,
+                                            'fechaFin' => $fechaFin,
                                             'usuarioAplicoID' => $idUsuario,
                                             'ofertaAlquilerID' => $idOferta,
                                         ]);
-                                        $result->success = true;
-                                        $result->message = "Renta creada con éxito.";
+                                        $resultado = $this->crearReserva($idUsuario,$idOferta);
+                                        if($resultado['success'] === true){
+                                            $result->success = true;
+                                            $result->message = "Renta verificada creada con éxito.";
+                                        }else{
+                                            $result->success = $resultado['success'];
+                                            $result->message = $resultado['message'];
+                                        }
+                                        
                                     }else{
-                                        $result->success = false;
-                                        $result->message = "Error: usuario tiene ya tiene una renta en proceso.";
+                                        $rentasUser = $this->aplicaOferta->buscarRegistrosRelacionados('usuarios', 'usuarioID', 'usuarioAplicoID', $idUsuario);
+                                        if(count($rentasUser) > 0){
+                                            $rentaId = '';
+                                            foreach($rentasUser as $renta){
+                                                $rentaId = $renta['aplicacionID'];
+                                            }
+                                            $renta = $this->aplicaOferta->getById($rentaId);
+                                            if($renta){
+                                                if($renta['estado'] !== ESPERA_RENTA){
+                                                    $this->aplicaOferta->insert([
+                                                        'estado' => ESPERA_RENTA,
+                                                        'fechaInicio' => $fechaInicio,
+                                                        'fechaFin' => $fechaFin,
+                                                        'usuarioAplicoID' => $idUsuario,
+                                                        'ofertaAlquilerID' => $idOferta,
+                                                    ]);
+                                                    $result->success = true;
+                                                    $result->message = "Renta creada con éxito.";
+                                                }else{
+                                                    $result->success = false;
+                                                    $result->message = "Ya tiene una oferta en proceso.";
+                                                }
+                                            }else{
+                                                $result->success = false;
+                                                $result->message = "Error: de proceso.";
+                                            }
+                                        }else{
+                                            $this->aplicaOferta->insert([
+                                                'estado' => ESPERA_RENTA,
+                                                'fechaInicio' => $fechaInicio,
+                                                'fechaFin' => $fechaFin,
+                                                'usuarioAplicoID' => $idUsuario,
+                                                'ofertaAlquilerID' => $idOferta,
+                                            ]);
+                                            $result->success = true;
+                                            $result->message = "Renta creada con éxito.";
+                                        }
+                                        
                                     }
-                                }else{
+                                } else {
                                     $result->success = false;
-                                    $result->message = "Error: de proceso.";
+                                    $result->message = 'Las fechas seleccionadas están fuera del período de disponibilidad de la oferta.';
                                 }
-                            }else{
-                                $this->aplicaOferta->insert([
-                                    'estado' => ESPERA_RENTA,
-                                    'usuarioAplicoID' => $idUsuario,
-                                    'ofertaAlquilerID' => $idOferta,
-                                ]);
-                                $result->success = true;
-                                $result->message = "Renta creada con éxito.";
+                                
+                                
+                            } else {
+                                $result->success = false;
+                                $result->message = 'La cantidad de días elegidos supera el tiempo máximo de alquiler de la oferta.';
                             }
                             
+                            
+                        } else {
+                            $result->success = false;
+                            $result->message = 'La cantidad de días elegidos no cumple con el tiempo mínimo de alquiler de la oferta.';
                         }
-                    }else{
+                        
+                        
+                    } else {
                         $result->success = false;
-                        $result->message = $esVerificado;
+                        $result->message = 'No puede aplicar a su propia publicación.';
                     }
-                }else{
+                    
+                } else {
                     $result->success = false;
-                    $result->message = "Error: información inválida.";
-                } 
+                    $result->message = 'Debe ingresar la cantidad de días que desea alquilar para poder aplicar a la oferta.';
+                }
+                 
             }else{
                 $result->success = false;
                 $result->message = 'Error: Solicitud invalida.';
