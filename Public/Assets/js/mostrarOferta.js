@@ -50,30 +50,22 @@ async function obtenerYMostrarReservas(pageNumber) {
                 `);
             });
 
-            const ofertar = document.getElementById('ofertar');
-            ofertarHTML = '';
-            if(userLog === true){
-                ofertarHTML = `<button onclick="realizarRenta();"  class="btn confirmacion">Realizar Oferta</button>`;
+            const ofertar = document.getElementById('contenedorForm');
+    
+            if(userLog !== true){
+                ofertar.className = 'd-none';
             }
-
-            ofertar.insertAdjacentHTML('beforeend', `
-                ${ofertarHTML}
-            `);
         }else{
             const valoraciones = document.getElementById('valoraciones');
             valoraciones.className = 'd-none';
             const oferta = document.getElementById('ofertaDeAlquiler');
             oferta.className = 'card col-md-12';
 
-            const ofertar = document.getElementById('ofertar');
-            ofertarHTML = '';
-            if(data.result === true){
-                ofertarHTML = `<button onclick="realizarRenta();"  class="btn confirmacion">Realizar Oferta</button>`;
+            const ofertar = document.getElementById('contenedorForm');
+    
+            if(data.result !== true){
+                ofertar.className = 'd-none';
             }
-
-            ofertar.insertAdjacentHTML('beforeend', `
-                ${ofertarHTML}
-            `);
         }
     }    
 }

@@ -76,29 +76,31 @@
             </div>
 
         </div>
-        <div class="container mt-2" id="contenedorForm">
-            <div class="card col-md-12">
+          
+    </div>
+    <div class="container mt-2 text-center" id="contenedorForm">
+            <div class="card col-md-12" style="max-width: 40%; margin: auto;">
                 <div class="card-header">
                     Realizar Oferta:
                 </div>
                 <div class="card-body" id="formularioRentar">
                     <form action="" method="post" id="rentarForm">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <label for="fecha-inicio">Fecha de inicio de alquiler:</label>
-                                <input type="text" class="form-control" id="fecha-inicio">
+                                <input type="text" class="form-control" id="fecha-inicio" readonly>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <label for="fecha-fin">Fecha de fin de alquiler:</label>
-                                <input type="text" class="form-control" id="fecha-fin">
+                                <input type="text" class="form-control" id="fecha-fin" readonly>
                             </div>
-                        </div> 
+                        </div>
+                        <button onclick="realizarRenta();"  class="btn confirmacion mt-2">Realizar Oferta</button> 
                     </form>
                 </div>
                 <div class="card-footer"></div>
             </div>
-        </div>  
-    </div>
+        </div>
 </main>
 <script>
     var idOferta = <?= $parameters['oferta']['ofertaID'] ?? '' ?>;

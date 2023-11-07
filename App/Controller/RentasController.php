@@ -269,6 +269,11 @@
         }
 
         public function rentar(){
+            // rentar ahora debe de agregar el rango de fechas a las que postula y tener en cuenta las restricciones, ver para traer las aplicaciones de la oferta y los rangos ya pedidos para el UI
+            // agregar tambien el rango de fechas en la tabla aplicar oferta. 
+            // solo debe traer el rango de fechas de las aceptadas y quisas tener en cuenta para resenar el que se acabara la fecha
+            // debe empezar el rango minimamente en el dia de la fecha o si se indico en la oferta desde ese dia
+            // tener en cuenta el tiempo minimo y maximo de estadia de la oferta
             $result = new Result();
             if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $idOferta = (isset($_POST['ofertaID']))? $_POST['ofertaID']:'';
