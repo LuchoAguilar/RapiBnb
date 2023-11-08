@@ -186,10 +186,10 @@ async function informacionDeOfertas() {
                             <div class="container" id="errores_${element.reservaUser.reservaID}"> </div>
                         </td>
                     `;
-                    if (element.reservaUser.textoReserva !== null || element.reservaUser.puntaje !== null) {
+                    if (element.reservaUser.textoReserva !== null || element.reservaUser.puntaje !== null || element.reservaUser.estado === 'en curso') {
 
                         evaluar = `
-                        <td>${element.reservaUser.puntaje}</td>
+                        <td>${(element.reservaUser.puntaje !== null)? element.reservaUser.puntaje :''}</td>
                         <td>${(element.reservaUser.textoReserva !== null)? element.reservaUser.textoReserva : ''}</td>
                         <td>${(element.reservaUser.respuesta != null) ? element.reservaUser.respuesta : ''}</td>
                         `;
@@ -202,6 +202,7 @@ async function informacionDeOfertas() {
                     reservasUsuarioHTML += `
                       <tr>
                         <td>${element.oferta.titulo}</td>
+                        <td>${element.reservaUser.estado}</td>
                         ${evaluar}
                       </tr>
                     `;
@@ -221,6 +222,7 @@ async function informacionDeOfertas() {
                             <thead>
                               <tr>
                                 <th scope="col">Publicación</th>
+                                <th scope="col">Estado</th>
                                 ${th}
                               </tr>
                             </thead>
@@ -271,6 +273,7 @@ async function informacionDeOfertas() {
                     thead.innerHTML = `
                         <tr>
                             <th scope="col">Fecha de registro</th>
+                            <th scope="col">Estado</th>
                             <th scope="col">Puntuación</th>
                             <th scope="col">Reseña</th>
                             <th scope="col">Respuesta</th>
@@ -306,6 +309,7 @@ async function informacionDeOfertas() {
                         tbody.innerHTML += `
                             <tr>
                                 <td>${reserva.fechaRegistro}</td>
+                                <td>${reserva.estado}</td>
                                 <td>${reserva.puntaje !== null ? reserva.puntaje : ''}</td>
                                 <td>${reserva.textoReserva !== null ? reserva.textoReserva : ''}</td>
                                 ${respuesta}

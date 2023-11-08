@@ -291,7 +291,7 @@
                     $duracionEnDias = $diferenciaEnSegundos / 86400;
 
                     $validacionIniFin = null;
-                    if(($oferta['fechaInicio'] !== '0000-00-00' && $oferta['fechaFin'] !== '0000-00-00') || ){
+                    if($oferta['fechaInicio'] !== '0000-00-00' && $oferta['fechaFin'] !== '0000-00-00' ){
                         $timestampFormIni = strtotime($fechaInicio);
                         $timestampOfertaIni = strtotime($oferta['fechaInicio']);
                         $timestampFormFin = strtotime($fechaFin);

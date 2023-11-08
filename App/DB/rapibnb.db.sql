@@ -41,6 +41,7 @@ CREATE TABLE reserva(
     textoReserva VARCHAR(255),
     puntaje INT,
     respuesta VARCHAR(255),
+    estado ENUM('en curso', 'finalizada'),
     fechaRegistro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ofertaAlquilerID INT,
     autorID INT,
