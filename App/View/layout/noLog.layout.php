@@ -59,45 +59,26 @@
 
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3 footer-col">
-                            <h3>Ubicación</h3>
-                            <ul class="list-group list-group-flush">
-                                <a href=".">
-                                    <li class="list-group-item">San Luis</li>
-                                </a>
-                                <a href=".">
-                                    <li class="list-group-item">Mendoza</li>
-                                </a>
-                                <a href=".">
-                                    <li class="list-group-item">Buenos Aires</li>
-                                </a>
-                                <a href=".">
-                                    <li class="list-group-item">Misiones</li>
-                                </a>
-                            </ul>
-                        </div>
 
-                        <div class="col-md-3 footer-col">
+                        <div class="col-md-4 footer-col">
                             <h3>Ayuda</h3>
                             <ul class="list-group list-group-flush">
-                                <a href=".">
-                                    <li class="list-group-item">Centro de ayuda</li>
+                                <a href="<?= URL_PATH ?>/Page/buscar/">
+                                    <li class="list-group-item">Buscar</li>
                                 </a>
-                                <a href=".">
-                                    <li class="list-group-item">Mapa</li>
-                                </a>
+
                             </ul>
                         </div>
 
-                        <div class="col-md-3 footer-col">
+                        <div class="col-md-4 footer-col">
                             <h3>Contacto</h3>
                             <ul class="list-group list-group-flush">
-                                <a href=".">
+                                <a href="<?= URL_PATH ?>/Page/home/">
                                     <li class="list-group-item">Contacto</li>
                                 </a>
                             </ul>
                         </div>
-                        <div class="col-md-3 footer-col">
+                        <div class="col-md-4 footer-col">
                             <h3>Dirección</h3>
                             <p>
                                 SL - Argentina <br />
