@@ -68,11 +68,11 @@ async function ofertasAlquilerCard() {
                             </div>
                             <div class="col-md-6 border">
                                 <label for="fechaInicio">Fecha en que inicia la publicación:</label>
-                                <p class="card-text" id="fechaInicio">${element.fechaInicio ?? 'No especificada'}</p>
+                                <p class="card-text" id="fechaInicio">${(element.fechaInicio !== '0000-00-00') ?element.fechaInicio: 'No especificada'}</p>
                             </div>
                             <div class="col-md-6 border">
                                 <label for="fechaFin">Fecha en que finaliza la publicación:</label>
-                                <p class="card-text" id="fechaFin">${element.fechaFin ?? 'No especificada'}</p>
+                                <p class="card-text" id="fechaFin">${(element.fechaFin !== '0000-00-00') ?element.fechaFin: 'No especificada'}</p>
                             </div>
                         </div>
                         <div class="container mt-1">

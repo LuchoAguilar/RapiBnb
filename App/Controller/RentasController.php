@@ -284,12 +284,14 @@
                 if($idOferta !== '' && $idUsuario !== '' && is_numeric($idUsuario) && is_numeric($idOferta) && $esVerificado !== false && $fechaInicio !== '' && $fechaFin !== ''){
                     //si es verificado debe crear la aplicacion con estado aceptado else con estado espera
                     $oferta = $this->ofertas->getById($idOferta);
+
                     $timestampInicio = strtotime($fechaInicio);
                     $timestampFin = strtotime($fechaFin);
                     $diferenciaEnSegundos = $timestampFin - $timestampInicio;
                     $duracionEnDias = $diferenciaEnSegundos / 86400;
+
                     $validacionIniFin = null;
-                    if($oferta['fechaInicio'] !== '0000-00-00' && $oferta['fechaFin'] !== '0000-00-00'){
+                    if(($oferta['fechaInicio'] !== '0000-00-00' && $oferta['fechaFin'] !== '0000-00-00') || ){
                         $timestampFormIni = strtotime($fechaInicio);
                         $timestampOfertaIni = strtotime($oferta['fechaInicio']);
                         $timestampFormFin = strtotime($fechaFin);
@@ -304,8 +306,11 @@
                     }
                     
                     if($oferta['creadorID'] !== $idUsuario){
+                        
                         if($duracionEnDias > $oferta['tiempoMinPermanencia']){
+
                             if($duracionEnDias < $oferta['tiempoMaxPermanencia']){
+
                                 if($validacionIniFin !== false){
                                     if($esVerificado === true){
                                         $this->aplicaOferta->insert([

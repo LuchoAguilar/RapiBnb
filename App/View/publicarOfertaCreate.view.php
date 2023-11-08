@@ -46,32 +46,20 @@
                     </div>
 
                     <div class="col-md-3">
-                        <label for="servicios[]" class="form-label">Servicios:</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="servicios[]" value="gas" id="Gas">
-                            <label class="form-check-label" for="gas">Gas</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="servicios[]" value="internet" id="Internet">
-                            <label class="form-check-label" for="internet">Internet</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="servicios[]" value="electricidad" id="Electricidad">
-                            <label class="form-check-label" for="electricidad">Electricidad</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="servicios[]" value="amoblado" id="Amoblado">
-                            <label class="form-check-label" for="amoblado">Amoblado</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="servicios[]" value="estacionamiento" id="Estacionamiento">
-                            <label class="form-check-label" for="estacionamiento">Estacionamiento</label>
-                        </div>
+                        <label for="servicios" class="form-label">Servicios:</label><br>
+                        <select name="servicios[]" id="servicios" multiple required>
+                            <option value="gas">Gas</option>
+                            <option value="internet">Internet</option>
+                            <option value="electricidad">Electricidad</option>
+                            <option value="amoblado">Amoblado</option>
+                            <option value="estacionamiento">Estacionamiento</option>
+                        </select>
                     </div>
+
                     <div class="col-md-3">
                         <label for="etiqueta" class="form-label">Tipo de propiedad:</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="etiqueta" value="casa" id="Casa">
+                            <input class="form-check-input" type="radio" name="etiqueta" value="casa" id="Casa" required>
                             <label class="form-check-label" for="casa">Casa</label>
                         </div>
                         <div class="form-check">
@@ -98,27 +86,27 @@
                     </div>
                     <div class="col-md-6">
                         <label for="costoAlquilerPorDia" class="form-label">Costo de Alquiler por Día:</label>
-                        <input type="number" step="0.01" class="form-control" name="costoAlquilerPorDia" required>
+                        <input type="number" step="0.01" min="0" class="form-control" name="costoAlquilerPorDia" required>
                     </div>
                     <div class="col-md-6">
                         <label for="tiempoMinPermanencia" class="form-label">Tiempo Mínimo de Permanencia:</label>
-                        <input type="number" class="form-control" name="tiempoMinPermanencia" required>
+                        <input type="number" min="0" max="366" class="form-control" name="tiempoMinPermanencia" required>
                     </div>
                     <div class="col-md-6">
                         <label for="tiempoMaxPermanencia" class="form-label">Tiempo Máximo de Permanencia:</label>
-                        <input type="number" class="form-control" name="tiempoMaxPermanencia" required>
+                        <input type="number" min="0" max="366" class="form-control" name="tiempoMaxPermanencia" required>
                     </div>
                     <div class="col-md-6">
                         <label for="cupo" class="form-label">Cupo:</label>
-                        <input type="number" class="form-control" name="cupo" required>
+                        <input type="number" min="0" max="30" class="form-control" name="cupo" required>
                     </div>
                     <div class="col-md-3">
-                        <label for="fechaInicio" class="form-label">Fecha de Inicio (Opcional):</label>
-                        <input type="date" class="form-control" name="fechaInicio">
+                        <label for="fechaInicio">Fecha de inicio de la publicación:</label>
+                        <input type="text" class="form-control datepicker" name="fechaInicio" id="fechaInicio" readonly>
                     </div>
                     <div class="col-md-3">
-                        <label for="fechaFin" class="form-label">Fecha de Fin (Opcional):</label>
-                        <input type="date" class="form-control" name="fechaFin">
+                        <label for="fechaFin">Fecha de fin de la publicación:</label>
+                        <input type="text" class="form-control datepicker" name="fechaFin" id="fechaFin" readonly>
                     </div>
                 </div>
                 <div class="text-center mt-3">
@@ -126,9 +114,31 @@
                     <a name="" id="" class="btn confirmacion" href="<?=URL_PATH.'/OfertaAlquiler/home/';?>" role="button">Cancelar</a>
                 </div>
             </form>
+            <div class="container" id="errores"></div>
         </div>
         <div class="card-footer"></div>
     </div>
 </main>
 
+<script>
+  $(document).ready(function () {
+    var today = new Date();
+
+    $(".datepicker").datepicker({
+      dateFormat: 'yy-mm-dd',
+      minDate: today, // Establece la fecha mínima como el día actual
+      onSelect: function (date, inst) {
+        if (inst.id === "fechaInicio") {
+          // Si se selecciona la fecha de inicio, actualiza la fecha mínima de fecha fin
+          var minDate = new Date(date);
+          minDate.setDate(minDate.getDate() + 1); // Asegura que la fecha mínima de fecha fin sea al menos un día después
+          $("#fechaFin").datepicker("option", "minDate", minDate);
+        }
+      }
+    });
+  });
+</script>
+
+
 <script src="<?= URL_PATH?>/Assets/js/publicarOfertaCreate.js"></script>
+

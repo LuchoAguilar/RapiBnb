@@ -97,29 +97,28 @@
 
                     <div class="col-md-6">
                         <label for="costoAlquilerPorDia" class="form-label">Costo de Alquiler por Día:</label>
-                        <input type="number" step="0.01" class="form-control" name="costoAlquilerPorDia" value="<?= $parameters['oferta']['costoAlquilerPorDia'] ?? '' ?>" required>
+                        <input type="number" step="0.01" min="0" class="form-control" name="costoAlquilerPorDia" value="<?= $parameters['oferta']['costoAlquilerPorDia'] ?? '' ?>" required>
                     </div>
                     <div class="col-md-6">
                         <label for="tiempoMinPermanencia" class="form-label">Tiempo Mínimo de Permanencia:</label>
-                        <input type="number" class="form-control" name="tiempoMinPermanencia" value="<?= $parameters['oferta']['tiempoMinPermanencia'] ?? '' ?>" required>
+                        <input type="number" min="0" max="366" class="form-control" name="tiempoMinPermanencia" value="<?= $parameters['oferta']['tiempoMinPermanencia'] ?? '' ?>" required>
                     </div>
                     <div class="col-md-6">
                         <label for="tiempoMaxPermanencia" class="form-label">Tiempo Máximo de Permanencia:</label>
-                        <input type="number" class="form-control" name="tiempoMaxPermanencia" value="<?= $parameters['oferta']['tiempoMaxPermanencia'] ?? '' ?>" required>
+                        <input type="number" min="0" max="366" class="form-control" name="tiempoMaxPermanencia" value="<?= $parameters['oferta']['tiempoMaxPermanencia'] ?? '' ?>" required>
                     </div>
                     <div class="col-md-6">
                         <label for="cupo" class="form-label">Cupo:</label>
-                        <input type="number" class="form-control" name="cupo" value="<?= $parameters['oferta']['cupo'] ?? '' ?>" required>
+                        <input type="number" min="0" max="30" class="form-control" name="cupo" value="<?= $parameters['oferta']['cupo'] ?? '' ?>" required>
                     </div>
                     <div class="col-md-3">
-                        <label for="fechaInicio" class="form-label">Fecha de Inicio (Opcional):</label>
-                        <input type="date" class="form-control" name="fechaInicio" value="<?= $parameters['oferta']['fechaInicio'] ?? '' ?>">
+                        <label for="fechaInicio">Fecha de inicio de la publicación:</label>
+                        <input type="text" class="form-control datepicker" name="fechaInicio" id="fechaInicio" value="<?= $parameters['oferta']['fechaInicio'] ?? '' ?> " readonly>
                     </div>
                     <div class="col-md-3">
-                        <label for="fechaFin" class="form-label">Fecha de Fin (Opcional):</label>
-                        <input type="date" class="form-control" name="fechaFin" value="<?= $parameters['oferta']['fechaFin'] ?? '' ?>">
+                        <label for="fechaFin">Fecha de fin de la publicación:</label>
+                        <input type="text" class="form-control datepicker" name="fechaFin" id="fechaFin" value="<?= $parameters['oferta']['fechaFin'] ?? '' ?>" readonly>
                     </div>
-
 
                     <div class="col-md-12 d-none">
                         <label for="textID" class="form-label">ID</label>
@@ -131,9 +130,29 @@
                     <a name="" id="" class="btn confirmacion" href="<?= URL_PATH.'/OfertaAlquiler/home/'; ?>" role="button">Cancelar</a>
                 </div>
             </form>
+            <div class="container" id="errores"></div>
         </div>
         <div class="card-footer"></div>
     </div>
 </main>
+
+<script>
+  $(document).ready(function () {
+    var today = new Date();
+
+    $(".datepicker").datepicker({
+      dateFormat: 'yy-mm-dd',
+      minDate: today, // Establece la fecha mínima como el día actual
+      onSelect: function (date, inst) {
+        if (inst.id === "fechaInicio") {
+          // Si se selecciona la fecha de inicio, actualiza la fecha mínima de fecha fin
+          var minDate = new Date(date);
+          minDate.setDate(minDate.getDate() + 1); // Asegura que la fecha mínima de fecha fin sea al menos un día después
+          $("#fechaFin").datepicker("option", "minDate", minDate);
+        }
+      }
+    });
+  });
+</script>
 
 <script src="<?= URL_PATH?>/Assets/js/publicarOfertaEdit.js"></script>
