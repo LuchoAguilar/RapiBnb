@@ -5,7 +5,7 @@
         public function __construct(){
 
             try{
-                $this->conexion = mysqli_connect("localhost","user_RapiBnB","rapibnb123@@@","rapibnb");
+                $this->conexion = mysqli_connect("localhost","root","","rapibnb_test");
             }catch(Exception $error){
                 echo $error->getMessage();
             }

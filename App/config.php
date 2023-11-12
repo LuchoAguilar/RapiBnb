@@ -17,4 +17,7 @@
     define('ACEPTADO','Aceptado');
     define('RECHAZADO','Rechazado');
     define('ESPERA_RENTA', 'Espera');
+    //constantes reserva
+    define('ENCURSO', 'en curso');
+    define('FINALIZADA', 'finalizada');
 ?>

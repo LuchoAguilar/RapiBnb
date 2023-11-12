@@ -246,6 +246,7 @@
                         }
                     } 
                     $this->reserva->insert([
+                        'estado' => ENCURSO,
                         'ofertaAlquilerID' => $idOferta,
                         'autorID' => $idUsuarioReserva,
                     ]);
