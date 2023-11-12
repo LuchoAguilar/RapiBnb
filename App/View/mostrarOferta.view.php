@@ -43,19 +43,19 @@
                         <p class="card-text" id="cupoPersonas"><?= $parameters['oferta']['cupo'] ?? '' ?> personas</p>
                     </div>
                     <div class="col-md-6 border">
-                        <label for="tiempoMinPermanencia">Tiempo mínimo de permanencia:</label>
+                        <label for="tiempoMinPermanencia">Mínimo de permanencia:</label>
                         <p class="card-text" id="tiempoMinPermanencia"><?= $parameters['oferta']['tiempoMinPermanencia'] ?? '' ?> días</p>
                     </div>
                     <div class="col-md-6 border">
-                        <label for="tiempoMaxPermanencia">Tiempo máximo de permanencia:</label>
+                        <label for="tiempoMaxPermanencia">Máximo de permanencia:</label>
                         <p class="card-text " id="tiempoMaxPermanencia"><?= $parameters['oferta']['tiempoMaxPermanencia'] ?? '' ?> días</p>
                     </div>
                     <div class="col-md-6 border" id="fechaInicioOP">
-                        <label for="fechaInicioPublicacion">Fecha en que inicia la publicación:</label>
+                        <label for="fechaInicioPublicacion">Inicia la publicación:</label>
                         <p class="card-text" id="fechaInicioPublicacion"><?= $parameters['oferta']['fechaInicio'] ?? '' ?></p>
                     </div>
                     <div class="col-md-6 border" id="fechaFinOP">
-                        <label for="fechaFinPublicacion">Fecha en que finaliza la publicación:</label>
+                        <label for="fechaFinPublicacion">Finaliza la publicación:</label>
                         <p class="card-text" id="fechaFinPublicacion"><?= $parameters['oferta']['fechaFin'] ?? '' ?></p>
                     </div>
                 </div>
@@ -87,11 +87,11 @@
                                 <input type="text" class="form-control" name="ofertaID" id="ofertaID" value="<?= $parameters['oferta']['ofertaID'] ?? '' ?>" >
                             </div>
                             <div class="col-md-6">
-                                <label for="fecha-inicio">Fecha de inicio de alquiler:</label>
+                                <label for="fecha-inicio">Inicio de alquiler:</label>
                                 <input type="text" class="form-control" name="fecha-inicio" id="fecha-inicio" readonly require>
                             </div>
                             <div class="col-md-6">
-                                <label for="fecha-fin">Fecha de fin de alquiler:</label>
+                                <label for="fecha-fin">Fin de alquiler:</label>
                                 <input type="text" class="form-control" name="fecha-fin" id="fecha-fin" readonly require>
                             </div>
                         </div>
