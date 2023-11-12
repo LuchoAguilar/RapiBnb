@@ -10,6 +10,7 @@
             </div>
         </div>
     </div>
+    <div id="all"></div>
 </main>
 
 <script src="<?= URL_PATH?>/Assets/js/rentas.js"></script>

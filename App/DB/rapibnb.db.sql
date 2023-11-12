@@ -1,9 +1,11 @@
 CREATE TABLE usuarios(
     usuarioID INT AUTO_INCREMENT PRIMARY KEY,
+    correo VARCHAR(255),
     nombreUsuario VARCHAR(255),
     contrasena VARCHAR(255),
     nombreCompleto VARCHAR(255),
     fotoRostro VARCHAR(255),
+    telefono VARCHAR(255),
     bio VARCHAR(255),
     fechaRegistro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

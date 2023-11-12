@@ -27,7 +27,7 @@ async function usuarioList() {
                         <td>${element.usuario.nombreUsuario}</td>
                         <td>${element.usuario.correo}</td>
                         <td>${element.usuario.nombreCompleto}</td>
-                        <td><img width="50" src="${URL_PATH}/Assets/images/fotoPerfil/${element.usuario.fotoRostro}" alt="Foto de perfil"></td>
+                        <td><img width="50" height="50" src="${URL_PATH}/Assets/images/fotoPerfil/${element.usuario.fotoRostro}" alt="Foto de perfil"></td>
                         <td>${element.usuario.bio}</td>
                         <td>${eliminarHTML}</td>
                     </tr>

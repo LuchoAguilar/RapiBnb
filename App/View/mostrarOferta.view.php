@@ -1,6 +1,6 @@
-<main class="container mt-5">
+<main class="container mt-3">
     <div class="row">
-        <div class="card col-md-6" style="max-width: 600px; max-height: 800px; margin: auto;" id="ofertaDeAlquiler">
+        <div class="card col-md-6" style="max-width: 500px; max-height: 900px; margin: auto;" id="ofertaDeAlquiler">
             <div class="card-header" style="background: white;">
                 <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
@@ -9,7 +9,7 @@
                         $activeClass = 'active';
                         foreach ($galeriaFotos as $foto) {
                             echo '<div class="carousel-item ' . $activeClass . '">';
-                            echo    '<img src="'. URL_PATH . '/Assets/images/galeriaFotos/' . $foto . '" style="width: 600px; height: 400px;" alt="Imagen">';
+                            echo    '<img src="'. URL_PATH . '/Assets/images/galeriaFotos/' . $foto . '" style="width: 500px; height: 400px;" alt="Imagen">';
                             echo '</div>';
                             $activeClass = '';
                         }
@@ -74,7 +74,7 @@
         </div>
           
     </div>
-        <div class="container mt-2 text-center" id="contenedorForm">
+        <div class="container text-center mt-2" id="contenedorForm">
             <div class="card col-md-12" style="max-width: 40%; margin: auto;">
                 <div class="card-header">
                     Realizar Oferta:

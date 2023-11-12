@@ -12,6 +12,7 @@ async function informacionDeOfertas() {
     let reposenseData = await reposense.json();
 
     if (reposenseData.success) {
+        let aux = 0;
 
         const divOfertas = document.getElementById('ofertasYAplicaciones');
         const divAplicacionesYReservas = document.getElementById('aplicacionesYReservas');
@@ -28,22 +29,14 @@ async function informacionDeOfertas() {
         const dataReservasAOfertas = reposenseData.result.reservasDeOfertasP;
         const dataEsVerificado = reposenseData.result.esVerificado;
 
-        console.log(dataOfertasYAplicaciones);
-        //controlador de columnas para que se vea bien la page
-
-        // Configuración inicial de clases
-
-
-        // Luego, ajusta las clases según las condiciones
         if (dataOfertasYAplicaciones && (dataAplicacionesUsuario != null) && (dataReservasDelUsuario.length > 0 || dataReservasAOfertas.length > 0)) {
             divOfertas.className = 'container col-12';
             divAplicacionesYReservas.className = 'container col-12';
         } 
 
-        //--------------------------------------------------------------------------
 
         // hay que tener en cuenta que puede no venir ninguna informacion o alguna de las datas o hasta todas a la vez.
-        if (dataOfertasYAplicaciones) {
+        if (dataOfertasYAplicaciones.length > 0) {
             const divCard = document.createElement('div');
             divCard.classList.add('row');
 
@@ -100,9 +93,11 @@ async function informacionDeOfertas() {
         
             });
 
+        }else {
+            aux++;
         }
         // carga de tabla de aplicaciones del usuario
-        if (dataAplicacionesUsuario) {
+        if (dataAplicacionesUsuario.length > 0) {
             // Crea una variable para almacenar el contenido HTML
             let aplicacionesUserHTML = '';
 
@@ -151,10 +146,12 @@ async function informacionDeOfertas() {
 
             // Inserta el contenido en el contenedor divAplicacionesUser
             divAplicacionesUser.innerHTML = aplicacionesUserHTML;
+        }else{
+            aux++;
         }
 
 
-        if (dataReservasDelUsuario || dataReservasAOfertas) {
+        if (dataReservasDelUsuario.length > 0 || dataReservasAOfertas.length > 0) {
 
             let ReservasDelUsuarioHTML = '';
             let ReservasAOfertasHTML = '';
@@ -239,6 +236,7 @@ async function informacionDeOfertas() {
 
 
             if (dataReservasAOfertas.length > 0) {
+                console.log(dataReservasAOfertas)
                 dataReservasAOfertas.forEach(element => {
                     const publicacionTitulo = element.ofertaUser.titulo;
                     const reservas = element.reservas;
@@ -344,6 +342,18 @@ async function informacionDeOfertas() {
                             </div>
                     `;
 
+        }else{
+            aux++;
+        }
+
+        if(aux===3){
+            divCard = document.getElementById('all');
+            divCard.insertAdjacentHTML('beforeend',`
+            <h1 class="display-4">¡Bienvenido! Aún no has realizado ninguna renta o alguna de tus publicaciones no ha sido rentada.</h1>
+            <p class="lead">Este espacio destaca propiedades en alquiler. Explora nuestras opciones y encuentra tu hogar ideal. Si ya has publicado alguna propiedad, ¡espera a que sea rentada!</p>
+            <hr class="my-4">
+            <p>Utilizamos clases de utilidad para la tipografía y el espaciado, creando un diseño atractivo para destacar las propiedades disponibles.</p>
+            `); 
         }
     }
 

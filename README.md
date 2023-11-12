@@ -5,3 +5,21 @@ ad ver noVer
 backup de la db para que pueda ingresar
 
 explicacion de porque le doy el user root.
+
+//Cuentas 
+
+ADMIN:
+user: administrador
+pw: Administrador123@
+
+User no verificado:
+
+user: Iri
+pw: Irina123@
+
+User verificado
+
+user: lucho
+pw: Lucho123@
+
+rapibnb_test.sql es el backup de la base de datos.

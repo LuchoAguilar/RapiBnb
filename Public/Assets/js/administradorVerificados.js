@@ -62,8 +62,7 @@ function mostrarDocumentacion(documentoAdjunto) {
             }).then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    console.log(data.message);
-                    verificacionList();
+                    window.location.replace(`${URL_PATH}/Administrador/verificaciones/`);
                 }else{
                     console.log(data.message);
                 }
@@ -88,8 +87,7 @@ function mostrarDocumentacion(documentoAdjunto) {
             }).then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    console.log(data.message);
-                    verificacionList();
+                    window.location.replace(`${URL_PATH}/Administrador/verificaciones/`);
                 }else{
                     console.log(data.message);
                 }

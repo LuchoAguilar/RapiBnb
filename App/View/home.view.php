@@ -1,5 +1,4 @@
-<main class="container-fluid mt-5">
-  <br><br>
+<main class="container-fluid mt-3">
   <!-- ofertas de verificados-->
   <section>
     <div class="card">
@@ -17,7 +16,7 @@
 
   <!-- ofertas restantes -->
 
-  <section class="mt-3">
+  <section class="mt-2">
     <div class="card">
       <div class="card-header">
         <div class="text-end" id="botonesPaginacion"></div>
@@ -30,7 +29,7 @@
 
   <!-- ofertas restantes -->
 
-  <section class="mt-3">
+  <section class="mt-2">
     <div class="card" id="recomendados">
       <div class="card-header">
       <div class="row">

@@ -24,15 +24,21 @@ a{
 
 /*------------------ footer -------------------*/
 
+body {
+    font-family: Roboto;
+}
+
 .RapiBnB-footer{
     color:#CCCCCC;
     background-color:#0047AB;
     border: white;
     border: 40px;
-    /*position: absolute;*/
     bottom: 0;
     width: 100%;
-}
+    position: relative;
+} 
+
+
 
 .RapiBnB-footer a{
     text-decoration: none;
@@ -142,9 +148,5 @@ label{
     color: #333; 
     font-size: 16px; 
     margin-right: 10px;
-}
-
-body{
-    font-family: Roboto;
 }
 

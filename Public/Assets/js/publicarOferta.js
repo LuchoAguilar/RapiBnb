@@ -16,86 +16,84 @@ async function ofertasAlquilerCard() {
                     const activeClass = index === 0 ? 'active' : ''; // Establecer la primera imagen como activa
                     carrouselHTML += `
                         <div class="carousel-item ${activeClass}">
-                            <img  src="${URL_PATH}/Assets/images/galeriaFotos/${foto}" style="width: 600px; height: 400px;" alt="Imagen">
+                            <img  src="${URL_PATH}/Assets/images/galeriaFotos/${foto}" style="width: 500px; height: 300px;" alt="Imagen">
                         </div>
                     `;
                 });
 
                 divCard.innerHTML += `
-                <div class="card col-md-4" style="max-width: 600px; max-height: 850px; margin: auto;">
-                    
-                    <div id="imageCarousel${element.ofertaID}" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            ${carrouselHTML}
+                    <div class="card col-md-4" style="max-width: 500px; max-height: 900px; margin: auto;">
+                        <div id="imageCarousel${element.ofertaID}" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                ${carrouselHTML}
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel${element.ofertaID}" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Anterior</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel${element.ofertaID}" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Siguiente</span>
+                            </button>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel${element.ofertaID}" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Anterior</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel${element.ofertaID}" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Siguiente</span>
-                        </button>
+                        <div class="card-body">
+                            <h5 class="card-title">${element.titulo}</h5>
+                            <p class="card-text">${element.descripcion}</p>
+                            <p class="card-text">Ubicación: ${element.ubicacion}</p>
+                            <div class="row border rounded">
+                                <div class="col-md-12 border">
+                                    <label for="servicios">Servicios:</label>
+                                    <p class="card-text " id="servicios"> ${element.listServicios}</p>
+                                </div>
+                                <div class="col-md-6 border">
+                                    <label for="costoPorDia">Costo por día:</label>
+                                    <p class="card-text " id="costoPorDia">$${element.costoAlquilerPorDia}</p>
+                                </div>
+                                <div class="col-md-6 border">
+                                    <label for="cupoPersonas">Cupo de personas:</label>
+                                    <p class="card-text" id="cupoPersonas">${element.cupo} personas</p>
+                                </div>
+                                <div class="col-md-6 border">
+                                    <label for="tiempoMinPermanencia">Tiempo mínimo de permanencia:</label>
+                                    <p class="card-text" id="tiempoMinPermanencia">${element.tiempoMinPermanencia} días</p>
+                                </div>
+                                <div class="col-md-6 border">
+                                    <label for="tiempoMaxPermanencia">Tiempo máximo de permanencia:</label>
+                                    <p class="card-text " id="tiempoMaxPermanencia">${element.tiempoMaxPermanencia} días</p>
+                                </div>
+                                <div class="col-md-6 border">
+                                    <label for="tiempoMaxPermanencia">Estado:</label>
+                                    <p class="card-text " id="tiempoMaxPermanencia">${element.estado}</p>
+                                </div>
+                                <div class="col-md-6 border">
+                                    <label for="fechaInicio">Fecha en que inicia la publicación:</label>
+                                    <p class="card-text" id="fechaInicio">${(element.fechaInicio !== '0000-00-00') ?element.fechaInicio: 'No especificada'}</p>
+                                </div>
+                                <div class="col-md-6 border">
+                                    <label for="fechaFin">Fecha en que finaliza la publicación:</label>
+                                    <p class="card-text" id="fechaFin">${(element.fechaFin !== '0000-00-00') ?element.fechaFin: 'No especificada'}</p>
+                                </div>
+                            </div>
+                            <div class="container mt-1">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                    <a name="" id="" class="btn confirmacion" href="${URL_PATH}/OfertaAlquiler/edit/?id=${element.ofertaID}" role="button"><i class="fas fa-pencil-alt"></i>Publicación</a>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <button onclick="eliminarOferta(${element.ofertaID});"  class="btn confirmacion">Eliminar Publicación</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title">${element.titulo}</h5>
-                        <p class="card-text">${element.descripcion}</p>
-                        <p class="card-text">Ubicación: ${element.ubicacion}</p>
-                        <div class="row border rounded">
-                            <div class="col-md-12 border">
-                                <label for="servicios">Servicios:</label>
-                                <p class="card-text " id="servicios"> ${element.listServicios}</p>
-                            </div>
-                            <div class="col-md-6 border">
-                                <label for="costoPorDia">Costo por día:</label>
-                                <p class="card-text " id="costoPorDia">$${element.costoAlquilerPorDia}</p>
-                            </div>
-                            <div class="col-md-6 border">
-                                <label for="cupoPersonas">Cupo de personas:</label>
-                                <p class="card-text" id="cupoPersonas">${element.cupo} personas</p>
-                            </div>
-                            <div class="col-md-6 border">
-                                <label for="tiempoMinPermanencia">Tiempo mínimo de permanencia:</label>
-                                <p class="card-text" id="tiempoMinPermanencia">${element.tiempoMinPermanencia} días</p>
-                            </div>
-                            <div class="col-md-6 border">
-                                <label for="tiempoMaxPermanencia">Tiempo máximo de permanencia:</label>
-                                <p class="card-text " id="tiempoMaxPermanencia">${element.tiempoMaxPermanencia} días</p>
-                            </div>
-                            <div class="col-md-6 border">
-                                <label for="tiempoMaxPermanencia">Estado:</label>
-                                <p class="card-text " id="tiempoMaxPermanencia">${element.estado}</p>
-                            </div>
-                            <div class="col-md-6 border">
-                                <label for="fechaInicio">Fecha en que inicia la publicación:</label>
-                                <p class="card-text" id="fechaInicio">${(element.fechaInicio !== '0000-00-00') ?element.fechaInicio: 'No especificada'}</p>
-                            </div>
-                            <div class="col-md-6 border">
-                                <label for="fechaFin">Fecha en que finaliza la publicación:</label>
-                                <p class="card-text" id="fechaFin">${(element.fechaFin !== '0000-00-00') ?element.fechaFin: 'No especificada'}</p>
-                            </div>
-                        </div>
-                        <div class="container mt-1">
-                        <div class="row">
-                            <div class="col-md-6">
-                            <a name="" id="" class="btn confirmacion" href="${URL_PATH}/OfertaAlquiler/edit/?id=${element.ofertaID}" role="button"><i class="fas fa-pencil-alt"></i>Publicación</a>
-                            </div>
-                            <div class="col-md-6">
-                            <button onclick="eliminarOferta(${element.ofertaID});"  class="btn confirmacion">Eliminar Publicación</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-            </div>
                 `;
             });
         }else{
             divCard.innerHTML = `
-            <h1 class="display-4">Bienvenido, aun no agrego su oferta?</h1>
-            <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-            <hr class="my-4">
-            <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-            
+                <h1 class="display-4">¡Bienvenido! Aún no has agregado ninguna oferta de alquiler.</h1>
+                <p class="lead">Este es un espacio destacado para resaltar tus ofertas de alquiler. Crea una publicación para que otros puedan encontrar y conocer tus propiedades.</p>
+                <hr class="my-4">
+                <p>Utilizamos clases de utilidad para la tipografía y el espaciado, creando un diseño atractivo para destacar las ofertas disponibles.</p>
             `;
         }
         
