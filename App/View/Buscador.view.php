@@ -114,7 +114,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="container row" style="margin: auto;" id="cardBusqueda"></div>
+                    <div class="container-fluid row" style="margin: auto;" id="cardBusqueda"></div>
                 </div>
                 <div class="card-footer">
                 </div>

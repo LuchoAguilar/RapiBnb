@@ -53,7 +53,7 @@ async function ofertasAlquilerRecomendadas(pageNumber) {
                                 </button>
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title">${element.titulo}</h5>
+                                <h6 class="card-title">${element.titulo}</h6>
                                 <p class="card-text"><small class="text-muted">Ubicación: ${element.ubicacion}</small></p>
                             </div>
                         </a>   

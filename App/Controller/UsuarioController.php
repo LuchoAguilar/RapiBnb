@@ -94,7 +94,6 @@
                                         try {
                                             $this->usuarioModel->insert([
                                                 'nombreUsuario' => $usuario,
-                                                'fotoRostro' => 'user.png',
                                                 'correo' => $correo,
                                                 'contrasena' => password_hash($contrasena, PASSWORD_BCRYPT)
                                             ]);

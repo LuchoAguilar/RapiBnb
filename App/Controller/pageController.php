@@ -173,7 +173,7 @@
                 if($texto === '' && $ubicacion === '' && $etiqueta === '' && $listServicios === ''){
                     // aca si no hay busqueda hecha(tambien seria el por defecto)
                     $consulta = '';
-                    $ofertasPublicadas = $this->ofertas->paginationWithConditions($page, 8, '*', $consulta);
+                    $ofertasPublicadas = $this->ofertas->paginationWithConditions($page, 9, '*', $consulta);
 
                     $result->success = true;
                     $result->result = $ofertasPublicadas;

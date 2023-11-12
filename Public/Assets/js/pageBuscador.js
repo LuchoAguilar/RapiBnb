@@ -44,7 +44,7 @@ async function ofertasBuscador(pageNumber, dataBusqueda) {
                     });
 
                     divbusqueda.insertAdjacentHTML('beforeend', `
-                        <div class="card col-md-3 mt-1" style="max-width: 400px; max-height: 600px; margin: auto;">
+                        <div class="card col-md-4 mt-1" style="max-width: 300px; max-height: 600px; margin: auto;">
                             <a href="${URL_PATH}/Page/oferta/?ofertaID=${element.ofertaID}"  class="d-block" style="text-decoration: none;>
                                 <div class="card-header">
                                     <div id="imageCarousel${element.ofertaID + 33}" class="carousel slide" data-bs-ride="carousel">
@@ -61,7 +61,7 @@ async function ofertasBuscador(pageNumber, dataBusqueda) {
                                     </button>
                                 </div>
                                 <div class="card-body">
-                                    <h5 class="card-title">${element.titulo}</h5>
+                                    <h6 class="card-title">${element.titulo}</h6>
                                     <p class="card-text"><small class="text-muted">Ubicación: ${element.ubicacion}</small></p>
                                 </div>
                             </a>

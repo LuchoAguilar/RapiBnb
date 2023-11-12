@@ -28,6 +28,10 @@ body {
     font-family: Roboto;
 }
 
+p{
+    font-size: 14px;
+}
+
 .RapiBnB-footer{
     color:#CCCCCC;
     background-color:#0047AB;
