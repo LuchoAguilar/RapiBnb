@@ -365,11 +365,11 @@ function actualizar(id) {
     const formulario = document.getElementById(`envioData_${id}`);
     formulario.addEventListener('submit', (e) => {
         e.preventDefault();
-        enviarEvaluacion(formulario);
+        enviarEvaluacion(formulario,id);
     });
 }
 
-function enviarEvaluacion(formulario) {
+function enviarEvaluacion(formulario,id) {
     const formData = new FormData(formulario);
 
     fetch(URL_PATH + '/Rentas/resenar/', { method: 'POST', body: formData })
@@ -378,13 +378,13 @@ function enviarEvaluacion(formulario) {
             if (data.success) {
                 window.location.replace(URL_PATH + '/Rentas/home');
             } else {
-                const divErr = document.getElementById('errores_${id}');
+                const divErr = document.getElementById(`errores_${id}`);
                 divErr.innerHTML = `
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
-              <strong>${data.message}</strong>
-            </div>
-          `;
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+                <strong>${data.message}</strong>
+                </div>
+            `;
             }
         });
 }
@@ -393,11 +393,11 @@ function actualizarRespuesta(id) {
     const formulario = document.getElementById(`Respuesta_${id}`);
     formulario.addEventListener('submit', (e) => {
         e.preventDefault();
-        enviarRespuesta(formulario);
+        enviarRespuesta(formulario,id);
     });
 }
 
-function enviarRespuesta(formulario) {
+function enviarRespuesta(formulario,id) {
     const formData = new FormData(formulario);
 
     fetch(URL_PATH + '/Rentas/responder/', { method: 'POST', body: formData })
@@ -406,7 +406,7 @@ function enviarRespuesta(formulario) {
             if (data.success) {
                 window.location.replace(URL_PATH + '/Rentas/home');
             } else {
-                const divErr = document.getElementById('errores_${id}');
+                const divErr = document.getElementById(`errores_${id}`);
                 divErr.innerHTML = `
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>

@@ -189,7 +189,7 @@
                             $result->message = "Evaluación realizada con éxito.";
                         }else{
                             $result->success = false;
-                            $result->message = "Error: usuario no verificado.".$puntuacion.$resena;
+                            $result->message = "Solo los usuarios verificados pueden reseñar.";
                         }
                     }
                     

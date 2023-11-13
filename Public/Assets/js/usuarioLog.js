@@ -27,12 +27,11 @@ async function usuarioLogSubmit(){
                     <input type="password" class="form-control" name="contrasena" id="contrasena" aria-describedby="helpId" placeholder="">
                 </div>
                 <button type="submit" class="btn confirmacion">Ingresar</button>
-                <div class="card-footer">
+                <a href="${URL_PATH}" class="btn confirmacion">Volver a inicio</a>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
                         <strong>${data.message}</strong>
-                    </div>
-                </div>                            
+                    </div>                            
                 `);
             }
             if(data.message === 'Contraseña incorrecta.'){
@@ -49,12 +48,11 @@ async function usuarioLogSubmit(){
                     <input type="password" class="form-control" name="contrasena" id="contrasena" aria-describedby="helpId" placeholder="">
                 </div>
                 <button type="submit" class="btn confirmacion">Ingresar</button>
-                <div class="card-footer">
+                <a href="${URL_PATH}" class="btn confirmacion">Volver a inicio</a>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
                         <strong>${data.message}</strong>
-                    </div>
-                </div>                            
+                    </div>                           
                 `);
             }
             
