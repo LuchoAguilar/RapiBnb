@@ -7,7 +7,6 @@ async function ofertasBuscador(pageNumber, dataBusqueda) {
 
     if (reposense.ok) {
         let reposenseData = await reposense.json();
-        console.log(reposenseData);
 
         if(reposenseData.success){
             let data = '';
@@ -22,7 +21,6 @@ async function ofertasBuscador(pageNumber, dataBusqueda) {
 
                 const paginas = data.pages;
                 const pagina = parseInt(data.page, 10);
-                console.log(paginas);
 
                 botonesPaginacion(pagina, paginas, dataPaginacion, 'cardBusqueda');
 

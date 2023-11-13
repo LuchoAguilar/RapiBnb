@@ -434,7 +434,7 @@
                     $result->message = "Datos cargados con éxito";
                 } else {
                     $result->success = false;
-                    $result->message = "Datos combinados vacíos. Por favor, seleccione al menos una opción. ".$ubicacion .$etiqueta . $listServicios;
+                    $result->message = "Datos combinados vacíos. Por favor, seleccione al menos una opción. ";
                 }
             } else {
                 $result->success = false;
