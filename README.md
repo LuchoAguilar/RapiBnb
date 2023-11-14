@@ -42,6 +42,8 @@ pw: Lucho123@
 
 rapibnb_test.sql es el backup de la base de datos. debe de crear una base de datos que se llame rapibnb_test y ahi importar los datos del backup.
 
+Arregle el tema del buscador antes de entregar el link de github.
+
 
 ## Contacto
 Si tienes preguntas o sugerencias, no dudes en contactarme: lucho.aguilar.hl.38@gmail.com
