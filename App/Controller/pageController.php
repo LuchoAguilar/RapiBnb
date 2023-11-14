@@ -168,7 +168,7 @@
                 $texto = (isset($_POST['buscarPorTexto']))? $_POST['buscarPorTexto'] : '';
                 $ubicacion = (isset($_POST['ubicacion']))? $_POST['ubicacion']: '';
                 $etiqueta = (isset($_POST['etiqueta'])) ? $_POST['etiqueta'] : '';
-                $listServicios = isset($_POST['servicios']) ? implode(", ", $_POST['servicios']) : '';
+                $listServicios = isset($_POST['servicios']) ? $_POST['servicios'] : '';
 
                 if($texto === '' && $ubicacion === '' && $etiqueta === '' && $listServicios === ''){
                     // aca si no hay busqueda hecha(tambien seria el por defecto)
@@ -209,16 +209,18 @@
                         $condiciones[] = "etiquetas IN ('$etiqueta')";
                     }
                     if(!empty($listServicios)){
-                        $condiciones[] = "listServicios IN ('$listServicios')";
+                        foreach($listServicios as $list){
+                            $condiciones[] = "(listServicios LIKE '%$list%')";
+                        } 
                     }
                     
 
                     if (!empty($condiciones)) {
-                        $consulta .= implode(' OR ', $condiciones);
+                        $consulta .= implode(' AND ', $condiciones);
                     }
 
 
-                    $ofertasPublicadas = $this->ofertas->paginationWithConditions($page, 8, '*', $consulta);
+                    $ofertasPublicadas = $this->ofertas->paginationWithConditions($page, 10, '*', $consulta);
                     $result->success = true;
                     $result->result = $ofertasPublicadas;
                     $result->message = $condicionTextoCompleta;
