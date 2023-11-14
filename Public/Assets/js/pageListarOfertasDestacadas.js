@@ -12,8 +12,7 @@ async function ofertasAlquilerCard(pageNumber) {
             const ofertas = reposenseData.result;
             const divPrueba = document.getElementById('prueba');
             const dataPaginacion = document.getElementById('dataPaginacion');
-
-            const limite = ofertas.limit;
+            
             const paginas = ofertas.pages;
             const pagina = parseInt(ofertas.page, 10);
             botonesPaginacion(pagina, paginas, dataPaginacion, 'prueba');

@@ -13,7 +13,6 @@ async function ofertasAlquilerRecomendadas(pageNumber) {
             const divRecomendada = document.getElementById('ofertasRecomendadas');
             const dataPaginacion = document.getElementById('Paginacion');
 
-            const limite = ofertas.limit;
             const paginas = ofertas.pages;
             const pagina = parseInt(ofertas.page, 10);
             botonesPaginacion(pagina, paginas, dataPaginacion, 'ofertasRecomendadas');

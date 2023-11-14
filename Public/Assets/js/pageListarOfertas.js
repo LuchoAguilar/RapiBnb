@@ -7,7 +7,6 @@ async function ofertasAlquiler(pageNumber) {
 
     if (reposense.ok) {
         let reposenseData = await reposense.json();
-        console.log(reposenseData);
 
         if(reposenseData.success){
             const ofertas = reposenseData.result;

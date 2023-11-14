@@ -162,7 +162,6 @@ async function informacionDeOfertas() {
                 let th = '<th scope="col">Evaluar reserva</th>';
                 dataReservasDelUsuario.forEach(element => {
                     // Agregar una nueva fila a la variable de contenido
-                    console.log(element.reservaUser.textoReserva);
                     let evaluar = `
                         <td>
                             <form action="" method="post" id="envioData_${element.reservaUser.reservaID}">
@@ -236,7 +235,7 @@ async function informacionDeOfertas() {
 
 
             if (dataReservasAOfertas.length > 0) {
-                console.log(dataReservasAOfertas)
+
                 dataReservasAOfertas.forEach(element => {
                     const publicacionTitulo = element.ofertaUser.titulo;
                     const reservas = element.reservas;
